@@ -1,0 +1,12 @@
+.headerContainer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-xs);
+    border-bottom: 1px solid var(--border-light);
+}
+
+.headerContainer > * {
+    padding: var(--space-sm);
+}

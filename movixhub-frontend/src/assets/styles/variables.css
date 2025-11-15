@@ -4,31 +4,32 @@
 :root {
   
   /* Cores principais de identidade */
-  --primary-color: #002EFD; /* identidade da marca */
-  --secondary-color: #A3C1F5; /* tom de apoio */
-  --accent-color: #FF6B35; /* destaques, links, botões */
-  --muted-color: #4F555A; /* elementos desabilitados ou menos destacados */
+  --primary-color: #244ed4; /* identidade da marca */
+  --secondary-color: #a755f7; /* tom de apoio */
+  --accent-color: #244ed4; /* destaques, links, botões */
+  --muted-color: #838383; /* elementos desabilitados ou menos destacados */
   --success-color: #5deb5d; /* sucesso */
   --warning-color: #ffcc00; /* aviso */
-  --error-color: #ff4d4f; /* erro */
+  --error-color: #df4648; /* erro */
 
   /* Cores de bordas */
-  --border-dark: #002EFD; 
-  --border-light: #9E9E9E; 
+  --border-dark: #244ed4; 
+  --border-light: #dcdcdc; 
 
   /* Cores de texto */
-  --text-dark: #4F555A; 
-  --text-light: #FFF; 
-  --text-accent: #002EFD;
-  --text-muted: #74797c; 
+  --text-dark: #111926;
+  --text-light: #5c6672; 
+  --text-accent: #244ed4;
+  --text-muted: #646667; 
   --text-success: #5deb5d; 
 
   /* Cores de fundo */
-  --bg-light: #F6F6F6;
-  --bg-dark: #002EFD;
-  --bg-accent: #ff6b3542; 
+  --bg-light: #f9fafc;
+  --bg-dark: #eeeeee;
+  --bg-accent: #eff6ff; 
   --bg-muted: #E0E0E0; 
   --bg-success: #BFFFBF;
+  --bg-error: #fee2e1;
 
   /* Tipografia */
   --font-family-primary:  "Inter", sans-serif;
@@ -60,13 +61,8 @@
   --space-2xl: 3rem;     /* 48px */
 
   /* Gradiente do fundo */
-  --bg-gradient: radial-gradient(
-    ellipse 100% 70% at bottom left, 
-    rgba(0, 46, 253, 0.3) 0%,
-    rgba(0, 46, 253, 0.2) 30%,
-    rgba(0, 46, 253, 0.1) 60%,
-    var(--bg-light) 100%
-  );
+  --bg-gradient: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+
 
     /* Border radius */
   --radius: 0.5rem;      /* 8px */

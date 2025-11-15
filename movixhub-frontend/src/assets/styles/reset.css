@@ -85,7 +85,6 @@ a {
 
 a:hover {
     color: var(--accent-color);
-    opacity: 0.8;
 }
 
 /* Foco visível para acessibilidade */
@@ -117,12 +116,12 @@ h6 {
 }
 
 h1 {
-    font-size: var(--text-2xl);
+    font-size: var(--text-xl);
     font-weight: var(--font-weight-bold);
 }
 
 h2 {
-    font-size: var(--text-xl);
+    font-size: var(--text-lg);
     font-weight: var(--font-weight-semibold);
 }
 
@@ -131,7 +130,7 @@ h3 {
 }
 
 h4 {
-    font-size: var(--text-md);
+    font-size: var(--text-xl);
 }
 
 p {
