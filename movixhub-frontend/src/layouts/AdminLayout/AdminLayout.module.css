@@ -2,29 +2,38 @@
     display: flex;
     height: 100vh;
     width: 100%;
-    overflow: hidden;
     /* Evita que a rolagem principal da página apareça */
+    overflow: hidden;
 }
 
 .content {
-    flex-grow: 1;
+    flex: 1;
     display: flex;
     flex-direction: column;
+
+    /* Sidebar colapsada */
+    margin-left: 60px;
+    width: 100%;    
     overflow: hidden;
+
+    transition: margin-left 0.3s ease;
 }
 
-/* 
-  MOBILE FIRST: O conteúdo ocupa 100% menos a largura da Sidebar (60px)
-  width: calc(100% - 60px);
-
-  @media (min-width: ${BREAKPOINT}) {
-    DESKTOP: O conteúdo ocupa 100% menos a largura da Sidebar (250px)
-    width: calc(100% - 250px);
-  } */
-
 .pageContent {
-    background-color: var(--bg-dark);
     flex: 1;
     padding: var(--space-sm);
+    background-color: var(--bg-dark);
+    /* Scroll INDEPENDENTE para o conteúdo da página */
     overflow-y: auto;
+}
+
+@media (min-width: 768px) {
+    .content {
+        margin-left: 250px;
+    }
+
+    /* Sidebar colapsada no desktop */
+    .collapsedContent {
+        margin-left: 60px !important;
+    }
 }

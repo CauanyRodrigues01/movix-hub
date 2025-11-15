@@ -1,0 +1,68 @@
+.navLink {
+    padding: var(--space-sm);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    border-left: 2px solid transparent;
+}
+
+.navLink:hover {
+    background-color: var(--bg-accent);
+}
+
+.navLink:active {
+    background-color: var(--bg-accent);
+}
+
+.isActive {
+    color: var(--text-accent);
+    background-color: var(--bg-accent);
+    border-left: 2px solid var(--border-dark);
+}
+
+/* ESTILOS ESPECÍFICOS DO DROPDOWN*/
+
+/* Botão de Toggle (o próprio link/item) */
+.toggleButton {
+    /* Garante que o ícone de seta fique à direita */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    cursor: pointer;
+    /* Herda o estilo do .link para ser o item de menu */
+}
+
+/* Seta de Dropdown */
+.arrowIcon {
+    transition: transform 0.3s ease;
+    /* Em mobile, é pequeno e discreto */
+}
+
+/* Rotação da Seta quando o menu está aberto */
+.arrowIcon.open {
+    transform: rotate(180deg);
+}
+
+/* Container dos Sub-links */
+.dropdownMenu {
+    /* Oculto por padrão, mas pode ser animado */
+    max-height: 0; 
+    overflow: hidden; /* Oculta o conteúdo */
+    transition: max-height 0.3s ease;
+    background-color: red; /* Fundo levemente mais escuro */
+}
+
+/* Estado Ativo/Aberto */
+.dropdownMenu.open {
+    /* Define uma altura que será maior que o conteúdo, permitindo a animação */
+    max-height: 500px; 
+}
+
+/* Estilo para os sub-links */
+.subLink {
+    padding: 8px 16px 8px 32px; /* Recuo para sub-item */
+    display: block;
+    color: blue;
+}
