@@ -1,10 +1,15 @@
 .navLink {
-    padding: var(--space-sm);
+    padding: var(--space-xs);
     border-radius: var(--radius);
     display: flex;
     align-items: center;
     gap: var(--space-xs);
     border-left: 2px solid transparent;
+    overflow: hidden;
+}
+
+.navLink i {
+    font-size: 20px;
 }
 
 .navLink:hover {
@@ -13,6 +18,11 @@
 
 .navLink:active {
     background-color: var(--bg-accent);
+}
+
+
+.title {
+    white-space: nowrap;
 }
 
 .isActive {

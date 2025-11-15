@@ -6,55 +6,41 @@ type SidebarProps = {
   onCollapseChange?: (collapsed: boolean) => void;
 }
 
-function Sidebar({ onCollapseChange } : SidebarProps) {
+function Sidebar({ onCollapseChange }: SidebarProps) {
 
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
 
   // Informa o layout sempre que colapsar/descolapsar
   useEffect(() => {
     onCollapseChange?.(isCollapsed);
   }, [isCollapsed, onCollapseChange])
 
-  // Fechar Drawer ao aumentar a tela
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 768) {
-        setIsDrawerOpen(false);
-      }
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
   const sidebarClasses = `
-  
     ${Styles.sidebar}
     ${isCollapsed ? Styles.collapsed : ""}
-    ${isDrawerOpen ? Styles.drawerOpen : Styles.drawerClosed}
-
+    ${window.innerWidth < 768 && !isCollapsed ? Styles.drawerOpen : ""}
   `;
+  // Adiciona drawerOpen só em mobile (abaixo de 768px) e quando NÃO está colapsado (ou seja, quando está aberto)
+  // NOTA: Em mobile, quando 'isCollapsed' é 'true', a barra tem 60px e fica visível (mobile: só ícones)
+  // Quando 'isCollapsed' é 'false', a barra tem 250px e fica visível (mobile: menu aberto/drawer)
+  // A lógica de esconder (left: -250px) deve ficar no CSS base, e ser cancelada pelo 'drawerOpen'.
 
   return (
 
     <>
 
-      {/* BACKDROP do Drawer */}
-      {isDrawerOpen && (
-        <div className={Styles.backdrop} onClick={() => setIsDrawerOpen(false)} />
+      {/* BACKDROP do Drawer: só aparece em mobile E quando a barra NÃO está colapsada (aberta) */}
+      {window.innerWidth < 768 && !isCollapsed && (
+        <div className={Styles.backdrop} onClick={() => setIsCollapsed(true)} />
       )}
 
       <aside className={sidebarClasses}>
 
-        {/* Botão para abrir/fechar o Drawer em telas pequenas */}
+        {/* Botão para abrir/fechar o Sidebar (em mobile) ou colapsar/descolapsar (em desktop) */}
         <button
           className={Styles.toggleButton}
           onClick={() => {
-            if (window.innerWidth < 768) {
-              setIsDrawerOpen(!isDrawerOpen);
-            } else {
-              setIsCollapsed(!isCollapsed);
-            }
+            setIsCollapsed(!isCollapsed);
           }}
         >
           <i className="bi bi-list"></i>
@@ -80,7 +66,6 @@ function Sidebar({ onCollapseChange } : SidebarProps) {
       </aside>
 
     </>
-
   );
 }
 

@@ -12,7 +12,7 @@
     flex-direction: column;
 
     /* Sidebar colapsada */
-    margin-left: 60px;
+    margin-left: 75px;
     width: 100%;    
     overflow: hidden;
 
@@ -34,6 +34,6 @@
 
     /* Sidebar colapsada no desktop */
     .collapsedContent {
-        margin-left: 60px !important;
+        margin-left: 75px !important;
     }
 }
