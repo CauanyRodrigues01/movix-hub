@@ -2,11 +2,17 @@
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    gap: var(--space-md);
+    gap: var(--space-xs);
     padding: var(--space-xs);
     border-bottom: 1px solid var(--border-light);
 }
 
-.headerContainer > * {
-    padding: var(--space-sm);
+.headerContainer>* {
+    padding: var(--space-xs);
+}
+
+@media (min-width: 768px) {
+    .headerContainer>* {
+        padding: var(--space-sm);
+    }
 }
