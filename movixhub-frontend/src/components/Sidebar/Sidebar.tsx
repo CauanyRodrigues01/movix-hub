@@ -8,7 +8,15 @@ type SidebarProps = {
 
 function Sidebar({ onCollapseChange }: SidebarProps) {
 
-  const [isCollapsed, setIsCollapsed] = useState(true);
+  // Função para definir o estado inicial baseado no tamanho da tela
+  const getInitialCollapsedState = () => {
+    // Retorna FALSE (NÃO colapsado = ABERTO) se for Desktop (>= 768px).
+    // Retorna TRUE (colapsado = SÓ ÍCONES) se for Mobile (< 768px).
+    return window.innerWidth < 768;
+  };
+
+  // Inicializa o estado com a função dinâmica
+  const [isCollapsed, setIsCollapsed] = useState(getInitialCollapsedState);
 
   // Informa o layout sempre que colapsar/descolapsar
   useEffect(() => {
@@ -66,6 +74,7 @@ function Sidebar({ onCollapseChange }: SidebarProps) {
       </aside>
 
     </>
+
   );
 }
 
