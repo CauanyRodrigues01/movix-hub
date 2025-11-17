@@ -21,7 +21,9 @@ function AdminLayout() {
       `}>
         <Header />
         <div className={Styles.pageContent}>
-          <Outlet />
+          <div className={Styles.pageWrapper}>
+            <Outlet />
+          </div>
           <Footer isCollapsed={collapsed} />
         </div>
       </div>

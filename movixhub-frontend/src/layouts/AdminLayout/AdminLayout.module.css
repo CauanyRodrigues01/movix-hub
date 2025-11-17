@@ -21,12 +21,17 @@
 
 .pageContent {
     flex: 1;
-    padding: var(--space-sm);
     background-color: var(--bg-dark);
+    position: relative;
+    display: flex;
+    flex-direction: column;
     /* Scroll INDEPENDENTE para o conteúdo da página */
     overflow-y: auto;
-    position: relative;
-    background-color: aqua;
+}
+
+.pageWrapper {
+    flex: 1;
+    padding: var(--space-sm);
 }
 
 @media (min-width: 768px) {

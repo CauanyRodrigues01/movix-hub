@@ -1,5 +1,5 @@
 .footer {
-    position: absolute;
+    position: static;
     left: 0;
     width: 100%;
     background-color: var(--bg-light);
