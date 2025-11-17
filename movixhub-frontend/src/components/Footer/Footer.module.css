@@ -31,7 +31,6 @@
     display: none;
 }
 
-
 @media (min-width: 768px) {
 
     .footer {
@@ -61,9 +60,10 @@
     }
 
     .circle {
-        width: 5px;
-        height: 5px;
-        background-color: var(--text-light);
+        display: block;
+        width: 4px;
+        height: 4px;
+        background-color: var(--text-dark);
         border-radius: 50%;
     }
 
