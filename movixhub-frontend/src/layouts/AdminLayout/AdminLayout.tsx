@@ -4,6 +4,7 @@ import Styles from "./AdminLayout.module.css";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import Header from "../../components/Header/Header";
 import { useState } from "react";
+import Footer from "../../components/Footer/Footer";
 
 function AdminLayout() {
 
@@ -21,6 +22,7 @@ function AdminLayout() {
         <Header />
         <div className={Styles.pageContent}>
           <Outlet />
+          <Footer isCollapsed={collapsed} />
         </div>
       </div>
     </div>

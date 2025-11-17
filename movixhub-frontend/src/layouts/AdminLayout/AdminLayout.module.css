@@ -13,7 +13,7 @@
 
     /* Sidebar colapsada */
     margin-left: 60px;
-    width: 100%;    
+    width: 100%;
     overflow: hidden;
 
     transition: margin-left 0.3s ease;
@@ -25,6 +25,8 @@
     background-color: var(--bg-dark);
     /* Scroll INDEPENDENTE para o conteúdo da página */
     overflow-y: auto;
+    position: relative;
+    background-color: aqua;
 }
 
 @media (min-width: 768px) {
@@ -35,5 +37,9 @@
     /* Sidebar colapsada no desktop */
     .collapsedContent {
         margin-left: 75px !important;
+    }
+
+    .pageContent {
+        margin-bottom: 72px;
     }
 }
