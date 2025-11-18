@@ -1,0 +1,122 @@
+/* --- 1. BASE (.button) | Mapeado do seu .btn --- */
+.button {
+    /* Estrutura e layout (Base do seu .btn) */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* Tamanho e Espaçamento Padrão (Medium) */
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--text-base);
+    min-height: 44px;
+
+    /* Estilos Visuais */
+    border-radius: var(--radius);
+    font-weight: var(--font-weight-semibold); 
+    border: 2px solid transparent;
+    cursor: pointer;
+    text-decoration: none;
+    font-family: var(--font-family-primary); 
+    text-align: center;
+    line-height: 1.5;
+    gap: var(--space-xs);
+    
+    /* Transições e Efeitos */
+    transition: all var(--transition, 0.25s ease-in-out);
+}
+
+/* Comportamento no Hover (Comum a todos) */
+.button:hover:not(:disabled) {
+    box-shadow: var(--shadow);
+    transform: translateY(-2px);
+}
+
+/* Comportamento no Focus (Comum a todos) */
+.button:focus {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
+/* Comportamento no estado Desabilitado (Comum a todos) */
+.button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* --- 2. VARIANTES: Cores e Temas --- */
+
+/* PRIMARY: Fundo Sólido com Cor de Destaque */
+.primary {
+    background-color: var(--primary-color);
+    color: var(--bg-light); /* Cor do texto claro */
+}
+
+.primary:hover:not(:disabled) {
+    /* Usei um tom ligeiramente mais escuro da primary_color para hover */
+    background-color: #1c3fb2; 
+}
+
+/* Comportamento no Active (Seu estilo: primary retorna à posição) */
+.primary:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: none; /* Removendo a sombra para dar a sensação de "clique" */
+}
+
+/* SECONDARY: Fundo Transparente com Borda Escura (Estilo Outline) */
+.secondary {
+    background-color: transparent;
+    color: var(--text-dark);
+    border-color: var(--border-dark); /* Usando border-dark */
+}
+
+.secondary:hover:not(:disabled) {
+    /* Seu estilo: Borda/fundo muda para a cor de destaque (primary-color) */
+    border-color: var(--primary-color);
+    background-color: var(--primary-color);
+    color: var(--bg-light); /* Texto claro no hover */
+}
+
+.secondary:active:not(:disabled) {
+    transform: translateY(0);
+    background-color: var(--primary-color);
+    box-shadow: none;
+}
+
+/* GHOST: Sem Fundo e Sem Borda, Apenas Texto de Destaque */
+.ghost {
+    background-color: transparent;
+    color: var(--primary-color);
+    padding: var(--space-xs) var(--space-sm); /* Padrão */
+}
+
+.ghost:hover:not(:disabled) {
+    background-color: var(--bg-accent); /* Leve fundo no hover */
+    color: var(--primary-color);
+    box-shadow: none;
+    transform: none; /* Remove a translação no ghost para um hover mais sutil */
+}
+
+.ghost:active:not(:disabled) {
+    background-color: var(--bg-muted);
+}
+
+
+/* --- 3. TAMANHOS --- */
+
+/* Small: Mais compacto */
+.small {
+    padding: var(--space-2xs) var(--space-xs);
+    font-size: var(--text-sm);
+    min-height: 36px;
+}
+
+/* Medium: (Usa as definições da base - default) */
+/* .medium {} */
+
+/* Large: Maior destaque */
+.large {
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--text-md);
+    min-height: 52px;
+}
