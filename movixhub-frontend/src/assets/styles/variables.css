@@ -14,7 +14,7 @@
 
   /* Cores de bordas */
   --border-dark: #244ed4; 
-  --border-light: #dcdcdc; 
+  --border-light: #e7e8ea; 
 
   /* Cores de texto */
   --text-dark: #111926;
@@ -22,10 +22,10 @@
   --text-accent: #244ed4;
   --text-muted: #646667; 
   --text-success: #5deb5d; 
-
+  --text-error: #df4648;
   /* Cores de fundo */
-  --bg-light: #f9fafc;
-  --bg-dark: #eeeeee;
+  --bg-light: #fff;
+  --bg-dark: #f9fafc;
   --bg-accent: #eff6ff; 
   --bg-muted: #E0E0E0; 
   --bg-success: #BFFFBF;
