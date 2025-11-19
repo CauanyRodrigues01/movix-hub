@@ -60,7 +60,6 @@
 .td {
     padding: var(--space-sm) var(--space-xs);
     vertical-align: middle;
-    font-size: var(--text-base);
     color: var(--text-dark);
     width: 1%;
     /* Necessário para o min-width funcionar bem em tabelas flexíveis */
@@ -98,7 +97,7 @@
 
 /* 1. Tipo: large-text (Ex: Nome, Descrição principal) */
 .typeLargeText {
-    min-width: 250px;
+    min-width: 200px;
     /* Largura maior, prioridade de espaço */
     white-space: normal;
     /* PERMITE quebra de linha */
@@ -106,14 +105,14 @@
 
 /* 2. Tipo: medium-text (Ex: Rota, Endereços, Detalhes) */
 .typeMediumText {
-    min-width: 180px;
+    min-width: 140px;
     /* Largura média, permite quebra de linha */
     white-space: normal;
 }
 
 /* 3. Tipo: fixed-short (Ex: Preço, Data, ID, Tempo Estimado) */
 .typeFixedShort {
-    min-width: 100px;
+    min-width: 50px;
     /* Compacto, mas legível */
     width: 1%;
     /* Ajusta ao conteúdo */
@@ -123,9 +122,9 @@
 
 /* 4. Tipo: badge (Ex: Status, Tipo de Serviço) */
 .typeBadge {
-    min-width: 120px;
+    min-width: 70px;
     /* Espaço suficiente para o badge e padding */
-    width: 120px;
+    width: 70px;
     /* Largura fixa para manter a consistência visual */
     white-space: nowrap;
     text-align: center;
@@ -137,4 +136,28 @@
     width: 80px;
     min-width: 80px;
     white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+    .typeLargeText {
+        min-width: 250px;
+    }
+
+    .typeMediumText {
+        min-width: 180px;
+    }
+
+    .typeFixedShort {
+        min-width: 100px;
+    }
+
+    .typeBadge {
+        min-width: 120px;
+    }
+
+    .typeActions {
+        width: 80px;
+        min-width: 80px;
+    }
+
 }
