@@ -11,13 +11,15 @@ interface PageHeaderProps {
 
 const PageHeader = ({ title, description, buttonIcon, buttonText, onButtonClick }: PageHeaderProps) => {
 
+    const shouldRenderButton = (!!buttonText || !!buttonIcon) && !!onButtonClick;
+
     return (
         <header className={Styles.pageHeader}>
             <div className={Styles.pageHeaderDetails}>
                 <h1>{title}</h1>
                 <p>{description}</p>
             </div>
-            <Button onClick={onButtonClick}> {buttonIcon} {buttonText}</Button>
+            {shouldRenderButton && <Button onClick={onButtonClick}> {buttonIcon} {buttonText}</Button>}
         </header>
     )
 
