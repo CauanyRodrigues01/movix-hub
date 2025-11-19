@@ -10,9 +10,9 @@
 }
 
 .actionDelete {
-    color: var(--error-color);
+    color: var(--text-error) !important;
 }
 
 .actionDelete:hover:not(:disabled) {
-    color: var(--error-color);
+    color: var(--text-error) !important;
 }

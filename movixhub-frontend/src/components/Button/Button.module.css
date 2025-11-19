@@ -53,8 +53,7 @@
 }
 
 .primary:hover:not(:disabled) {
-    /* Usei um tom ligeiramente mais escuro da primary_color para hover */
-    background-color: #1c3fb2; 
+    background-color: var(--text-accent); 
 }
 
 /* Comportamento no Active (Seu estilo: primary retorna à posição) */
