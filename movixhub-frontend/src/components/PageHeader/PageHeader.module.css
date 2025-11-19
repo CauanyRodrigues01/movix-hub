@@ -1,0 +1,32 @@
+.pageHeader {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: var(--space-sm);
+    gap: var(--space-sm);
+}
+
+.pageHeaderDetails {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    text-align: center;
+}
+
+.pageHeaderDetails p {
+    color: var(--text-light);
+}
+
+@media (min-width: 768px) {
+    .pageHeader {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .pageHeaderDetails {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-xs);
+        text-align: justify;
+    }
+}
