@@ -1,0 +1,22 @@
+import Styles from './BadgeTable.module.css';
+
+interface BadgeTableProps {
+    value: string;
+    colorClass: string;
+}
+
+const BadgeTable = ({ value, colorClass } : BadgeTableProps) => {
+
+    return (
+        <span className={`
+            ${Styles.badge} 
+            ${colorClass}
+        `}>
+            {value}
+        </span>
+    )
+
+}
+
+export default BadgeTable;
+
