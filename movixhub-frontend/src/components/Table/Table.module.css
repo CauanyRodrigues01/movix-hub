@@ -23,15 +23,15 @@
 
 .table {
     width: 100%;
-    border-collapse: collapse; 
+    border-collapse: collapse;
 }
 
 /* --- 3. Cabeçalho (Header) --- */
 
 .tableHeader {
     background-color: var(--bg-dark);
-    position: sticky; 
-    top: 0; 
+    position: sticky;
+    top: 0;
     z-index: 10;
 }
 
@@ -40,7 +40,7 @@
     text-align: left;
     font-size: 0.85rem;
     font-weight: var(--font-weight-semibold);
-    color: var(--text-muted); 
+    color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 0.08em;
     border-bottom: 1px solid var(--border-light);
@@ -60,57 +60,81 @@
 .td {
     padding: var(--space-sm) var(--space-xs);
     vertical-align: middle;
-    font-size: var(--text-base); 
+    font-size: var(--text-base);
     color: var(--text-dark);
-    width: 1%; /* Necessário para o min-width funcionar bem em tabelas flexíveis */
+    width: 1%;
+    /* Necessário para o min-width funcionar bem em tabelas flexíveis */
 }
 
 /* Classes de Alinhamento Genéricas */
-.tdLeft { text-align: left; }
-.tdRight { text-align: right; }
-.tdCenter { text-align: center; }
+.tdLeft {
+    text-align: left;
+}
+
+.tdRight {
+    text-align: right;
+}
+
+.tdCenter {
+    text-align: center;
+}
 
 /* CLASSES DE FORMATAÇÃO DE TEXTO CUSTOMIZADA */
+
 .mainText {
-    color: red;
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    color: var(--text-dark);
+    line-height: 1.3;
 }
 
 .secondaryText {
-    color: royalblue
+    font-size: var(--text-sm);
+    color: var(--text-light);
+    line-height: 1.3;
 }
 
 /* REGRAS AUTOMÁTICAS DE LARGURA POR FORMATO DE CONTEÚDO */
 
 /* 1. Tipo: large-text (Ex: Nome, Descrição principal) */
 .typeLargeText {
-    min-width: 250px; /* Largura maior, prioridade de espaço */
-    white-space: normal; /* PERMITE quebra de linha */
+    min-width: 250px;
+    /* Largura maior, prioridade de espaço */
+    white-space: normal;
+    /* PERMITE quebra de linha */
 }
 
 /* 2. Tipo: medium-text (Ex: Rota, Endereços, Detalhes) */
 .typeMediumText {
-    min-width: 180px; /* Largura média, permite quebra de linha */
+    min-width: 180px;
+    /* Largura média, permite quebra de linha */
     white-space: normal;
 }
 
 /* 3. Tipo: fixed-short (Ex: Preço, Data, ID, Tempo Estimado) */
 .typeFixedShort {
-    min-width: 100px; /* Compacto, mas legível */
-    width: 1%; /* Ajusta ao conteúdo */
-    white-space: nowrap; /* IMPEDE quebra de linha (crucial para números) */
+    min-width: 100px;
+    /* Compacto, mas legível */
+    width: 1%;
+    /* Ajusta ao conteúdo */
+    white-space: nowrap;
+    /* IMPEDE quebra de linha (crucial para números) */
 }
 
 /* 4. Tipo: badge (Ex: Status, Tipo de Serviço) */
 .typeBadge {
-    min-width: 120px; /* Espaço suficiente para o badge e padding */
-    width: 120px; /* Largura fixa para manter a consistência visual */
+    min-width: 120px;
+    /* Espaço suficiente para o badge e padding */
+    width: 120px;
+    /* Largura fixa para manter a consistência visual */
     white-space: nowrap;
-    text-align: center; /* Centraliza o badge se a célula for maior */
+    text-align: center;
+    /* Centraliza o badge se a célula for maior */
 }
 
 /* 5. Tipo: actions (Ex: Botões/Ícones) */
 .typeActions {
-    width: 80px; 
+    width: 80px;
     min-width: 80px;
     white-space: nowrap;
 }

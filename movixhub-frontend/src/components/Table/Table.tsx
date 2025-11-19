@@ -6,6 +6,8 @@ export interface ColumnDefinition<TData> {
     // Chave para identificar a coluna no objeto de dados (TData)
     // ou 'custom' para colunas que contêm JSX, badges ou botões (como a coluna 'AÇÕES').
     key: keyof TData | 'custom';
+    // Chave opcional para renderizar um texto secundário na célula (linha de baixo)
+    secondaryKey?: keyof TData;
     // Texto do cabeçalho da coluna
     header: string;
     // Define a natureza do dado para regras automáticas de largura
@@ -29,7 +31,7 @@ const Table = <TData extends { id: string | number }>
     ({ data, columns, title, minWidth }: TableProps<TData>) => {
 
     // Mapeia os tipos de coluna para a classe CSS de largura/quebra de linha
-    const getContentTypeClass = (type:ColumnContentType) => {
+    const getContentTypeClass = (type: ColumnContentType) => {
         switch (type) {
             case 'large-text': return Styles.typeLargeText; // Texto longo, alta prioridade de espaço
             case 'medium-text': return Styles.typeMediumText; // Texto secundário, min-width médio
@@ -89,17 +91,27 @@ const Table = <TData extends { id: string | number }>
                                 {columns.map((column, colIndex) => {
                                     // Obtém o valor da célula, a menos que seja uma coluna 'custom'
                                     const value = column.key !== "custom" ? row[column.key as keyof TData] : undefined;
+                                    const secondaryValue = column.secondaryKey ? row[column.secondaryKey as keyof TData] : undefined;
 
                                     // Variável para armazenar o conteúdo da célula, priorizando renderização customizada
                                     let content: React.ReactNode;
 
-                                    // Renderiza o conteúdo da célula
                                     if (column.render) {
+                                        // Renderiza o conteúdo da célula
                                         content = column.render(value, row);
-                                    } 
+                                    } else if (column.secondaryKey && secondaryValue && value) {
+                                        // Renderiza a estrutura de duas linhas (mainText + secondaryText)
+                                        content = (
+                                            <div>
+                                                <div className={Styles.mainText}>{value as React.ReactNode}</div>
+                                                <div className={Styles.secondaryText}>{secondaryValue as React.ReactNode}</div>
+                                            </div>
+                                        );
+                                    }
                                     // Se não houver renderização customizada, exibe o valor diretamente com tipos de dados suportados (string ou number)
                                     else if (value !== undefined && (typeof value == 'string' || typeof value === 'number')) {
                                         content = value;
+                                        console.log(content)
                                     } else {
                                         content = null; // Célula vazia
                                     }
@@ -112,7 +124,7 @@ const Table = <TData extends { id: string | number }>
                                                 ${getAlignClass(column.align)}
                                                 ${column.className || ''}
                                             `}>
-                                                {content}
+                                            {content}
                                         </td>
                                     );
                                 })}
