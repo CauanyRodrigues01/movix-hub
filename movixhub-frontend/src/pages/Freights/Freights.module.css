@@ -14,6 +14,11 @@
     color: var(--text-muted);
 }
 
+.statusUnavailable {
+    background-color: var(--bg-error);
+    color: var(--text-error); 
+}
+
 /* Badge tipo de serviço de frete */
 .typeUrbano {
     background-color: var(--bg-accent);
@@ -26,6 +31,6 @@
 }
 
 .typeExpresso {
-    background-color: var(--bg-error);
-    color: var(--text-error);
+    background-color: #f9e4ff;
+    color: #fe4be3;
 }
