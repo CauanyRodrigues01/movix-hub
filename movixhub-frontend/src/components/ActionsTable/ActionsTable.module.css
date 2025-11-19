@@ -1,0 +1,18 @@
+
+.tdActions {
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+}
+
+.actionEdit {
+    color: var(--primary-color);
+}
+
+.actionDelete {
+    color: var(--error-color);
+}
+
+.actionDelete:hover:not(:disabled) {
+    color: var(--error-color);
+}
