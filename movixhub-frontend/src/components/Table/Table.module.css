@@ -54,7 +54,7 @@
 }
 
 .tableRow:hover {
-    background-color: var(--bg-accent);
+    background-color: var(--bg-dark);
 }
 
 .td {
