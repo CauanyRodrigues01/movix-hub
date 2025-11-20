@@ -28,7 +28,7 @@ export interface TableProps<TData> {
 }
 
 const Table = <TData extends { id: string | number }>
-    ({ data, columns, title, minWidth }: TableProps<TData>) => {
+    ({ data, columns, title, minWidth='900px' }: TableProps<TData>) => {
 
     // Mapeia os tipos de coluna para a classe CSS de largura/quebra de linha
     const getContentTypeClass = (type: ColumnContentType) => {
