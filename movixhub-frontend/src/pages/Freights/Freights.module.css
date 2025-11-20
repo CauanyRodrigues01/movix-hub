@@ -19,18 +19,21 @@
     color: var(--text-error); 
 }
 
-/* Badge tipo de serviço de frete */
-.typeUrbano {
+.noPromotions {
+    color: var(--text-muted);
+}
+
+.promotions {
     background-color: var(--bg-accent);
     color: var(--text-accent);
 }
 
-.typeRegional {
+.coverages {
     background-color: #ede5f6;
     color: var(--secondary-color);
 }
 
-.typeExpresso {
+.vehicles {
     background-color: #f9e4ff;
     color: #fe4be3;
 }

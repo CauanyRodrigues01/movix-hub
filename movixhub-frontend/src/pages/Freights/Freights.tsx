@@ -3,48 +3,58 @@ import Styles from './Freights.module.css';
 import ActionsTable from '../../components/ActionsTable/ActionsTable';
 import PageHeader from '../../components/PageHeader/PageHeader';
 import BadgeTable from '../../components/BadgeTable/BadgeTable';
+import ArrayRendererTable from '../../components/ArrayRendererTable/ArrayRenderer';
 
-// --- Tipos Específicos para o Exemplo de Serviço ---
-type ServiceType = 'Urbano' | 'Regional' | 'Expresso';
-type ServiceStatus = 'Ativo' | 'Manutencao' | 'Inativo' | 'Indisponível';
+type ServiceInternalStatus = 'Ativo' | 'Inativo' |'Manutencao' | 'Indisponível';
+type CoverageArea = 'Municipal' | 'Intermunicipal' | 'Interestadual' | 'Internacional';
+type AllowedVehicle = 'Motocicleta' | 'Carro' | 'Van' | 'Caminhão' | 'Caminhão Pesado';
 
 interface Service {
     id: string | number;
     name: string;
+    internalCode: string
     description: string;
-    type: ServiceType;
-    routeDetails: string;
-    routeSpecs: string;
-    priceMedio: number;
-    estimatedTime: string;
-    status: ServiceStatus;
+    averagePrice: number;
+    status: ServiceInternalStatus;
+    coverage: CoverageArea[];
+    allowedVehicles: AllowedVehicle[];
+    averageTime: string;
+    activePromotions: string[];
 }
 
+// Mock de Serviços de Fretes do Movix
 const mockServiceData: Service[] = [
-    { id: '1', name: 'Frete Urbano Centro', description: 'Serviço de frete para região central da cidade', type: 'Urbano', routeDetails: 'Centro → Zona Sul', routeSpecs: 'Van • Até 50kg', priceMedio: 25.90, estimatedTime: '2-4 horas', status: 'Indisponível' },
-    { id: '2', name: 'Frete Regional SP-RJ', description: 'Frete regional entre capitais', type: 'Regional', routeDetails: 'São Paulo → Rio de Janeiro', routeSpecs: 'Caminhão • Até 200kg', priceMedio: 180.00, estimatedTime: '6-8 horas', status: 'Inativo' },
-    { id: '3', name: 'Expresso Aeroporto', description: 'Serviço expresso para aeroporto', type: 'Expresso', routeDetails: 'Centro → Aeroporto', routeSpecs: 'Carro • Até 30kg', priceMedio: 45.00, estimatedTime: '1-2 horas', status: 'Ativo' },
-    { id: '4', name: 'Frete Zona Norte', description: 'Frete para região norte da cidade', type: 'Urbano', routeDetails: 'Centro → Zona Norte', routeSpecs: 'Van • Até 40kg', priceMedio: 22.50, estimatedTime: '2-3 horas', status: 'Manutencao' },
-    { id: '5', name: 'Regional Interior', description: 'Serviço para cidades do interior', type: 'Regional', routeDetails: 'Capital → Interior', routeSpecs: 'Caminhão • Até 150kg', priceMedio: 120.00, estimatedTime: '4-6 horas', status: 'Ativo' },
+    { id: '1', name: 'Expresso', internalCode: 'EX-001', description: 'Cargas leves e urgentes, foco em tempo. Ideal para documentos e pequenos volumes.', averagePrice: 45.00, status: 'Ativo', coverage: ['Municipal', 'Intermunicipal', 'Interestadual'], allowedVehicles: ['Motocicleta', 'Carro'], averageTime: '1-3 horas', activePromotions: ['PROMO-VERAO'] },
+    { id: '2', name: 'Pesado', internalCode: 'PS-002', description: 'Transporte de cargas volumosas ou acima de 500kg.', averagePrice: 180.00, status: 'Manutencao', coverage: ['Municipal', 'Intermunicipal'], allowedVehicles: ['Caminhão Pesado'], averageTime: '3-5 dias', activePromotions: [] },
+    { id: '3', name: 'Frágil', internalCode: 'FR-003', description: 'Requer manuseio especial e embalagem reforçada. Ideal para vidros e eletrônicos.', averagePrice: 75.00, status: 'Ativo', coverage: ['Municipal', 'Intermunicipal', 'Interestadual'], allowedVehicles: ['Van', 'Caminhão'], averageTime: '24-48 horas', activePromotions: [] },
+    { id: '4', name: 'Normal', internalCode: 'NR-004', description: 'Solução mais econômica e padrão para entregas não urgentes.', averagePrice: 22.50, status: 'Inativo', coverage: ['Municipal', 'Intermunicipal', 'Interestadual', 'Internacional'], allowedVehicles: ['Carro', 'Van'], averageTime: '3-6 horas', activePromotions: ['PROMO-VERAO', 'PROMO-INVERNO'] },
+    { id: '5', name: 'Veículo', internalCode: 'VE-005', description: 'Serviço dedicado para transporte de veículos e máquinas de médio porte.', averagePrice: 999.00, status: 'Indisponível', coverage: ['Municipal', 'Intermunicipal'], allowedVehicles: ['Caminhão Pesado'], averageTime: '7-15 dias', activePromotions: ['PROMO-INVERNO'] },
 ];
 
 // Formatação de Moeda
-const formatCurrency = (value: number) =>
-    new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+// const formatCurrency = (value: number) =>
+//     new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
 
-// Mapeamentos de Classes (Para a demonstração)
-const typeClasses: Record<ServiceType, string> = {
-    'Urbano': Styles.typeUrbano,
-    'Regional': Styles.typeRegional,
-    'Expresso': Styles.typeExpresso,
-};
-
-const statusClasses: Record<ServiceStatus, string> = {
+// Mapeamentos de Status 
+const statusClasses: Record<ServiceInternalStatus, string> = {
     'Ativo': Styles.statusActive,
     'Manutencao': Styles.statusMaintenance,
     'Inativo': Styles.statusInactive,
     'Indisponível': Styles.statusUnavailable,
 };
+
+
+const arrayBadgeColumns: Record<string, string> = {
+    'Promotions': Styles.promotions,
+    'Coverages': Styles.coverages,
+    'Vehicles': Styles.vehicles,
+}
+
+// Mapeamento de Promoções 
+// const promotionClasses = {
+//     'PROMO-VERAO': Styles.promoVerao,
+//     'PROMO-INVERNO': Styles.promoInverno,
+// };
 
 // Definição das Colunas
 const serviceColumns: ColumnDefinition<Service>[] = [
@@ -55,50 +65,68 @@ const serviceColumns: ColumnDefinition<Service>[] = [
         secondaryKey: 'description',
     },
     {
-        key: 'type',
-        header: 'TIPO',
-        type: 'badge',
-        render: (value) => {
-            const status = value as ServiceType;
-            const colorClass = typeClasses[status] || '';
-            return <BadgeTable value={status} colorClass={colorClass} />;
-        },
-    },
-    {
-        key: 'priceMedio',
-        header: 'PREÇO MÉDIO',
-        align: 'center',
+        key: 'internalCode', 
+        header: 'CÓDIGO',
         type: 'fixed-short',
-        render: (value) => formatCurrency(value as number),
     },
     {
         key: 'status',
         header: 'STATUS',
         type: 'badge',
         render: (value) => {
-            const status = value as ServiceStatus;
-            const colorClass = statusClasses[status] || '';
+            const status = value as ServiceInternalStatus;
+            const colorClass = statusClasses[status] || Styles.statusInactive;
             return <BadgeTable value={status} colorClass={colorClass} />;
         },
     },
     {
-        key: 'routeDetails',
-        header: 'ROTA',
-        type: 'medium-text',
-        secondaryKey: 'routeSpecs',
+        key: 'activePromotions', 
+        header: 'PROMOÇÕES',
+        type: 'medium-text', 
+        render: (_, row) => {
+            if (row.activePromotions.length === 0) return <span className={Styles.noPromotions}>-</span>
+            return (
+                <ArrayRendererTable
+                    items={row.activePromotions}
+                    categoryClass={arrayBadgeColumns['Promotions']}
+                />
+            )
+        }
     },
     {
-        key: 'estimatedTime',
-        header: 'TEMPO ESTIMADO',
-        align: 'center',
+        key: 'coverage', 
+        header: 'COBERTURA',
+        type: 'medium-text',
+        render: (value) => ( 
+            <ArrayRendererTable
+                items={value as CoverageArea[]}
+                categoryClass={arrayBadgeColumns['Coverages']}
+            />
+        )
+    },
+    {
+        key: 'allowedVehicles', 
+        header: 'VEÍCULOS',
+        type: 'medium-text',
+        render: (value) => ( 
+            <ArrayRendererTable
+                items={value as AllowedVehicle[]}
+                categoryClass={arrayBadgeColumns['Vehicles']}
+            />
+        )
+    },
+    {
+        key: 'averageTime',
+        header: 'TEMPO MÉDIO',
         type: 'fixed-short',
+        render: (value) => <span>{value}</span>, 
     },
     {
         key: 'custom',
         header: 'AÇÕES',
         align: 'center',
         type: 'actions',
-        render: () => <ActionsTable />,
+        render: (_, row) => <ActionsTable itemId={row.id} />,
         className: Styles.colActions
     },
 ];
