@@ -15,6 +15,10 @@ const ActionsTable = ({ itemId }: ActionsTableProps) => {
         alert('Excluindo item... ' + itemId);
     }
 
+    const onClickSee = () => {
+        alert('Ver mais do item... ' + itemId);
+    }
+
     return (
         <div className={Styles.tdActions}>
 
@@ -25,6 +29,15 @@ const ActionsTable = ({ itemId }: ActionsTableProps) => {
                 aria-label={'edit'}
             >
                 <i className="bi bi-pencil-square"></i>
+            </Button>
+
+            <Button
+                variant='ghost'
+                className={Styles.actionSee}
+                onClick={onClickSee}
+                aria-label={'ver mais'}
+            >
+                <i className="bi bi-eye"></i>
             </Button>
 
             <Button

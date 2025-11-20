@@ -5,6 +5,10 @@
     align-items: center;
 }
 
+.tdActions button {
+    padding: var(--space-2xs) var(--space-xs);
+}
+
 .actionEdit {
     color: var(--primary-color);
 }
@@ -15,4 +19,8 @@
 
 .actionDelete:hover:not(:disabled) {
     color: var(--text-error) !important;
+}
+
+.actionSee{
+    color: var(--text-success);
 }
