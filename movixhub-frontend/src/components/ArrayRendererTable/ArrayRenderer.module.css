@@ -1,0 +1,5 @@
+.arrayContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+}
