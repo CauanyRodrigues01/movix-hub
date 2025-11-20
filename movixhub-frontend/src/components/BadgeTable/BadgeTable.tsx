@@ -10,7 +10,7 @@ const BadgeTable = ({ value, colorClass } : BadgeTableProps) => {
     return (
         <span className={`
             ${Styles.badge} 
-            ${colorClass}
+            ${colorClass || Styles.defaultBadge}
         `}>
             {value}
         </span>
