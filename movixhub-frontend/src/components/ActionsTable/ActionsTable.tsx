@@ -1,15 +1,18 @@
 import Styles from './ActionsTable.module.css';
 import Button from '../Button/Button';
 
+interface ActionsTableProps {
+    itemId: string | number;
+}
 
-const ActionsTable = () => {
+const ActionsTable = ({ itemId }: ActionsTableProps) => {
 
     const onClickEdit = () => {
-        alert('Editando item...');
+        alert('Editando item... ' + itemId);
     }
 
     const onClickDelete = () => {
-        alert('Excluindo item...');
+        alert('Excluindo item... ' + itemId);
     }
 
     return (
