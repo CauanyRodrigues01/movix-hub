@@ -13,8 +13,8 @@ interface ChangeHistory {
   date: string;
   changedBy: string;
   field: string;
-  oldValue: string | number;
-  newValue: string | number;
+  oldValue: string | number | boolean;
+  newValue: string | number | boolean;
 }
 
 interface Service {
