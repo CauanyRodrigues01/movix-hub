@@ -59,6 +59,7 @@ function Sidebar({ onCollapseChange }: SidebarProps) {
           <SidebarItem to="/dashboard" title="Dashboard" icon="bi-speedometer2" end={true} />
           <SidebarItem to="/fretes" title="Serviços de Fretes" icon="bi-truck" />
           <SidebarItem to="/promocoes" title="Promoções" icon="bi-bookmark-star" />
+          <SidebarItem to="/motoristas" title="Motoristas" icon="bi-person-vcard" />
           <SidebarItem to="/clientes" title="Clientes" icon="bi-person" />
           <SidebarItem to="/usuarios" title="Equipe Interna" icon="bi-people" />
           <SidebarItem to="/configuracoes" title="Configurações" icon="bi-gear" />

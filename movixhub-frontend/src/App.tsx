@@ -11,6 +11,7 @@ import Clients from './pages/Clients/Clients';
 import Users from './pages/Users/Users';
 import Settings from './pages/Settings/Settings';
 import Help from './pages/Help/Help';
+import Drivers from './pages/Drivers/Drivers';
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
         <Route path="/dashboard/*" element={<Dashboard />} />
         <Route path="/fretes" element={<Freights />} />
         <Route path="/promocoes" element={<Promotions />} />
+        <Route path="/motoristas" element={<Drivers />} />
         <Route path="/clientes" element={<Clients />} />
         <Route path="/usuarios" element={<Users />} />
         <Route path="/configuracoes" element={<Settings />} />
