@@ -277,7 +277,7 @@ function Promotions() {
     return (
         <div className={Styles.promotionsContainer}>
             <PageHeader
-                title="Acompanhar Promoções"
+                title="Promoções"
                 description="Gerencie e acompanhe as promoções ativas e futuras."
                 buttonIcon={<i className="bi bi-plus-lg"></i>}
                 buttonText="Nova Promoção"

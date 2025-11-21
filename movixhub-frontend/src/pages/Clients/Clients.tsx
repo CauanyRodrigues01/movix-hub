@@ -186,7 +186,7 @@ function Clients() {
     return (
         <div className={Styles.clientsContainer}>
             <PageHeader 
-                title="Monitore Clientes Movix"
+                title="Clientes Movix"
                 description="Gerencie e acompanhe os clientes da Movix."
             />   
             <Table
