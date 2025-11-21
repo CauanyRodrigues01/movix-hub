@@ -3,17 +3,17 @@ import BadgeTable from '../../components/BadgeTable/BadgeTable';
 import PageHeader from '../../components/PageHeader/PageHeader';
 import type { ColumnDefinition } from '../../components/Table/Table';
 import Table from '../../components/Table/Table';
-import styles from './Clients.module.css';
+import Styles from './Clients.module.css';
 
 type ClientType = 'Pessoa Física' | 'Pessoa Jurídica';
 type ClientClassification = 'Regular' | 'VIP' | 'Corporativo' | 'Novo' | 'Parceiro';
 type ClientStatus = 'Ativo' | 'Inativo' | 'Bloqueado' | 'Em Análise';
 
 const clientStatusClasses: Record<ClientStatus, string> = {
-    'Ativo': styles.statusActive,
-    'Inativo': styles.statusInactive,
-    'Bloqueado': styles.statusBlocked,
-    'Em Análise': styles.statusUnderReview
+    'Ativo': Styles.statusActive,
+    'Inativo': Styles.statusInactive,
+    'Bloqueado': Styles.statusBlocked,
+    'Em Análise': Styles.statusUnderReview
 };
 
 interface ChangeHistory {
@@ -184,7 +184,7 @@ const clientsColumns: ColumnDefinition<Client>[] = [
 function Clients() {
 
     return (
-        <div className={styles.clientsContainer}>
+        <div className={Styles.clientsContainer}>
             <PageHeader 
                 title="Monitore Clientes Movix"
                 description="Gerencie e acompanhe os clientes da Movix."

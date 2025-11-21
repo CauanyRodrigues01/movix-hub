@@ -2,7 +2,7 @@ import ActionsTable from '../../components/ActionsTable/ActionsTable';
 import BadgeTable from '../../components/BadgeTable/BadgeTable';
 import PageHeader from '../../components/PageHeader/PageHeader';
 import Table, { type ColumnDefinition } from '../../components/Table/Table';
-import styles from './Users.module.css';
+import Styles from './Users.module.css';
 
 type UserStatus = 'Ativo' | 'Inativo' | 'Bloqueado' | 'Suspenso';
 type AccessProfile = 'Administrador' | 'Operador' | 'Supervisor' | 'Finanças' | 'Visualizador';
@@ -37,10 +37,10 @@ interface User {
 }
 
 const userStatusClasses: Record<UserStatus, string> = {
-    'Ativo': styles.statusActive,
-    'Inativo': styles.statusInactive,
-    'Bloqueado': styles.statusBlocked,
-    'Suspenso': styles.statusSuspended,
+    'Ativo': Styles.statusActive,
+    'Inativo': Styles.statusInactive,
+    'Bloqueado': Styles.statusBlocked,
+    'Suspenso': Styles.statusSuspended,
 };
 
 const mockUsersData: User[] = [
@@ -189,7 +189,7 @@ const usersColumns: ColumnDefinition<User>[] = [
 
 function Users() {
     return (
-        <div className={styles.usersContainer}>
+        <div className={Styles.usersContainer}>
             <PageHeader 
                 title="Equipe Interna"
                 description="Gerencie os membros da equipe e suas permissões."

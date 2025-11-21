@@ -1,8 +1,8 @@
-import styles from './Login.module.css';
+import Styles from './Login.module.css';
 
 function Login() {
     return (
-        <div className={styles.loginContainer}>
+        <div className={Styles.loginContainer}>
             <h1>Login</h1>
         </div>
     )

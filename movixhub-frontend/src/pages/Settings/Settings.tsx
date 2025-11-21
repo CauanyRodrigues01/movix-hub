@@ -1,9 +1,9 @@
 import PageHeader from '../../components/PageHeader/PageHeader';
-import styles from './Settings.module.css';
+import Styles from './Settings.module.css';
 
 function Settings() {
     return (
-        <div className={styles.settingsContainer}>
+        <div className={Styles.settingsContainer}>
             <PageHeader 
                 title="Configurações"
                 description="Personalize as configurações do sistema e suas preferências."

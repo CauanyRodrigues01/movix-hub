@@ -1,9 +1,9 @@
 import PageHeader from '../../components/PageHeader/PageHeader';
-import styles from './Help.module.css';
+import Styles from './Help.module.css';
 
 function Help() {
     return (
-        <div className={styles.helpContainer}>
+        <div className={Styles.helpContainer}>
             <PageHeader 
                 title="Ajuda"
                 description="Encontre respostas para suas dúvidas e suporte para o uso do MovixHub."

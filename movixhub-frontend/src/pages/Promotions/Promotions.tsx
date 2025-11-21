@@ -2,7 +2,7 @@ import ActionsTable from '../../components/ActionsTable/ActionsTable';
 import BadgeTable from '../../components/BadgeTable/BadgeTable';
 import PageHeader from '../../components/PageHeader/PageHeader';
 import Table, { type ColumnDefinition } from '../../components/Table/Table';
-import styles from './Promotions.module.css';
+import Styles from './Promotions.module.css';
 
 type PromotionStatus = 'Agendada' | 'Ativa' | 'Pausada' | 'Expirada' | 'Cancelada';
 type DiscountType = 'Percentual' | 'Valor Fixo';
@@ -37,16 +37,16 @@ interface Promotion {
 }
 
 const discountTypeClasses: Record<DiscountType, string> = {
-    'Percentual': styles.discountPercentage,
-    'Valor Fixo': styles.discountFixedValue,
+    'Percentual': Styles.discountPercentage,
+    'Valor Fixo': Styles.discountFixedValue,
 };
 
 const statusClasses: Record<PromotionStatus, string> = {
-    'Agendada': styles.statusScheduled,
-    'Ativa': styles.statusActive,
-    'Pausada': styles.statusPaused,
-    'Expirada': styles.statusExpired,
-    'Cancelada': styles.statusCancelled,
+    'Agendada': Styles.statusScheduled,
+    'Ativa': Styles.statusActive,
+    'Pausada': Styles.statusPaused,
+    'Expirada': Styles.statusExpired,
+    'Cancelada': Styles.statusCancelled,
 };
 
 const mockPromotionsData: Promotion[] = [
@@ -255,7 +255,7 @@ const promotionsColumns: ColumnDefinition<Promotion>[] = [
         key: 'endDate',
         header: 'TÉRMINO',
         type: 'fixed-short',
-        render: (_, row) => row.endDate ? row.endDate : <span className={styles.noEndDate}>-</span>
+        render: (_, row) => row.endDate ? row.endDate : <span className={Styles.noEndDate}>-</span>
     },
     {
         key: 'usedCount',
@@ -275,7 +275,7 @@ const promotionsColumns: ColumnDefinition<Promotion>[] = [
 function Promotions() {
 
     return (
-        <div className={styles.promotionsContainer}>
+        <div className={Styles.promotionsContainer}>
             <PageHeader
                 title="Acompanhar Promoções"
                 description="Gerencie e acompanhe as promoções ativas e futuras."
