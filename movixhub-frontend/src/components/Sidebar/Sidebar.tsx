@@ -28,16 +28,16 @@ function Sidebar({ onCollapseChange }: SidebarProps) {
     ${isCollapsed ? Styles.collapsed : ""}
     ${window.innerWidth < 768 && !isCollapsed ? Styles.drawerOpen : ""}
   `;
-  // Adiciona drawerOpen só em mobile (abaixo de 768px) e quando NÃO está colapsado (ou seja, quando está aberto)
-  // NOTA: Em mobile, quando 'isCollapsed' é 'true', a barra tem 60px e fica visível (mobile: só ícones)
-  // Quando 'isCollapsed' é 'false', a barra tem 250px e fica visível (mobile: menu aberto/drawer)
-  // A lógica de esconder (left: -250px) deve ficar no CSS base, e ser cancelada pelo 'drawerOpen'.
+  // === Collapsed (Colapsado): É o estado em que a barra lateral está recolhida (estreita), mostrando apenas os ícones para economizar espaço.
+
+  // === Drawer: é a barra lateral que desliza para dentro da tela (250px de largura) quando é aberta, cobrindo o conteúdo principal.
+  // No DESKTOP, a navegação é sempre visível e persistente; o Sidebar apenas Colapsa (diminui a largura), mas não é escondido nem se sobrepõe ao conteúdo principal da tela.
 
   return (
 
     <>
 
-      {/* BACKDROP do Drawer: só aparece em mobile E quando a barra NÃO está colapsada (aberta) */}
+      {/* BACKDROP: É a sobreposição semitransparente que cobre o conteúdo principal quando o Drawer está aberto, usada para fechar o Drawer com um clique e focar o usuário.*/}
       {window.innerWidth < 768 && !isCollapsed && (
         <div className={Styles.backdrop} onClick={() => setIsCollapsed(true)} />
       )}
