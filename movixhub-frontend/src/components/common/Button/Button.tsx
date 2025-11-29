@@ -1,23 +1,13 @@
-import type { ButtonHTMLAttributes } from 'react';
+import type { ButtonHTMLAttributes, ReactNode } from 'react';
 import Styles from './Button.module.css';
 
-
-type ButtonProps = {
-
+export type ButtonProps = {
     variant?: 'primary' | 'secondary' | 'ghost';
     size?: 'small' | 'medium' | 'large';
-    children: React.ReactNode;
-
+    children: ReactNode;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
-function Button({
-    variant = 'primary',
-    size = 'medium',
-    children,
-    className,
-    ...rest
-    } : ButtonProps)
-{
+export const Button = ({ variant = 'primary', size = 'medium', children, className, ...rest } : ButtonProps) => {
 
     const buttonClasses = [
         Styles.button,
@@ -32,6 +22,4 @@ function Button({
         </button>
     )
 
-}
-
-export default Button;
+};
