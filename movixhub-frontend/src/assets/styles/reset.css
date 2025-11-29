@@ -39,6 +39,30 @@ body {
     text-rendering: optimizeLegibility;
 }
 
+/* Custom scrollbar */
+body::-webkit-scrollbar {
+    width: var(--space-xs);
+}
+
+body::-webkit-scrollbar-track {
+    background: var(--bg-dark);
+}
+
+body::-webkit-scrollbar-thumb {
+    background: var(--bg-muted);
+    border-radius: var(--space-2xs);
+}
+
+body::-webkit-scrollbar-thumb:hover {
+    background: var(--text-light);
+}
+
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--bg-muted) var(--bg-dark);
+}
+
 /* Elementos básicos */
 
 /* Imagens responsivas por padrão */
