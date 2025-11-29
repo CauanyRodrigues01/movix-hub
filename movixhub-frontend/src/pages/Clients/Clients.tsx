@@ -1,5 +1,5 @@
-import ActionsTable from '../../components/ActionsTable/ActionsTable';
-import BadgeTable from '../../components/BadgeTable/BadgeTable';
+import TableActions from '../../components/common/Table/TableActions';
+import BadgeTable from '../../components/common/Table/BadgeTable';
 import PageHeader from '../../components/PageHeader/PageHeader';
 import type { ColumnDefinition } from '../../components/Table/Table';
 import Table from '../../components/Table/Table';
@@ -176,7 +176,7 @@ const clientsColumns: ColumnDefinition<Client>[] = [
         header: 'AÇÕES',
         align: 'center',
         type: 'actions',
-        render: (_, row) => <ActionsTable itemId={row.id} />
+        render: (_, row) => <TableActions itemId={row.id} />
     }
 ];
 

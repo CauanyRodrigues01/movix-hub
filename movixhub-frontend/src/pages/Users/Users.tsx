@@ -1,5 +1,5 @@
-import ActionsTable from '../../components/ActionsTable/ActionsTable';
-import BadgeTable from '../../components/BadgeTable/BadgeTable';
+import TableActions from '../../components/common/Table/TableActions';
+import BadgeTable from '../../components/common/Table/BadgeTable';
 import PageHeader from '../../components/PageHeader/PageHeader';
 import Table, { type ColumnDefinition } from '../../components/Table/Table';
 import Styles from './Users.module.css';
@@ -19,6 +19,7 @@ interface User {
   id: string;
   fullName: string;
   corporateEmail: string;
+  cpf: string;
   phone?: string;
   position: string;
   department: string;
@@ -48,6 +49,7 @@ const mockUsersData: User[] = [
     id: 'USER-001',
     fullName: 'Lucas Andrade Moura Santos',
     corporateEmail: 'lucas.andrade@movix.com',
+    cpf: '123.456.789-00',
     phone: '+55 83 99999-1234',
     position: 'Supervisor de Operações',
     department: 'Logística',
@@ -69,6 +71,7 @@ const mockUsersData: User[] = [
     id: 'USER-002',
     fullName: 'Mariana Silva Fernandes Lima',
     corporateEmail: 'mariana.silva@movix.com',
+    cpf: '987.654.321-00',
     phone: '+55 84 98888-4567',
     position: 'Analista Financeiro',
     department: 'Financeiro',
@@ -90,6 +93,7 @@ const mockUsersData: User[] = [
     id: 'USER-003',
     fullName: 'Rafael Costa da Silva Lopes',
     corporateEmail: 'rafael.costa@movix.com',
+    cpf: '456.789.123-00',
     phone: '+55 81 97777-0001',
     position: 'Agente de Suporte ao Cliente',
     department: 'Suporte',
@@ -119,6 +123,7 @@ const mockUsersData: User[] = [
     id: 'USER-004',
     fullName: 'Ana Beatriz Rocha Vieira',
     corporateEmail: 'ana.rocha@movix.com',
+    cpf: '321.654.987-00',
     phone: '+55 85 96666-7890',
     position: 'Administrador de Sistemas',
     department: 'TI',
@@ -163,6 +168,22 @@ const usersColumns: ColumnDefinition<User>[] = [
         type: 'fixed-short'
     },
     {
+      key: 'specificPermissions',
+      header: 'PERMISSÕES',
+      align: 'center',
+      type: 'actions',
+      render: (value) => {
+        const permissions = value as string[];
+        const contPermissions = permissions.length;
+        return contPermissions > 0 ? (
+          <div className={Styles.teste1}><i className="bi bi-shield-lock"></i> {contPermissions}</div>
+          
+        ) : (
+          <div className={Styles.teste2}><i className="bi bi-shield-lock"></i></div>
+        )
+      }
+    },
+    {
         key: 'status',
         header: 'STATUS',
         type: 'badge',
@@ -182,7 +203,7 @@ const usersColumns: ColumnDefinition<User>[] = [
         header: 'AÇÕES',
         align: 'center',
         type: 'actions',
-        render: (_, row) => <ActionsTable itemId={row.id} />
+        render: (_, row) => <TableActions itemId={row.id} />
     }
 ]
 

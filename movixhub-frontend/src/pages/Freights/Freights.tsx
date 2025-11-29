@@ -1,9 +1,9 @@
 import Table, { type ColumnDefinition } from '../../components/Table/Table';
 import Styles from './Freights.module.css';
-import ActionsTable from '../../components/ActionsTable/ActionsTable';
+import TableActions from '../../components/common/Table/TableActions';
 import PageHeader from '../../components/PageHeader/PageHeader';
-import BadgeTable from '../../components/BadgeTable/BadgeTable';
-import ArrayRendererTable from '../../components/ArrayRendererTable/ArrayRenderer';
+import BadgeTable from '../../components/common/Table/BadgeTable';
+import ArrayRendererTable from '../../components/common/Table/ArrayRenderer';
 
 type ServiceInternalStatus = 'Ativo' | 'Inativo' | 'Manutencao' | 'Indisponível';
 type CoverageArea = 'Municipal' | 'Intermunicipal' | 'Interestadual' | 'Internacional';
@@ -246,7 +246,7 @@ const serviceColumns: ColumnDefinition<Service>[] = [
         header: 'AÇÕES',
         align: 'center',
         type: 'actions',
-        render: (_, row) => <ActionsTable itemId={row.id} />,
+        render: (_, row) => <TableActions itemId={row.id} />,
     },
 ];
 
