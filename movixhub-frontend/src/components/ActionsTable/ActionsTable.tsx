@@ -1,5 +1,5 @@
 import Styles from './ActionsTable.module.css';
-import Button from '../Button/Button';
+import { Button } from '../common/Button/Button';
 
 interface ActionsTableProps {
     itemId: string | number;
