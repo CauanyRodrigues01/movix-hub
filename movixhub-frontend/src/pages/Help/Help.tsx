@@ -1,7 +1,7 @@
-import PageHeader from '../../components/PageHeader/PageHeader';
+import { PageHeader } from '../../components/common/Layout';
 import Styles from './Help.module.css';
 
-function Help() {
+export const Help = () => {
     return (
         <div className={Styles.helpContainer}>
             <PageHeader 
@@ -10,6 +10,4 @@ function Help() {
             />
         </div>
     )
-}
-
-export default Help;
+};

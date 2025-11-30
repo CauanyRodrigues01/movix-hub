@@ -1,11 +1,23 @@
-import TableActions from '../../components/common/Table/TableActions';
-import BadgeTable from '../../components/common/Table/BadgeTable';
-import PageHeader from '../../components/PageHeader/PageHeader';
-import Table, { type ColumnDefinition } from '../../components/Table/Table';
 import Styles from './Users.module.css';
+import { 
+    Table, 
+    TableBadge,
+    TableActions,
+    type ColumnDefinition,
+    type TableBadgeProps
+} from '../../components/common/Table';
+
+import { PageHeader } from '../../components/common/Layout';
 
 type UserStatus = 'Ativo' | 'Inativo' | 'Bloqueado' | 'Suspenso';
 type AccessProfile = 'Administrador' | 'Operador' | 'Supervisor' | 'Finanças' | 'Visualizador';
+
+const userStatusClasses: Record<UserStatus, TableBadgeProps["variant"]> = {
+    'Ativo': 'success',
+    'Inativo': 'info',
+    'Bloqueado': 'error',
+    'Suspenso': 'warning',
+};
 
 interface ChangeHistory {
   date: string;
@@ -36,13 +48,6 @@ interface User {
   updatedAt: string;
   changeHistory: ChangeHistory[];
 }
-
-const userStatusClasses: Record<UserStatus, string> = {
-    'Ativo': Styles.statusActive,
-    'Inativo': Styles.statusInactive,
-    'Bloqueado': Styles.statusBlocked,
-    'Suspenso': Styles.statusSuspended,
-};
 
 const mockUsersData: User[] = [
   {
@@ -189,8 +194,8 @@ const usersColumns: ColumnDefinition<User>[] = [
         type: 'badge',
         render: (value) => {
             const status = value as UserStatus;
-            const colorClass = userStatusClasses[status] || '';
-            return <BadgeTable value={status} colorClass={colorClass} />;
+            const variant = userStatusClasses[status] ?? 'default';
+            return <TableBadge value={status} variant={variant} />;
         }
     },
     {
@@ -203,7 +208,7 @@ const usersColumns: ColumnDefinition<User>[] = [
         header: 'AÇÕES',
         align: 'center',
         type: 'actions',
-        render: (_, row) => <TableActions itemId={row.id} />
+        render: () => <TableActions/>
     }
 ]
 

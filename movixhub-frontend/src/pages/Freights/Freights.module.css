@@ -1,31 +1,5 @@
-/* Badge status de serviço de frete */
-.statusActive {
-    background-color: var(--bg-success);
-    color: var(--text-success);
-}
-
-.statusMaintenance {
-    background-color: var(--bg-warning);
-    color: var(--text-warning);
-}
-
-.statusInactive {
-    background-color: var(--bg-muted);
-    color: var(--text-muted);
-}
-
-.statusUnavailable {
-    background-color: var(--bg-error);
-    color: var(--text-error); 
-}
-
 .noPromotions {
     color: var(--text-muted);
-}
-
-.promotions {
-    background-color: var(--bg-accent);
-    color: var(--text-accent);
 }
 
 .coverages {

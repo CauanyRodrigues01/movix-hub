@@ -1,7 +1,7 @@
-import PageHeader from '../../components/PageHeader/PageHeader';
+import { PageHeader } from '../../components/common/Layout';
 import Styles from './Dashboard.module.css';
 
-function Dashboard() {
+export const Dashboard = () => {
     return (
         <div className={Styles.dashboardContainer}>
             <PageHeader 
@@ -10,6 +10,4 @@ function Dashboard() {
             />
         </div>
     )
-}
-
-export default Dashboard;
+};

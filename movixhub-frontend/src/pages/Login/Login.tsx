@@ -1,11 +1,9 @@
 import Styles from './Login.module.css';
 
-function Login() {
+export const Login = () => {
     return (
         <div className={Styles.loginContainer}>
             <h1>Login</h1>
         </div>
     )
-}
-
-export default Login;
+};

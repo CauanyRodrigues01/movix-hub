@@ -1,19 +1,23 @@
-import TableActions from '../../components/common/Table/TableActions';
-import BadgeTable from '../../components/common/Table/BadgeTable';
-import PageHeader from '../../components/PageHeader/PageHeader';
-import type { ColumnDefinition } from '../../components/Table/Table';
-import Table from '../../components/Table/Table';
 import Styles from './Clients.module.css';
+import { 
+    Table, 
+    TableBadge,
+    TableActions,
+    type ColumnDefinition,
+    type TableBadgeProps
+} from '../../components/common/Table';
+
+import { PageHeader } from '../../components/common/Layout';
 
 type ClientType = 'Pessoa Física' | 'Pessoa Jurídica';
 type ClientClassification = 'Regular' | 'VIP' | 'Corporativo' | 'Novo' | 'Parceiro';
 type ClientStatus = 'Ativo' | 'Inativo' | 'Bloqueado' | 'Em Análise';
 
-const clientStatusClasses: Record<ClientStatus, string> = {
-    'Ativo': Styles.statusActive,
-    'Inativo': Styles.statusInactive,
-    'Bloqueado': Styles.statusBlocked,
-    'Em Análise': Styles.statusUnderReview
+const clientStatusClasses: Record<ClientStatus, TableBadgeProps["variant"]> = {
+    'Ativo': 'success',
+    'Inativo': 'warning',
+    'Bloqueado': 'error',
+    'Em Análise': 'info'
 };
 
 interface ChangeHistory {
@@ -157,8 +161,8 @@ const clientsColumns: ColumnDefinition<Client>[] = [
         type: 'badge',
         render: (value) => {
             const status = value as ClientStatus;
-            const colorClass = clientStatusClasses[status] || '';
-            return <BadgeTable value={status} colorClass={colorClass} />;
+            const variant = clientStatusClasses[status] ?? 'default';
+            return <TableBadge value={status} variant={variant} />;
         },
     },
     {
@@ -176,7 +180,7 @@ const clientsColumns: ColumnDefinition<Client>[] = [
         header: 'AÇÕES',
         align: 'center',
         type: 'actions',
-        render: (_, row) => <TableActions itemId={row.id} />
+        render: () => <TableActions />
     }
 ];
 

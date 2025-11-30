@@ -1,7 +1,7 @@
-import PageHeader from '../../components/PageHeader/PageHeader';
+import { PageHeader } from '../../components/common/Layout';
 import Styles from './Settings.module.css';
 
-function Settings() {
+export const Settings = () => {
     return (
         <div className={Styles.settingsContainer}>
             <PageHeader 
@@ -12,6 +12,4 @@ function Settings() {
             <p></p>
         </div>
     )
-}
-
-export default Settings;
+};

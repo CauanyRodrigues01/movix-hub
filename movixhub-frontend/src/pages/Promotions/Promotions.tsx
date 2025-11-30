@@ -1,11 +1,24 @@
-import TableActions from '../../components/common/Table/TableActions';
-import BadgeTable from '../../components/common/Table/BadgeTable';
-import PageHeader from '../../components/PageHeader/PageHeader';
-import Table, { type ColumnDefinition } from '../../components/Table/Table';
 import Styles from './Promotions.module.css';
+import {
+    Table,
+    TableBadge,
+    TableActions,
+    type ColumnDefinition,
+    type TableBadgeProps
+} from '../../components/common/Table';
+
+import { PageHeader } from '../../components/common/Layout';
 
 type PromotionStatus = 'Agendada' | 'Ativa' | 'Pausada' | 'Expirada' | 'Cancelada';
 type DiscountType = 'Percentual' | 'Valor Fixo';
+
+const promotionsStatusClasses: Record<PromotionStatus, TableBadgeProps["variant"]> = {
+    'Agendada': 'default',
+    'Ativa': 'success',
+    'Pausada': 'warning',
+    'Expirada': 'info',
+    'Cancelada': 'error',
+};
 
 interface ChangeHistory {
     date: string;
@@ -35,19 +48,6 @@ interface Promotion {
     updatedAt: string;
     changeHistory: ChangeHistory[];
 }
-
-const discountTypeClasses: Record<DiscountType, string> = {
-    'Percentual': Styles.discountPercentage,
-    'Valor Fixo': Styles.discountFixedValue,
-};
-
-const statusClasses: Record<PromotionStatus, string> = {
-    'Agendada': Styles.statusScheduled,
-    'Ativa': Styles.statusActive,
-    'Pausada': Styles.statusPaused,
-    'Expirada': Styles.statusExpired,
-    'Cancelada': Styles.statusCancelled,
-};
 
 const mockPromotionsData: Promotion[] = [
     {
@@ -128,8 +128,6 @@ const mockPromotionsData: Promotion[] = [
             }
         ]
     },
-
-    // ➕ NOVAS PROMOÇÕES
 
     {
         id: 'PROMO-004',
@@ -230,9 +228,15 @@ const promotionsColumns: ColumnDefinition<Promotion>[] = [
         header: 'TIPO DE DESCONTO',
         type: 'fixed-short',
         render: (value) => {
-            const type = value as DiscountType;
-            const colorClass = discountTypeClasses[type] || '';
-            return <BadgeTable value={type} colorClass={colorClass} />;
+            const v = String(value); // converte qualquer coisa para string
+
+            if (v === "Percentual") {
+                return <TableBadge value={v} variant="custom" className={Styles.discountPercentage} />;
+            }
+            if (v === "Valor Fixo") {
+                return <TableBadge value={v} variant="custom" className={Styles.discountFixedValue} />;
+            }
+            return <TableBadge value={v} variant="default" />;
         }
     },
     {
@@ -241,8 +245,8 @@ const promotionsColumns: ColumnDefinition<Promotion>[] = [
         type: 'fixed-short',
         render: (value) => {
             const status = value as PromotionStatus;
-            const colorClass = statusClasses[status] || '';
-            return <BadgeTable value={status} colorClass={colorClass} />;
+            const variant = promotionsStatusClasses[status] ?? 'default';
+            return <TableBadge value={status} variant={variant} />;
 
         }
     },
@@ -268,7 +272,7 @@ const promotionsColumns: ColumnDefinition<Promotion>[] = [
         header: 'AÇÕES',
         align: 'center',
         type: 'actions',
-        render: (_, row) => <TableActions itemId={row.id} />,
+        render: () => <TableActions />,
     }
 ]
 

@@ -19,21 +19,26 @@
 // Notas negativas
 // Pontos críticos
 
-import TableActions from '../../components/common/Table/TableActions';
-import BadgeTable from '../../components/common/Table/BadgeTable';
-import PageHeader from '../../components/PageHeader/PageHeader';
-import Table, { type ColumnDefinition } from '../../components/Table/Table';
 import Styles from './Drivers.module.css';
+import { 
+    Table,
+    TableBadge,
+    TableActions,
+    type ColumnDefinition,
+    type TableBadgeProps
+} from '../../components/common/Table';
+
+import { PageHeader } from '../../components/common/Layout';
 
 type DriverStatus = 'Disponível' | 'Em Rota' | 'Inativo' | 'Suspenso';
 type DriverLinkType = 'Interno' | 'Terceirizado' | 'Parceiro';
 type CnhCategory = 'A' | 'B' | 'C' | 'D' | 'E';
 
-const driverStatusClasses: Record<DriverStatus, string> = {
-  'Disponível': Styles.statusAvailable,
-  'Em Rota': Styles.statusInRoute,
-  'Inativo': Styles.statusInactive,
-  'Suspenso': Styles.statusSuspended,
+const driverStatusClasses: Record<DriverStatus, TableBadgeProps["variant"]> = {
+  'Disponível': 'success',
+  'Em Rota': 'warning',
+  'Inativo': 'info',
+  'Suspenso': 'error',
 };
 
 interface ChangeHistory {
@@ -199,8 +204,8 @@ const driversColumns: ColumnDefinition<Driver>[] = [
         type: 'badge',
         render: (value) => {
             const status = value as DriverStatus;
-            const colorClass = driverStatusClasses[status];
-            return <BadgeTable value={status} colorClass={colorClass} />;
+            const variant = driverStatusClasses[status] ?? 'default';
+            return <TableBadge value={status} variant={variant} />;
         }
     },
     {
@@ -231,7 +236,7 @@ const driversColumns: ColumnDefinition<Driver>[] = [
         header: 'AÇÕES',
         align: 'center',
         type: 'actions',
-        render: (_, row) => <TableActions itemId={row.id} />
+        render: () => <TableActions/>
     }
 ]
 

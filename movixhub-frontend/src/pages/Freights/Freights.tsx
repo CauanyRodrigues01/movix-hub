@@ -1,13 +1,26 @@
-import Table, { type ColumnDefinition } from '../../components/Table/Table';
 import Styles from './Freights.module.css';
-import TableActions from '../../components/common/Table/TableActions';
-import PageHeader from '../../components/PageHeader/PageHeader';
-import BadgeTable from '../../components/common/Table/BadgeTable';
-import ArrayRendererTable from '../../components/common/Table/ArrayRenderer';
+import { 
+    Table, 
+    TableBadge,
+    TableActions,
+    TableArrayRenderer,
+    type ColumnDefinition,
+    type TableBadgeProps
+} from '../../components/common/Table';
+
+import { PageHeader } from '../../components/common/Layout';
 
 type ServiceInternalStatus = 'Ativo' | 'Inativo' | 'Manutencao' | 'Indisponível';
 type CoverageArea = 'Municipal' | 'Intermunicipal' | 'Interestadual' | 'Internacional';
 type AllowedVehicle = 'Motocicleta' | 'Carro' | 'Van' | 'Caminhão' | 'Caminhão Pesado';
+
+// Mapeamentos de Status 
+const freightsStatusClasses: Record<ServiceInternalStatus, TableBadgeProps["variant"]> = {
+    'Ativo': 'success',
+    'Manutencao': 'warning',
+    'Inativo': 'info',
+    'Indisponível': 'error',
+};
 
 interface ChangeHistory {
   date: string;
@@ -158,21 +171,6 @@ const mockServiceData: Service[] = [
     }
 ];
 
-// Mapeamentos de Status 
-const statusClasses: Record<ServiceInternalStatus, string> = {
-    'Ativo': Styles.statusActive,
-    'Manutencao': Styles.statusMaintenance,
-    'Inativo': Styles.statusInactive,
-    'Indisponível': Styles.statusUnavailable,
-};
-
-
-const arrayBadgeColumns: Record<string, string> = {
-    'Promotions': Styles.promotions,
-    'Coverages': Styles.coverages,
-    'Vehicles': Styles.vehicles,
-}
-
 // Definição das Colunas
 const serviceColumns: ColumnDefinition<Service>[] = [
     {
@@ -192,8 +190,8 @@ const serviceColumns: ColumnDefinition<Service>[] = [
         type: 'badge',
         render: (value) => {
             const status = value as ServiceInternalStatus;
-            const colorClass = statusClasses[status] || Styles.statusInactive;
-            return <BadgeTable value={status} colorClass={colorClass} />;
+            const variant = freightsStatusClasses[status] ?? 'default';
+            return <TableBadge value={status} variant={variant} />;
         },
     },
     {
@@ -203,9 +201,8 @@ const serviceColumns: ColumnDefinition<Service>[] = [
         render: (_, row) => {
             if (row.activePromotions.length === 0) return <span className={Styles.noPromotions}>-</span>
             return (
-                <ArrayRendererTable
+                <TableArrayRenderer
                     items={row.activePromotions}
-                    categoryClass={arrayBadgeColumns['Promotions']}
                 />
             )
         }
@@ -215,9 +212,10 @@ const serviceColumns: ColumnDefinition<Service>[] = [
         header: 'COBERTURA',
         type: 'medium-text',
         render: (value) => (
-            <ArrayRendererTable
+            <TableArrayRenderer
                 items={value as CoverageArea[]}
-                categoryClass={arrayBadgeColumns['Coverages']}
+                variant='custom'
+                className={Styles.coverages}
             />
         )
     },
@@ -226,9 +224,10 @@ const serviceColumns: ColumnDefinition<Service>[] = [
         header: 'VEÍCULOS',
         type: 'medium-text',
         render: (value) => (
-            <ArrayRendererTable
+            <TableArrayRenderer
                 items={value as AllowedVehicle[]}
-                categoryClass={arrayBadgeColumns['Vehicles']}
+                variant='custom'
+                className={Styles.vehicles}
             />
         )
     },
@@ -246,7 +245,7 @@ const serviceColumns: ColumnDefinition<Service>[] = [
         header: 'AÇÕES',
         align: 'center',
         type: 'actions',
-        render: (_, row) => <TableActions itemId={row.id} />,
+        render: () => <TableActions/>,
     },
 ];
 
