@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import SidebarItem from "../SidebarItem/SidebarItem";
-import Styles from "./Sidebar.module.css";
+import Styles from "./Layout.module.css";
+import { SidebarItem } from "./SidebarItem";
 
-type SidebarProps = {
+export interface SidebarProps {
   onCollapseChange?: (collapsed: boolean) => void;
-}
+};
 
-function Sidebar({ onCollapseChange }: SidebarProps) {
+export const Sidebar = ({ onCollapseChange }: SidebarProps) => {
 
   // Função para definir o estado inicial baseado no tamanho da tela
   const getInitialCollapsedState = () => {
@@ -73,10 +73,6 @@ function Sidebar({ onCollapseChange }: SidebarProps) {
         </SidebarItem> */}
 
       </aside>
-
     </>
-
   );
-}
-
-export default Sidebar;
+};

@@ -1,6 +1,6 @@
-import Styles from "./MainHeader.module.css";
+import Styles from "./Layout.module.css";
 
-function Header() {
+export const MainHeader = () => {
     return (
         <header className={Styles.headerContainer}>
             <i className="bi bi-bell"></i>
@@ -8,5 +8,3 @@ function Header() {
         </header>
     );
 };
-
-export default Header;

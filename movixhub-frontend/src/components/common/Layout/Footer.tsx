@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import Styles from "./Footer.module.css";
+import Styles from "./Layout.module.css";
 
-function Footer({ isCollapsed } : { isCollapsed: boolean}) {
+export const Footer = ({ isCollapsed } : { isCollapsed: boolean}) => {
     return (
         <footer className={`
         
@@ -22,6 +22,4 @@ function Footer({ isCollapsed } : { isCollapsed: boolean}) {
             </div>
         </footer>
     )
-}
-
-export default Footer;
+};

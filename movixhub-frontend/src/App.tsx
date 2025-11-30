@@ -3,15 +3,15 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import ProtectedRoute from './routes/ProtectedRoute';
 import AdminLayout from './layouts/AdminLayout/AdminLayout';
 
-import Login from './pages/Login/Login';
-import Dashboard from './pages/Dashboard/Dashboard';
 import Freights from './pages/Freights/Freights';
 import Promotions from './pages/Promotions/Promotions';
 import Clients from './pages/Clients/Clients';
 import Users from './pages/Users/Users';
-import Settings from './pages/Settings/Settings';
-import Help from './pages/Help/Help';
 import Drivers from './pages/Drivers/Drivers';
+import { Login } from './pages/Login/Login';
+import { Dashboard } from './pages/Dashboard/Dashboard';
+import { Settings } from './pages/Settings/Settings';
+import { Help } from './pages/Help/Help';
 
 function App() {
   return (

@@ -1,15 +1,15 @@
-import { Button } from '../common/Button/Button';
-import Styles from './PageHeader.module.css';
+import { Button } from '../Button/Button';
+import Styles from "./Layout.module.css";
 
-interface PageHeaderProps {
+export interface PageHeaderProps {
     title: string;
     description: string;
     buttonIcon?: React.ReactNode;
     buttonText?: string;
     onButtonClick?: () => void;
-}
+};
 
-const PageHeader = ({ title, description, buttonIcon, buttonText, onButtonClick }: PageHeaderProps) => {
+export const PageHeader = ({ title, description, buttonIcon, buttonText, onButtonClick }: PageHeaderProps) => {
 
     const shouldRenderButton = (!!buttonText || !!buttonIcon) && !!onButtonClick;
 
@@ -22,7 +22,4 @@ const PageHeader = ({ title, description, buttonIcon, buttonText, onButtonClick 
             {shouldRenderButton && <Button onClick={onButtonClick}> {buttonIcon} {buttonText}</Button>}
         </header>
     )
-
-}
-
-export default PageHeader;
+};

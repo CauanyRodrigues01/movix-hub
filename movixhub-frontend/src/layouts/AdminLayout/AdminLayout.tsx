@@ -1,10 +1,8 @@
+import { useState } from "react";
 import { Outlet } from "react-router-dom";
 
 import Styles from "./AdminLayout.module.css";
-import Sidebar from "../../components/Sidebar/Sidebar";
-import Header from "../../components/MainHeader/MainHeader";
-import { useState } from "react";
-import Footer from "../../components/Footer/Footer";
+import { Sidebar, MainHeader, Footer } from "../../components/common/Layout";
 
 function AdminLayout() {
 
@@ -19,7 +17,7 @@ function AdminLayout() {
         ${Styles.content}
         ${collapsed ? Styles.collapsedContent : ""}
       `}>
-        <Header />
+        <MainHeader />
         <div className={Styles.pageContent}>
           <div className={Styles.pageWrapper}>
             <Outlet />

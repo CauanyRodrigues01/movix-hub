@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react';
-import Styles from './SidebarItem.module.css';
+import Styles from "./Layout.module.css";
 import { NavLink } from 'react-router-dom';
 
-type SidebarItemProps = {
+export interface SidebarItemProps {
     title: string;
     icon: string;
     to?: string; // Opcional: usado para links simples
@@ -19,7 +19,7 @@ const getNavLinkClass = ({ isActive }: { isActive: boolean }, isDropdown: boolea
     return classes;
 };
 
-function SidebarItem({ title, icon, to, children, end }: SidebarItemProps) {
+export const SidebarItem = ({ title, icon, to, children, end }: SidebarItemProps) => {
 
     // Define o estado do menu suspenso (aberto/fechado)
     const [isOpen, setIsOpen] = useState(false);
@@ -74,6 +74,4 @@ function SidebarItem({ title, icon, to, children, end }: SidebarItemProps) {
     // Fallback render (caso nenhum 'to' ou 'children' seja fornecido)
     return <div className={Styles.menuItem}>Item Error: Missing 'to' or 'children'</div>;
 
-}
-
-export default SidebarItem;
+};

@@ -1,0 +1,301 @@
+/* Header do site */
+.headerContainer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-xs);
+    border-bottom: 1px solid var(--border-light);
+}
+
+.headerContainer>* {
+    padding: var(--space-xs);
+}
+
+@media (min-width: 768px) {
+    .headerContainer>* {
+        padding: var(--space-sm);
+    }
+}
+
+/* Header das páginas */
+.pageHeader {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: var(--space-sm);
+    gap: var(--space-sm);
+}
+
+.pageHeaderDetails {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    text-align: center;
+}
+
+.pageHeaderDetails p {
+    color: var(--text-light);
+}
+
+@media (min-width: 768px) {
+    .pageHeader {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .pageHeaderDetails {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-xs);
+        text-align: justify;
+    }
+}
+
+/* Sidebar */
+
+
+.sidebar {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    bottom: 0px;
+
+    width: 60px;
+    background-color: var(--bg-light);
+    border-right: 1px solid var(--border-light);
+
+    padding: var(--space-xs);
+    overflow-y: auto;
+    z-index: 100;
+
+    transition: width 0.3s ease, transform 0.3s ease;
+}
+
+/* Oculta textos quando colapsado (60px) (mobile + desktop) */
+.collapsed span {
+    display: none;
+}
+
+/* Drawer aberto (mobile) */
+.drawerOpen {
+    width: 250px;
+}
+
+/* BACKDROP DO DRAWER */
+.backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 50;
+}
+
+/* Botão */
+.toggleButton {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    padding: var(--space-xs);
+}
+
+.toggleButton:hover {
+    background-color: var(--bg-accent);
+}
+
+.navbar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    margin-top: var(--space-xs);
+}
+
+@media (min-width: 768px) {
+
+    /* Sidebar padrão desktop */
+    .sidebar {
+        padding: var(--space-sm);
+        width: 250px !important;
+        /* Padrão Desktop: 250px (Aberto) */
+        left: 0 !important;
+        /* Cancela qualquer transformação ou 'left' de mobile */
+    }
+
+    /* Sidebar colapsada no desktop */
+    .collapsed {
+        width: 75px !important;
+    }
+
+    /* O Drawer não existe no desktop */
+    .drawerOpen {
+        /* Cancela o aumento de largura do drawerOpen no desktop */
+        width: inherit !important;
+    }
+
+    .backdrop {
+        display: none;
+    }
+
+}
+
+/* Item do Sidebar */
+.navLink {
+    padding: var(--space-xs);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    border-left: 2px solid transparent;
+    overflow: hidden;
+}
+
+.navLink i {
+    font-size: 20px;
+}
+
+.navLink:hover {
+    background-color: var(--bg-accent);
+}
+
+.navLink:active {
+    background-color: var(--bg-accent);
+}
+
+
+.title {
+    white-space: nowrap;
+}
+
+.isActive {
+    color: var(--text-accent);
+    background-color: var(--bg-accent);
+    border-left: 2px solid var(--border-dark);
+}
+
+/* ESTILOS ESPECÍFICOS DO DROPDOWN*/
+
+/* Botão de Toggle (o próprio link/item) */
+.toggleButton {
+    /* Garante que o ícone de seta fique à direita */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    cursor: pointer;
+    /* Herda o estilo do .link para ser o item de menu */
+}
+
+/* Seta de Dropdown */
+.arrowIcon {
+    transition: transform 0.3s ease;
+    /* Em mobile, é pequeno e discreto */
+}
+
+/* Rotação da Seta quando o menu está aberto */
+.arrowIcon.open {
+    transform: rotate(180deg);
+}
+
+/* Container dos Sub-links */
+.dropdownMenu {
+    /* Oculto por padrão, mas pode ser animado */
+    max-height: 0; 
+    overflow: hidden; /* Oculta o conteúdo */
+    transition: max-height 0.3s ease;
+    background-color: red; /* Fundo levemente mais escuro */
+}
+
+/* Estado Ativo/Aberto */
+.dropdownMenu.open {
+    /* Define uma altura que será maior que o conteúdo, permitindo a animação */
+    max-height: 500px; 
+}
+
+/* Estilo para os sub-links */
+.subLink {
+    padding: 8px 16px 8px 32px; /* Recuo para sub-item */
+    display: block;
+    color: blue;
+}
+
+/* Footer */
+.footer {
+    position: static;
+    left: 0;
+    width: 100%;
+    background-color: var(--bg-light);
+    border-top: 1px solid var(--border-light);
+}
+
+.footer p, .footer a {
+    font-size: 0.90rem;
+    color: var(--text-light);
+}
+
+.footer a {
+    text-decoration: underline;
+}
+
+.footerContainer {
+    text-align: center;
+    padding: var(--space-xs);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    width: 100%;
+}
+
+.details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.circle {
+    display: none;
+}
+
+@media (min-width: 768px) {
+
+    .footer {
+        position: fixed;
+        left: 250px;
+        bottom: 0;
+        right: 0;
+        z-index: 100;
+        width: auto;
+        padding: var(--space-sm);
+        transition: left 0.3s ease;
+    }
+
+    .collapsedFooter {
+        left: 75px;
+        right: 0;
+        transition: left 0.3s ease;
+    }
+
+    .footerContainer {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .details {
+        flex-direction: row;
+    }
+
+    .circle {
+        display: block;
+        width: 4px;
+        height: 4px;
+        background-color: var(--text-light);
+        border-radius: 50%;
+    }
+
+}
