@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Outlet } from "react-router-dom";
 
 import Styles from "./AdminLayout.module.css";
-import { Sidebar, MainHeader, Footer } from "../../components/common/Layout";
+import { Footer, MainHeader, Sidebar } from "../common/Layout";
 
 function AdminLayout() {
 

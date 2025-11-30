@@ -1,7 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 
 import ProtectedRoute from './routes/ProtectedRoute';
-import AdminLayout from './layouts/AdminLayout/AdminLayout';
 
 import Freights from './pages/Freights/Freights';
 import Promotions from './pages/Promotions/Promotions';
@@ -12,6 +11,7 @@ import { Login } from './pages/Login/Login';
 import { Dashboard } from './pages/Dashboard/Dashboard';
 import { Settings } from './pages/Settings/Settings';
 import { Help } from './pages/Help/Help';
+import AdminLayout from './components/AdminLayout/AdminLayout';
 
 function App() {
   return (
