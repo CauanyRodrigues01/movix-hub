@@ -229,5 +229,5 @@
 }
 
 .actionSee{
-    color: var(--text-success);
+    color: var(--text-success) !important;
 }

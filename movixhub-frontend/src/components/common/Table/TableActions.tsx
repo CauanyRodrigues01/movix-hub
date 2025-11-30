@@ -20,7 +20,6 @@ export const TableActions = ({
             {onView && (
                 <Button
                     variant="ghost"
-                    size="small"
                     className={Styles.actionView}
                     onClick={onView}
                     aria-label="Visualizar"
@@ -32,7 +31,6 @@ export const TableActions = ({
             {onEdit && (
                 <Button
                     variant="ghost"
-                    size="small"
                     className={Styles.actionEdit}
                     onClick={onEdit}
                     aria-label="Editar"
@@ -44,7 +42,6 @@ export const TableActions = ({
             {onDelete && (
                 <Button
                     variant="ghost"
-                    size="small"
                     className={Styles.actionDelete}
                     onClick={onDelete}
                     aria-label="Deletar"

@@ -236,7 +236,11 @@ const driversColumns: ColumnDefinition<Driver>[] = [
         header: 'AÇÕES',
         align: 'center',
         type: 'actions',
-        render: () => <TableActions/>
+        render: (_, row) => <TableActions
+          onView={() => alert("ver mais " + row.id)}
+          onEdit={() => alert("Editando " + row.id)}
+          onDelete={() => alert("Deletando " + row.id)}
+        />
     }
 ]
 
