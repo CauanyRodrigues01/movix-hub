@@ -1,22 +1,27 @@
 import Styles from './Users.module.css';
-import { 
-    Table, 
-    TableBadge,
-    TableActions,
-    type ColumnDefinition,
-    type TableBadgeProps
+import {
+  Table,
+  TableBadge,
+  TableActions,
+  type ColumnDefinition,
+  type TableBadgeProps
 } from '../../components/common/Table';
 
 import { PageHeader } from '../../components/common/Layout';
+import { Button } from '../../components/common/Button';
+import { useState } from 'react';
+import { UserForm, UserPermissionsModal, type UserFormData } from '../../components/features/users';
+import { ModalConfirm, ModalDetails, ModalForm } from '../../components/common/Modal';
+import { UserDetailsContent } from '../../components/features/users/UserDetailsContent';
 
 type UserStatus = 'Ativo' | 'Inativo' | 'Bloqueado' | 'Suspenso';
 type AccessProfile = 'Administrador' | 'Operador' | 'Supervisor' | 'Finanças' | 'Visualizador';
 
 const userStatusClasses: Record<UserStatus, TableBadgeProps["variant"]> = {
-    'Ativo': 'success',
-    'Inativo': 'info',
-    'Bloqueado': 'error',
-    'Suspenso': 'warning',
+  'Ativo': 'success',
+  'Inativo': 'info',
+  'Bloqueado': 'error',
+  'Suspenso': 'warning',
 };
 
 interface ChangeHistory {
@@ -155,84 +160,319 @@ const mockUsersData: User[] = [
   }
 ];
 
-const usersColumns: ColumnDefinition<User>[] = [
-    {
-        key: 'fullName',
-        header: 'NOME',
-        type: 'large-text',
-        secondaryKey: 'corporateEmail'
-    },
-    {
-        key: 'position',
-        header: 'CARGO',
-        type: 'large-text'
-    },
-    {
-        key: 'accessProfile',
-        header: 'PERFIL DE ACESSO',
-        type: 'fixed-short'
-    },
-    {
-      key: 'specificPermissions',
-      header: 'PERMISSÕES',
-      align: 'center',
-      type: 'actions',
-      render: (value) => {
-        const permissions = value as string[];
-        const contPermissions = permissions.length;
-        return contPermissions > 0 ? (
-          <div className={Styles.teste1}><i className="bi bi-shield-lock"></i> {contPermissions}</div>
-          
-        ) : (
-          <div className={Styles.teste2}><i className="bi bi-shield-lock"></i></div>
-        )
-      }
-    },
-    {
-        key: 'status',
-        header: 'STATUS',
-        type: 'badge',
-        render: (value) => {
-            const status = value as UserStatus;
-            const variant = userStatusClasses[status] ?? 'default';
-            return <TableBadge value={status} variant={variant} />;
-        }
-    },
-    {
-        key: 'lastAccess',
-        header: 'ÚLTIMO ACESSO',
-        type: 'fixed-short',
-    },
-    {
-        key: 'custom',
-        header: 'AÇÕES',
-        align: 'center',
-        type: 'actions',
-        render: (_, row) => <TableActions
-          onView={() => alert("ver mais " + row.id)}
-          onEdit={() => alert("Editando " + row.id)}
-          onDelete={() => alert("Deletando " + row.id)}
-        />
-    }
-]
-
-
-function Users() {
-    return (
-        <div className={Styles.usersContainer}>
-            <PageHeader 
-                title="Equipe Interna"
-                description="Gerencie os membros da equipe e suas permissões."
-                buttonIcon={<i className="bi bi-plus-lg"></i>}
-                buttonText="Adicionar Membro"
-                onButtonClick={() => alert('Clicou no botão!')}
-            />
-            <Table
-                data={mockUsersData}
-                columns={usersColumns}
-            />
-        </div>
-    )
+// Função auxiliar para criar colunas
+interface GetColumnsParams {
+  onView: (user: User) => void;
+  onEdit: (user: User) => void;
+  onDelete: (user: User) => void;
+  onPermissions: (user: User) => void;
 }
 
-export default Users;
+const getUsersColumns = ({ onView, onEdit, onDelete, onPermissions }: GetColumnsParams): ColumnDefinition<User>[] => [
+  {
+    key: 'fullName',
+    header: 'NOME',
+    type: 'large-text',
+    secondaryKey: 'corporateEmail'
+  },
+  {
+    key: 'position',
+    header: 'CARGO',
+    type: 'large-text'
+  },
+  {
+    key: 'accessProfile',
+    header: 'PERFIL DE ACESSO',
+    type: 'fixed-short'
+  },
+  {
+    key: 'specificPermissions',
+    header: 'PERMISSÕES',
+    align: 'center',
+    type: 'actions',
+    render: (value, row) => {
+      const permissions = value as string[];
+      const countPermissions = permissions.length;
+      return (
+        <Button
+          onClick={() => onPermissions(row)}
+          className={countPermissions > 0 ? Styles.permissionsActive : Styles.permissionsEmpty}
+          title="Gerenciar Permissões"
+          size='small'
+        >
+          <i className="bi bi-shield-lock"></i>
+          {countPermissions > 0 && ` ${countPermissions}`}
+        </Button>
+      );
+    }
+  },
+  {
+    key: 'status',
+    header: 'STATUS',
+    type: 'badge',
+    render: (value) => {
+      const status = value as UserStatus;
+      const variant = userStatusClasses[status] ?? 'default';
+      return <TableBadge value={status} variant={variant} />;
+    }
+  },
+  {
+    key: 'lastAccess',
+    header: 'ÚLTIMO ACESSO',
+    type: 'fixed-short',
+    render: (value) => {
+      const date = new Date(value as string);
+      return date.toLocaleString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+  },
+  {
+    key: 'custom',
+    header: 'AÇÕES',
+    align: 'center',
+    type: 'actions',
+    render: (_, row) => (
+      <TableActions
+        onView={() => onView(row)}
+        onEdit={() => onEdit(row)}
+        onDelete={() => onDelete(row)}
+      />
+    )
+  }
+];
+
+export const Users = () => {
+
+  // Estado dos dados
+  const [users, setUsers] = useState<User[]>(mockUsersData);
+
+  // Estados do modals
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [isPermissionsOpen, setIsPermissionsOpen] = useState(false);
+
+  // Estados auxiliares
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [isEdit, setIsEdit] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Handlers para CRIAR
+  const handleCreateUser = () => {
+    setSelectedUser(null);
+    setIsEdit(false);
+    setIsFormOpen(true);
+  };
+
+  // Handlers para EDITAR
+  const handleEditUser = (user: User) => {
+    setSelectedUser(user);
+    setIsEdit(true);
+    setIsFormOpen(true);
+  };
+
+  // Handlers para VER DETALHES
+  const handleViewUser = (user: User) => {
+    setSelectedUser(user);
+    setIsDetailsOpen(true);
+  };
+
+  // Handlers para DELETAR
+  const handleDeleteUserClick = (user: User) => {
+    setSelectedUser(user);
+    setIsDeleteOpen(true);
+  };
+
+  const handleDeleteUser = async () => {
+    if (!selectedUser) return;
+
+    setIsLoading(true);
+    try {
+      // TODO: Implementar chamada API
+      // await deleteUser(selectedUser.id);
+      console.log('Deltando usuáiro:', selectedUser.id);
+
+      // Atualiza estado local
+      setUsers(prevUsers => prevUsers.filter(u => u.id !== selectedUser.id));
+      setIsDeleteOpen(false);
+      setSelectedUser(null);
+    } catch (error) {
+      console.error('Erro ao deletar usuário:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Handlers para PERMISSÕES
+  const handlePermissions = (user: User) => {
+    setSelectedUser(user);
+    setIsPermissionsOpen(true);
+  };
+
+  const handleSavePermissions = async (permissions: string[]) => {
+    if (!selectedUser) return;
+
+    setIsLoading(true);
+    try {
+      // TODO: Implementar chamada API
+      // await updateUserPermissions(selectedUser.id, permissions);
+
+      console.log('Salvando permissões para usuário:', { userId: selectedUser.id, permissions });
+      // Atualiza estado local
+      setUsers(prevUsers => prevUsers.map(u =>
+        u.id === selectedUser.id
+          ? { ...u, specificPermissions: permissions }
+          : u
+      ));
+
+      setIsPermissionsOpen(false);
+      setSelectedUser(null);
+
+    } catch (error) {
+      console.error('Erro ao salvar permissões:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Handler do FORMULÁRIO (Create/Edit)
+  const handleSubmit = async (data: UserFormData) => {
+    setIsLoading(true);
+    try {
+      if (isEdit) {
+        // TODO: Implementar chamada API
+        // await updateUser(data);
+
+        console.log('Atualizando usuário:', data);
+
+        // Atualiza estado local
+        setUsers(prevUsers => prevUsers.map(u =>
+          u.id === data.id
+            ? { ...u, ...data, updateAt: new Date().toISOString() }
+            : u
+        ));
+      } else {
+        // TODO: Implementar chamada API
+        // const newUser = await createUser(data);
+
+        const newUser: User = {
+          id: `USER-${Date.now()}`,
+          ...data,
+          specificPermissions: [],
+          loginAttempts: 0,
+          lastAccess: new Date().toISOString(),
+          profilePhoto: undefined,
+          createdBy: 'CURRENT_USER',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          changeHistory: [],
+          passwordHash: data.passwordHash || ''
+        };
+
+        console.log('Criando novo usuário:', newUser);
+
+        setUsers(prevUsers => [...prevUsers, newUser]);
+      }
+
+      setIsFormOpen(false);
+      setSelectedUser(null);
+    } catch (error) {
+      console.error('Erro ao salvar usuário:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const usersColumns: ColumnDefinition<User>[] = getUsersColumns({
+    onView: handleViewUser,
+    onEdit: handleEditUser,
+    onDelete: handleDeleteUserClick,
+    onPermissions: handlePermissions
+  });
+
+  return (
+    <div className={Styles.usersContainer}>
+      <PageHeader
+        title="Equipe Interna"
+        description="Gerencie os membros da equipe e suas permissões."
+        buttonIcon={<i className="bi bi-plus-lg"></i>}
+        buttonText="Adicionar Membro"
+        onButtonClick={handleCreateUser}
+      />
+      <Table
+        data={users}
+        columns={usersColumns}
+      />
+
+      {/* Modal de Formulário (Create/Edit) */}
+      <ModalForm
+        isOpen={isFormOpen}
+        onClose={() => setIsFormOpen(false)}
+        title={isEdit ? 'Editar Usuário' : 'Novo Usuário'}
+        subtitle={isEdit ? selectedUser?.fullName : undefined}
+        size="lg"
+      >
+        <UserForm
+          key={selectedUser?.id || 'new'}
+          initialData={selectedUser}
+          onSubmit={handleSubmit}
+          onCancel={() => setIsFormOpen(false)}
+          isEdit={isEdit}
+          isLoading={isLoading}
+        />
+      </ModalForm>
+
+      {/* Modal de Detalhes (View) */}
+      <ModalDetails
+        isOpen={isDetailsOpen}
+        onClose={() => setIsDetailsOpen(false)}
+        title="Detalhes do Usuário"
+        subtitle={selectedUser?.fullName}
+        size="lg"
+        onEdit={() => {
+                    setIsDetailsOpen(false);
+                    if (selectedUser) handleEditUser(selectedUser);
+                }}
+      >
+        {selectedUser && <UserDetailsContent user={selectedUser} />}
+      </ModalDetails>
+
+      {/* Modal de Permissões */}
+      <ModalForm
+        isOpen={isPermissionsOpen}
+        onClose={() => setIsPermissionsOpen(false)}
+        title="Gerenciar Permissões"
+        subtitle={selectedUser?.fullName}
+        size="lg"
+      >
+        {selectedUser && (
+          <UserPermissionsModal
+            userName={selectedUser.fullName}
+            currentPermissions={selectedUser.specificPermissions}
+            onSave={handleSavePermissions}
+            onCancel={() => setIsPermissionsOpen(false)}
+            isLoading={isLoading}
+          />
+        )}
+      </ModalForm>
+
+      {/* Modal de Confirmação (Delete) */}
+      <ModalConfirm
+        isOpen={isDeleteOpen}
+        onConfirm={handleDeleteUser}
+        onCancel={() => setIsDeleteOpen(false)}
+        title="Deletar Usuário"
+        message={`Tem certeza que deseja deletar o usuário "${selectedUser?.fullName}"? Esta ação não pode ser desfeita.`}
+        confirmLabel="Sim, deletar"
+        cancelLabel="Cancelar"
+        variant="danger"
+        isLoading={isLoading}
+      />
+    </div>
+  );
+};
