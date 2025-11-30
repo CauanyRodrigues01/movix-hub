@@ -214,7 +214,6 @@ const serviceColumns: ColumnDefinition<Service>[] = [
         render: (value) => (
             <TableArrayRenderer
                 items={value as CoverageArea[]}
-                variant='custom'
                 className={Styles.coverages}
             />
         )
@@ -226,7 +225,6 @@ const serviceColumns: ColumnDefinition<Service>[] = [
         render: (value) => (
             <TableArrayRenderer
                 items={value as AllowedVehicle[]}
-                variant='custom'
                 className={Styles.vehicles}
             />
         )

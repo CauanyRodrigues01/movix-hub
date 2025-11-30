@@ -10,7 +10,7 @@ export interface TableArrayRendererProps {
 
 export const TableArrayRenderer = ({ 
     items, 
-    variant = 'default',
+    variant = 'custom',
     className = '',
     maxVisible 
 }: TableArrayRendererProps) => {

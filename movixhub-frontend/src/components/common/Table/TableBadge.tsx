@@ -6,7 +6,7 @@ export interface TableBadgeProps {
     className?: string;
 }
 
-export const TableBadge = ({ value, variant = 'default', className = '' }: TableBadgeProps) => {
+export const TableBadge = ({ value, variant = 'custom', className = '' }: TableBadgeProps) => {
     return (
         <span className={`${Styles.badge}  ${className} ${Styles[`badge-${variant}`]}`}>
             {value}
