@@ -13,7 +13,7 @@ import { Clients } from './pages/Clients/Clients';
 import { FreightServices } from './pages/FreightsServices/FreightsServices';
 import { Promotions } from './pages/Promotions/Promotions';
 
-function App() {
+export const App = () => {
   return (
 
     <Routes>
@@ -22,7 +22,8 @@ function App() {
       <Route
         path="/"
         element={
-          localStorage.getItem("authToken")
+          // Verifica se o token existe (qualquer valor não nulo/vazio)
+          localStorage.getItem("authToken") 
             ? <Navigate to="/dashboard" />
             : <Navigate to="/entrar" />
         }
@@ -33,6 +34,7 @@ function App() {
 
       {/* Rota admin protegida */}
       <Route element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
+        {/* ... rotas protegidas ... */}
         <Route path="/dashboard/*" element={<Dashboard />} />
         <Route path="/fretes" element={<FreightServices />} />
         <Route path="/promocoes" element={<Promotions />} />
@@ -47,5 +49,3 @@ function App() {
 
   );
 };
-
-export default App;

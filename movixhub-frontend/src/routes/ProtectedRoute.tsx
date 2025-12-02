@@ -1,13 +1,15 @@
+import type { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 
 type ProtectedRouteProps = {
-    children: React.ReactNode;
+    children: ReactNode;
 };
 
 export default function ProtectedRoute({ children } : ProtectedRouteProps){
 
-    const isAuthenticated = localStorage.getItem("authToken");
+    // Verifica se o token existe (qualquer string não vazia)
+    const isAuthenticated = !!localStorage.getItem("authToken");
 
-    return isAuthenticated === "true" ? children : <Navigate to="/login" />;
+    return isAuthenticated ? children : <Navigate to="/entrar" />; 
 
-};
+}
