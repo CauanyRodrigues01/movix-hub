@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Styles from './Users.module.css';
+import Styles from './UserPermissions.module.css';
 import { Button } from "../../common/Button";
 import { FormCheckbox } from "../../common/Form";
 
