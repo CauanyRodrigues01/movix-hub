@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import type { ColumnDefinition } from "../Table";
+import type { BaseEntity } from "../../../types";
 
 // Objeto congelado (as const) que define todos os tipos de campos que um formulário pode ter.
 // Funciona como um enum
@@ -46,13 +47,6 @@ export interface FormFieldDefinition {
     maxLength?: number;
     defaultValue?: unknown; // Valor inicial do campo quando o formulário é carregado.
 }
-
-// Tipo base que todas as entidades devem estender
-export type BaseEntity = Record<string, unknown> & {
-    id: string | number;
-    createdAt?: string;
-    updatedAt?: string;
-};
 
 // Representa o esquema de uma entidade, incluindo seus campos e colunas da tabela.
 export interface EntitySchema<T extends BaseEntity = BaseEntity> {

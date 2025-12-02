@@ -1,64 +1,84 @@
 import { useState } from 'react';
 import Styles from './Drivers.module.css';
-import { driverSchema, type Driver, type DriverStatus } from '../../components/features/drivers';
 import { Table, TableActions, TableBadge, type ColumnDefinition, type TableBadgeProps } from '../../components/common/Table';
 import { useEntityCRUD } from '../../hooks/useEntityCRUD';
 import { PageHeader } from '../../components/common/Layout';
 import { ModalConfirm, ModalDetails, ModalForm } from '../../components/common/Modal';
 import { EntityDetailsContent, EntityGenericForm } from '../../components/common/EntityCRUD';
+import type { Driver, DriverStatus } from '../../types';
+import { driverSchema } from '../../components/features/drivers';
 
 
 const driverStatusClasses: Record<DriverStatus, TableBadgeProps["variant"]> = {
   'Ativo': 'success',
   'Inativo': 'info',
-  'Férias': 'warning',
   'Suspenso': 'error',
+  'Férias': 'warning',
 };
 
 const mockDriversData: Driver[] = [
   {
     id: 'MOT-001',
+    // Dados pessoais
     fullName: 'João Carlos Ferreira',
     cpf: '123.456.789-00',
+    phone: '+55 83 98888-1111',
+    email: 'joao.ferreira@gmail.com',
+    // Endereço
+    fullAddress: 'Rua das Flores, 123, Centro',
+    zipCode: '58400-000',
+    city: 'Campina Grande',
+    state: 'PB',
+    // Habilitação
     cnhNumber: '98765432100',
     cnhCategory: 'D',
     cnhValidity: '2026-08-15',
-    phone: '+55 83 98888-1111',
-    email: 'joao.ferreira@gmail.com',
+    // Vínculo
     driverLinkType: 'Parceiro',
+    baseCity: 'Campina Grande',
+    registrationDate: '2023-05-10',
     status: 'Ativo',
-    profilePhoto: 'https://i.pravatar.cc/150?img=12',
     linkedVehicleId: 'VEI-001',
+    // Métricas
     averageRating: 4.8,
     totalDeliveries: 152,
-    baseCity: 'Campina Grande',
-    admissionDate: '2023-05-10',
     internalScore: 92,
-    observations: 'Motorista pontual e bem avaliado pelos clientes.',
+    // Observações
+    internalNotes: 'Preferido para entregas VIP.',
+    // Metadados
     createdAt: '2023-05-10T09:30:00',
     updatedAt: '2025-01-18T14:20:00',
     changeHistory: []
   },
-
   {
     id: 'MOT-002',
+    // Dados pessoais
     fullName: 'André Luiz Nascimento',
     cpf: '987.654.321-99',
+    phone: '+55 84 97777-2222',
+    email: 'andre.nascimento@gmail.com',
+    // Endereço
+    fullAddress: 'Av. Senador Salgado Filho, 456, Lagoa Nova',
+    zipCode: '59075-000',
+    city: 'Natal',
+    state: 'RN',
+    // Habilitação
     cnhNumber: '12345678911',
     cnhCategory: 'C',
     cnhValidity: '2025-03-20',
-    phone: '+55 84 97777-2222',
-    email: 'andre.nascimento@gmail.com',
-    driverLinkType: 'Parceiro',
+    // Vínculo
+    driverLinkType: 'CLT',
+    baseCity: 'Natal',
+    registrationDate: '2021-11-02',
     status: 'Ativo',
-    profilePhoto: 'https://i.pravatar.cc/150?img=12',
     linkedVehicleId: 'VEI-003',
+    // Métricas
     averageRating: 4.5,
     totalDeliveries: 310,
-    baseCity: 'Natal',
-    admissionDate: '2021-11-02',
     internalScore: 88,
-    observations: 'Motorista experiente em rotas intermunicipais.',
+    // Observações
+    internalNotes: 'Disponível para rotas longas.',
+    // Metadados
     createdAt: '2021-11-02T08:10:00',
     updatedAt: '2025-02-02T10:45:00',
     changeHistory: [
@@ -71,26 +91,35 @@ const mockDriversData: Driver[] = [
       }
     ]
   },
-
   {
     id: 'MOT-003',
+    // Dados pessoais
     fullName: 'Rogério Batista da Silva',
     cpf: '321.654.987-55',
+    phone: '+55 81 96666-3333',
+    email: 'rogerio.silva@gmail.com',
+    // Endereço
+    fullAddress: 'Rua do Príncipe, 789, Boa Vista',
+    zipCode: '50050-900',
+    city: 'Recife',
+    state: 'PE',
+    // Habilitação
     cnhNumber: '55667788990',
     cnhCategory: 'E',
     cnhValidity: '2024-12-10',
-    phone: '+55 81 96666-3333',
-    email: 'rogerio.silva@gmail.com',
+    // Vínculo
     driverLinkType: 'Terceirizado',
+    baseCity: 'Recife',
+    registrationDate: '2022-06-18',
     status: 'Inativo',
-    profilePhoto: 'https://i.pravatar.cc/150?img=12',
     linkedVehicleId: 'VEI-005',
+    // Métricas
     averageRating: 3.9,
     totalDeliveries: 89,
-    baseCity: 'Recife',
-    admissionDate: '2022-06-18',
     internalScore: 67,
-    observations: 'Necessita reciclagem em atendimento ao cliente.',
+    // Observações
+    internalNotes: 'CNH próxima do vencimento - verificar renovação.',
+    // Metadados
     createdAt: '2022-06-18T11:00:00',
     updatedAt: '2024-12-20T09:15:00',
     changeHistory: [
@@ -98,31 +127,40 @@ const mockDriversData: Driver[] = [
         date: '2024-12-20T09:15:00',
         changedBy: 'ADMIN',
         field: 'status',
-        oldValue: 'Disponível',
+        oldValue: 'Ativo',
         newValue: 'Inativo'
       }
     ]
   },
-
   {
     id: 'MOT-004',
+    // Dados pessoais
     fullName: 'Carlos Eduardo Pimenta',
     cpf: '741.852.963-77',
+    phone: '+55 85 95555-4444',
+    email: 'carlos.pimenta@gmail.com',
+    // Endereço
+    fullAddress: 'Av. Beira Mar, 321, Meireles',
+    zipCode: '60165-121',
+    city: 'Fortaleza',
+    state: 'CE',
+    // Habilitação
     cnhNumber: '99887766554',
     cnhCategory: 'B',
     cnhValidity: '2027-05-30',
-    phone: '+55 85 95555-4444',
-    email: 'carlos.pimenta@gmail.com',
+    // Vínculo
     driverLinkType: 'Parceiro',
+    baseCity: 'Fortaleza',
+    registrationDate: '2024-02-01',
     status: 'Suspenso',
-    profilePhoto: 'https://i.pravatar.cc/150?img=12',
     linkedVehicleId: 'VEI-007',
+    // Métricas
     averageRating: 2.8,
     totalDeliveries: 45,
-    baseCity: 'Fortaleza',
-    admissionDate: '2024-02-01',
     internalScore: 42,
-    observations: 'Suspenso por múltiplas reclamações.',
+    // Observações
+    internalNotes: 'Suspenso por múltiplas reclamações.',
+    // Metadados
     createdAt: '2024-02-01T10:00:00',
     updatedAt: '2025-01-25T13:00:00',
     changeHistory: [
@@ -160,8 +198,13 @@ const getDriverColumns = ({ onView, onEdit, onDelete }: GetDriverColumnsParams):
     key: 'averageRating',
     header: 'AVALIAÇÃO',
     type: 'fixed-short',
+    align: 'center',
     render: (_: unknown, row: Driver) => {
-      return <span>{row.averageRating} <i className="bi bi-star"></i></span>
+      return (
+        <span>
+          {row.averageRating.toFixed(1)} <i className="bi bi-star-fill"></i>
+        </span>
+      );
     }
   } as ColumnDefinition<Driver>,
   {
@@ -188,7 +231,7 @@ export const Drivers = () => {
   const handleSubmit = async (data: Partial<Driver>) => {
     crud.setIsLoading(true);
     try {
-      if (crud.isEdit) {
+      if (crud.isEdit && crud.selectedEntity) {
         // TODO: Implementar chamada API
         // await updateDriver(data);
 
@@ -196,17 +239,18 @@ export const Drivers = () => {
 
         // Atualiza estado local
         setDrivers(prev => prev.map(d =>
-          d.id === data.id 
-          ? { ...d, ...data, updatedAt: new Date().toISOString() } 
-          : d
+          d.id === crud.selectedEntity!.id
+            ? { ...d, ...data, updatedAt: new Date().toISOString() }
+            : d
         ));
       } else {
         const newDriver: Driver = {
-          id: `DRV-${Date.now()}`,
           ...data,
+          id: `DRV-${Date.now()}`,
           averageRating: 0,
           totalDeliveries: 0,
           internalScore: 0,
+          changeHistory: [],
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString()
         } as Driver;
@@ -229,6 +273,7 @@ export const Drivers = () => {
       console.log('Deletando motorista:', crud.selectedEntity.id);
       setDrivers(prev => prev.filter(d => d.id !== crud.selectedEntity!.id));
       crud.setIsDeleteOpen(false);
+      crud.setSelectedEntity(null);
     } catch (error) {
       console.error('Erro ao deletar Motorista:', error);
     } finally {
@@ -254,10 +299,13 @@ export const Drivers = () => {
 
       <Table data={drivers} columns={columns} />
 
-      {/* Modal de Formulário (Create/Edit) */}
+      {/* Modal de Formulário */}
       <ModalForm
         isOpen={crud.isFormOpen}
-        onClose={() => crud.setIsFormOpen(false)}
+        onClose={() => {
+          crud.setIsFormOpen(false);
+          crud.setSelectedEntity(null);
+        }}
         title={crud.isEdit ? 'Editar Motorista' : 'Novo Motorista'}
         subtitle={crud.isEdit ? crud.selectedEntity?.fullName : undefined}
         size="lg"
@@ -267,7 +315,10 @@ export const Drivers = () => {
           key={crud.selectedEntity?.id || 'new'}
           initialData={crud.selectedEntity}
           onSubmit={handleSubmit}
-          onCancel={() => crud.setIsFormOpen(false)}
+          onCancel={() => {
+            crud.setIsFormOpen(false);
+            crud.setSelectedEntity(null);
+          }}
           isEdit={crud.isEdit}
           isLoading={crud.isLoading}
         />
@@ -276,7 +327,10 @@ export const Drivers = () => {
       {/* Modal de Detalhes */}
       <ModalDetails
         isOpen={crud.isDetailsOpen}
-        onClose={() => crud.setIsDetailsOpen(false)}
+        onClose={() => {
+          crud.setIsDetailsOpen(false);
+          crud.setSelectedEntity(null);
+        }}
         title="Detalhes do Motorista"
         subtitle={crud.selectedEntity?.fullName}
         onEdit={() => {
@@ -296,7 +350,10 @@ export const Drivers = () => {
       <ModalConfirm
         isOpen={crud.isDeleteOpen}
         onConfirm={handleDelete}
-        onCancel={() => crud.setIsDeleteOpen(false)}
+        onCancel={() => {
+          crud.setIsDeleteOpen(false);
+          crud.setSelectedEntity(null);
+        }}
         title="Deletar Motorista"
         message={`Tem certeza que deseja deletar "${crud.selectedEntity?.fullName}"?`}
         variant="danger"

@@ -2,7 +2,7 @@
 
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { FormActions, FormCheckbox, FormContainer, FormError, FormField, FormGrid, FormSection, FormSelect, FormTextarea } from "../Form";
-import type { BaseEntity, EntitySchema, FormFieldDefinition } from "./types";
+import type { BaseEntity, EntitySchema, FormFieldDefinition } from "../../../types";
 
 export interface EntityGenericFormProps<T extends BaseEntity> {
     schema: EntitySchema<T>;

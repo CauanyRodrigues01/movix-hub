@@ -1,35 +1,7 @@
-import { FieldType, type BaseEntity, type EntitySchema } from "../../common/EntityCRUD/types";
+
+import type { Driver } from "../../../types";
+import { FieldType, type EntitySchema } from "../../common/EntityCRUD";
 import type { ColumnDefinition } from "../../common/Table";
-
-export type CnhCategory = 'A' | 'B' | 'C' | 'D' | 'E' | 'AB' | 'AC' | 'AD' | 'AE';
-export type DriverLinkType = 'CLT' | 'PJ' | 'Terceirizado' | 'Parceiro';
-export type DriverStatus = 'Ativo' | 'Inativo' | 'Suspenso' | 'Férias';
-
-export interface Driver extends BaseEntity {
-    fullName: string;
-    cpf: string;
-    cnhNumber: string;
-    cnhCategory: CnhCategory;
-    cnhValidity: string;
-    phone: string;
-    email: string;
-    driverLinkType: DriverLinkType;
-    status: DriverStatus;
-    linkedVehicleId?: string;
-    averageRating: number;
-    totalDeliveries: number;
-    baseCity: string;
-    admissionDate: string;
-    internalScore: number;
-    observations?: string;
-    changeHistory?: Array<{
-        date: string;
-        changedBy: string;
-        field: string;
-        oldValue: string;
-        newValue: string;
-    }>;
-}
 
 export const driverSchema: EntitySchema<Driver> = {
     entityName: 'Motorista',
@@ -68,6 +40,66 @@ export const driverSchema: EntitySchema<Driver> = {
             section: 'Dados Pessoais'
         },
         {
+            name: 'zipCode',
+            label: 'CEP',
+            type: FieldType.Text,
+            required: true,
+            section: 'Endereço',
+            placeholder: '00000-000',
+            mask: '00000-000'
+        },
+        {
+            name: 'fullAddress',
+            label: 'Endereço Completo',
+            type: FieldType.Text,
+            required: true,
+            section: 'Endereço',
+            placeholder: 'Rua, número, complemento'
+        },
+        {
+            name: 'city',
+            label: 'Cidade',
+            type: FieldType.Text,
+            required: true,
+            section: 'Endereço'
+        },
+        {
+            name: 'state',
+            label: 'Estado',
+            type: FieldType.Select,
+            required: true,
+            section: 'Endereço',
+            options: [
+                { value: 'AC', label: 'Acre' },
+                { value: 'AL', label: 'Alagoas' },
+                { value: 'AP', label: 'Amapá' },
+                { value: 'AM', label: 'Amazonas' },
+                { value: 'BA', label: 'Bahia' },
+                { value: 'CE', label: 'Ceará' },
+                { value: 'DF', label: 'Distrito Federal' },
+                { value: 'ES', label: 'Espírito Santo' },
+                { value: 'GO', label: 'Goiás' },
+                { value: 'MA', label: 'Maranhão' },
+                { value: 'MT', label: 'Mato Grosso' },
+                { value: 'MS', label: 'Mato Grosso do Sul' },
+                { value: 'MG', label: 'Minas Gerais' },
+                { value: 'PA', label: 'Pará' },
+                { value: 'PB', label: 'Paraíba' },
+                { value: 'PR', label: 'Paraná' },
+                { value: 'PE', label: 'Pernambuco' },
+                { value: 'PI', label: 'Piauí' },
+                { value: 'RJ', label: 'Rio de Janeiro' },
+                { value: 'RN', label: 'Rio Grande do Norte' },
+                { value: 'RS', label: 'Rio Grande do Sul' },
+                { value: 'RO', label: 'Rondônia' },
+                { value: 'RR', label: 'Roraima' },
+                { value: 'SC', label: 'Santa Catarina' },
+                { value: 'SP', label: 'São Paulo' },
+                { value: 'SE', label: 'Sergipe' },
+                { value: 'TO', label: 'Tocantins' }
+            ]
+        },
+        {
             name: 'cnhNumber',
             label: 'Número da CNH',
             type: FieldType.Text,
@@ -81,11 +113,15 @@ export const driverSchema: EntitySchema<Driver> = {
             required: true,
             section: 'Habilitação',
             options: [
-                { value: 'A', label: 'A' },
-                { value: 'B', label: 'B' },
-                { value: 'C', label: 'C' },
-                { value: 'D', label: 'D' },
-                { value: 'E', label: 'E' }
+                { value: 'A', label: 'A - Motocicletas' },
+                { value: 'B', label: 'B - Automóveis' },
+                { value: 'C', label: 'C - Caminhões pequenos' },
+                { value: 'D', label: 'D - Ônibus e vans' },
+                { value: 'E', label: 'E - Carretas e caminhões pesados' },
+                { value: 'AB', label: 'AB - A + B' },
+                { value: 'AC', label: 'AC - A + C' },
+                { value: 'AD', label: 'AD - A + D' },
+                { value: 'AE', label: 'AE - A + E' }
             ]
         },
         {
@@ -116,7 +152,7 @@ export const driverSchema: EntitySchema<Driver> = {
             section: 'Vínculo Profissional'
         },
         {
-            name: 'admissionDate',
+            name: 'registrationDate',
             label: 'Data de Admissão',
             type: FieldType.Date,
             required: true,
@@ -137,12 +173,20 @@ export const driverSchema: EntitySchema<Driver> = {
             ]
         },
         {
-            name: 'observations',
-            label: 'Observações',
+            name: 'linkedVehicleId',
+            label: 'Veículo Vinculado',
+            type: FieldType.Text,
+            section: 'Vínculo Profissional',
+            placeholder: 'ID do veículo (opcional)'
+        },
+        {
+            name: 'internalNotes',
+            label: 'Notas Internas',
             type: FieldType.Textarea,
-            section: 'Informações Adicionais',
-            rows: 4,
-            maxLength: 500
+            section: 'Observações',
+            rows: 3,
+            maxLength: 500,
+            placeholder: 'Notas internas (não visíveis para o motorista)'
         }
     ],
 
