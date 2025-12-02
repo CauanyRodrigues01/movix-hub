@@ -37,6 +37,11 @@ const mockClientsData: Client[] = [
     zipCode: '58400-123',
     city: 'Campina Grande',
     state: 'PB',
+    lastAccess: '2025-02-10T09:45:00',
+    loginAttempts: 0,
+    passwordHash: 'hashed_password_001',
+    profilePhoto: 'https://i.pravatar.cc/150?img=12',
+    userName: 'maria.santos',
 
     // Status (CLIENTE)
     status: 'Ativo',
@@ -77,6 +82,11 @@ const mockClientsData: Client[] = [
     zipCode: '59000-200',
     city: 'Natal',
     state: 'RN',
+    lastAccess: '2025-02-10T09:45:00',
+    loginAttempts: 0,
+    passwordHash: 'hashed_password_002',
+    profilePhoto: 'https://i.pravatar.cc/150?img=12',
+    userName: 'construtora.horizonte',
 
     status: 'Ativo',
 
@@ -114,6 +124,11 @@ const mockClientsData: Client[] = [
     zipCode: '60000-340',
     city: 'Fortaleza',
     state: 'CE',
+    lastAccess: '2025-02-10T09:45:00',
+    loginAttempts: 0,
+    passwordHash: 'hashed_password_003',
+    profilePhoto: 'https://i.pravatar.cc/150?img=12',
+    userName: 'joaopedro',
 
     status: 'Inativo',
 
@@ -154,9 +169,9 @@ const getClientColumns = ({ onView, onEdit, onDelete }: GetClientColumnsParams):
     align: 'center',
     type: 'actions',
     render: (_: unknown, row: Client) => <TableActions
-        onView={() => onView(row)}
-        onEdit={() => onEdit(row)}
-        onDelete={() => onDelete(row)}
+      onView={() => onView(row)}
+      onEdit={() => onEdit(row)}
+      onDelete={() => onDelete(row)}
     />
   }
 ];
@@ -187,7 +202,14 @@ export const Clients = () => {
         const newClient: Client = {
           ...data,
           id: `CLT-${Date.now()}`,
+          totalServices: 0, 
+          lastServiceDate: null,
           changeHistory: [],
+          loginAttempts: 0,
+          lastAccess: new Date().toISOString(),
+          profilePhoto: undefined,
+          userName: data.email?.split('@')[0] || 'new_client',
+          status: 'Ativo',
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString()
         } as Client;

@@ -127,28 +127,6 @@ export const clientSchema: EntitySchema<Client> = {
                 { value: 'Ouro', label: 'Ouro' }
             ]
         },
-        {
-            name: 'status',
-            label: 'Status',
-            type: FieldType.Select,
-            required: true,
-            section: 'Informações Comerciais',
-            defaultValue: 'Ativo',
-            options: [
-                { value: 'Ativo', label: 'Ativo' },
-                { value: 'Inativo', label: 'Inativo' },
-                { value: 'Bloqueado', label: 'Bloqueado' }
-            ]
-        },
-        {
-            name: 'internalNotes',
-            label: 'Notas Internas',
-            type: FieldType.Textarea,
-            section: 'Observações',
-            rows: 4,
-            maxLength: 500,
-            placeholder: 'Observações internas sobre o cliente'
-        }
     ],
 
     tableColumns: [

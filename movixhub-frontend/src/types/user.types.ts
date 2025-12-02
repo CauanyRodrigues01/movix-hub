@@ -15,9 +15,5 @@ export interface User extends BasePerson {
     department: string;
     accessProfile: AccessProfile;
     specificPermissions: string[];
-    lastAccess: string; 
-    loginAttempts: number;
-    passwordHash: string;
-    profilePhoto?: string;
     createdBy: string;
 }

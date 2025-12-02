@@ -42,6 +42,7 @@ const mockUsersData: User[] = [
     loginAttempts: 0,
     passwordHash: 'hashed_password_001',
     profilePhoto: 'https://i.pravatar.cc/150?img=12',
+    userName: 'lucas.santos',
     createdBy: 'USER-ADMIN',
     // Observações (BasePerson)
     internalNotes: 'Funcionário exemplar, com excelente desempenho.',
@@ -75,6 +76,7 @@ const mockUsersData: User[] = [
     loginAttempts: 1,
     passwordHash: 'hashed_password_002',
     profilePhoto: 'https://i.pravatar.cc/150?img=32',
+    userName: 'mariana.silva',
     createdBy: 'USER-ADMIN',
     // Observações (BasePerson)
     internalNotes: 'Responsável por análises de custos e relatórios.',
@@ -108,6 +110,7 @@ const mockUsersData: User[] = [
     loginAttempts: 0,
     passwordHash: 'hashed_password_003',
     profilePhoto: 'https://i.pravatar.cc/150?img=5',
+    userName: 'rafael.costa',
     createdBy: 'USER-ADMIN',
     // Observações (BasePerson)
     internalNotes: 'Desligado em dezembro de 2024.',
@@ -149,6 +152,7 @@ const mockUsersData: User[] = [
     loginAttempts: 5,
     passwordHash: 'hashed_password_004',
     profilePhoto: 'https://i.pravatar.cc/150?img=44',
+    userName: 'ana.rocha',
     createdBy: 'SYSTEM',
     // Observações (BasePerson)
     internalNotes: 'Conta suspensa por múltiplas tentativas de login falhadas.',
@@ -281,6 +285,8 @@ export const Users = () => {
           loginAttempts: 0,
           lastAccess: new Date().toISOString(),
           profilePhoto: undefined,
+          userName: data.email?.split('@')[0] || 'new_user',
+          status: 'Ativo',
           createdBy: 'CURRENT_USER',
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
