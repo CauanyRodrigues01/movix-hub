@@ -21,7 +21,7 @@ const mockUsersData: User[] = [
     id: 'USER-001',
     // Dados pessoais (BasePerson)
     fullName: 'Lucas Andrade Moura Santos',
-    cpf: '123.456.789-00',
+    cpfCnpj: '123.456.789-00',
     phone: '+55 83 99999-1234',
     email: 'lucas.santos@gmail.com',
     corporateEmail: 'lucas.andrade@movix.com',
@@ -54,7 +54,7 @@ const mockUsersData: User[] = [
     id: 'USER-002',
     // Dados pessoais (BasePerson)
     fullName: 'Mariana Silva Fernandes Lima',
-    cpf: '987.654.321-00',
+    cpfCnpj: '987.654.321-00',
     phone: '+55 84 98888-4567',
     email: 'mariana.silva@hotmail.com',
     corporateEmail: 'mariana.silva@movix.com',
@@ -87,7 +87,7 @@ const mockUsersData: User[] = [
     id: 'USER-003',
     // Dados pessoais (BasePerson)
     fullName: 'Rafael Costa da Silva Lopes',
-    cpf: '456.789.123-00',
+    cpfCnpj: '456.789.123-00',
     phone: '+55 81 97777-0001',
     email: 'rafael.costa@outlook.com',
     corporateEmail: 'rafael.costa@movix.com',
@@ -128,7 +128,7 @@ const mockUsersData: User[] = [
     id: 'USER-004',
     // Dados pessoais (BasePerson)
     fullName: 'Ana Beatriz Rocha Vieira',
-    cpf: '321.654.987-00',
+    cpfCnpj: '321.654.987-00',
     phone: '+55 85 96666-7890',
     email: 'ana.rocha@gmail.com',
     corporateEmail: 'ana.rocha@movix.com',

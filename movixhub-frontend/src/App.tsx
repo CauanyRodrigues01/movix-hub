@@ -4,7 +4,6 @@ import ProtectedRoute from './routes/ProtectedRoute';
 
 import Freights from './pages/Freights/Freights';
 import Promotions from './pages/Promotions/Promotions';
-import Clients from './pages/Clients/Clients';
 import { Login } from './pages/Login/Login';
 import { Dashboard } from './pages/Dashboard/Dashboard';
 import { Settings } from './pages/Settings/Settings';
@@ -12,6 +11,7 @@ import { Help } from './pages/Help/Help';
 import AdminLayout from './components/AdminLayout/AdminLayout';
 import { Users } from './pages/Users/Users';
 import { Drivers } from './pages/Drivers/Drivers';
+import { Clients } from './pages/Clients/Clients';
 
 function App() {
   return (

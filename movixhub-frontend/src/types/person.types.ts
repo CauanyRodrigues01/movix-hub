@@ -4,7 +4,7 @@ import type { BaseEntity, ChangeHistoryEntry } from "./base.types";
 export interface BasePerson extends BaseEntity {
     // Dados pessoais obrigatórios
     fullName: string;
-    cpf: string;
+    cpfCnpj: string;
     phone: string;
     email: string;
 

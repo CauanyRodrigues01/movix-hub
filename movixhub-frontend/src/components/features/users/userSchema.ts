@@ -14,7 +14,7 @@ export const userSchema: EntitySchema<User> = {
             section: 'Dados Pessoais'
         },
         {
-            name: 'cpf',
+            name: ' cpfCnpj',
             label: 'CPF',
             type: FieldType.Text,
             required: true,
@@ -44,7 +44,8 @@ export const userSchema: EntitySchema<User> = {
             type: FieldType.Email,
             required: true,
             section: 'Dados Pessoais'
-        }, {
+        }, 
+        {
             name: 'zipCode',
             label: 'CEP',
             type: FieldType.Text,
@@ -149,7 +150,8 @@ export const userSchema: EntitySchema<User> = {
                 { value: 'Bloqueado', label: 'Bloqueado' },
                 { value: 'Suspenso', label: 'Suspenso' }
             ]
-        }, {
+        }, 
+        {
             name: 'accessProfile',
             label: 'Perfil de Acesso',
             type: FieldType.Select,

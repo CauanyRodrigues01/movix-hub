@@ -15,12 +15,12 @@ export const driverSchema: EntitySchema<Driver> = {
             section: 'Dados Pessoais'
         },
         {
-            name: 'cpf',
-            label: 'CPF',
+            name: 'cpfCnpj',
+            label: 'CPF / CNPJ',
             type: FieldType.Text,
             required: true,
             section: 'Dados Pessoais',
-            placeholder: '000.000.000-00',
+            placeholder: '000.000.000-00 ou 00.000.000/0000-00',
             mask: '000.000.000-00'
         },
         {

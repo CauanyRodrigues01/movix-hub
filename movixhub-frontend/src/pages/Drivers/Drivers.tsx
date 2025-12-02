@@ -21,7 +21,7 @@ const mockDriversData: Driver[] = [
     id: 'MOT-001',
     // Dados pessoais
     fullName: 'João Carlos Ferreira',
-    cpf: '123.456.789-00',
+    cpfCnpj: '123.456.789-00',
     phone: '+55 83 98888-1111',
     email: 'joao.ferreira@gmail.com',
     // Endereço
@@ -54,7 +54,7 @@ const mockDriversData: Driver[] = [
     id: 'MOT-002',
     // Dados pessoais
     fullName: 'André Luiz Nascimento',
-    cpf: '987.654.321-99',
+    cpfCnpj: '987.654.321-99',
     phone: '+55 84 97777-2222',
     email: 'andre.nascimento@gmail.com',
     // Endereço
@@ -95,7 +95,7 @@ const mockDriversData: Driver[] = [
     id: 'MOT-003',
     // Dados pessoais
     fullName: 'Rogério Batista da Silva',
-    cpf: '321.654.987-55',
+    cpfCnpj: '321.654.987-55',
     phone: '+55 81 96666-3333',
     email: 'rogerio.silva@gmail.com',
     // Endereço
@@ -136,7 +136,7 @@ const mockDriversData: Driver[] = [
     id: 'MOT-004',
     // Dados pessoais
     fullName: 'Carlos Eduardo Pimenta',
-    cpf: '741.852.963-77',
+    cpfCnpj: '741.852.963-77',
     phone: '+55 85 95555-4444',
     email: 'carlos.pimenta@gmail.com',
     // Endereço

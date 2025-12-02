@@ -5,7 +5,6 @@ export type DriverLinkType = 'CLT' | 'PJ' | 'Terceirizado' | 'Parceiro';
 export type DriverStatus = 'Ativo' | 'Inativo' | 'Suspenso' | 'Férias';
 
 export interface Driver extends BasePerson {
-    
     // Override de tipos
     status: DriverStatus;
     
