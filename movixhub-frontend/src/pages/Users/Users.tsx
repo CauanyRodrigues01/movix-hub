@@ -1,21 +1,12 @@
-import Styles from './Users.module.css';
-import {
-  Table,
-  TableBadge,
-  TableActions,
-  type ColumnDefinition,
-  type TableBadgeProps
-} from '../../components/common/Table';
-
-import { PageHeader } from '../../components/common/Layout';
-import { Button } from '../../components/common/Button';
 import { useState } from 'react';
-import { UserForm, UserPermissionsModal, type UserFormData } from '../../components/features/users';
+import Styles from './Users.module.css';
+import { Table, TableActions, TableBadge, type ColumnDefinition, type TableBadgeProps } from '../../components/common/Table';
+import { UserPermissionsModal, userSchema, type User, type UserStatus } from '../../components/features/users';
+import { Button } from '../../components/common/Button';
+import { useEntityCRUD } from '../../hooks/useEntityCRUD';
+import { PageHeader } from '../../components/common/Layout';
 import { ModalConfirm, ModalDetails, ModalForm } from '../../components/common/Modal';
-import { UserDetailsContent } from '../../components/features/users/UserDetailsContent';
-
-type UserStatus = 'Ativo' | 'Inativo' | 'Bloqueado' | 'Suspenso';
-type AccessProfile = 'Administrador' | 'Operador' | 'Supervisor' | 'Finanças' | 'Visualizador';
+import { EntityDetailsContent, EntityGenericForm } from '../../components/common/EntityCRUD';
 
 const userStatusClasses: Record<UserStatus, TableBadgeProps["variant"]> = {
   'Ativo': 'success',
@@ -23,36 +14,6 @@ const userStatusClasses: Record<UserStatus, TableBadgeProps["variant"]> = {
   'Bloqueado': 'error',
   'Suspenso': 'warning',
 };
-
-interface ChangeHistory {
-  date: string;
-  changedBy: string;
-  field: string;
-  oldValue: string | number | boolean;
-  newValue: string | number | boolean;
-}
-
-interface User {
-  id: string;
-  fullName: string;
-  corporateEmail: string;
-  cpf: string;
-  phone?: string;
-  position: string;
-  department: string;
-  accessProfile: AccessProfile;
-  specificPermissions: string[];
-  status: UserStatus;
-  admissionDate: string;
-  lastAccess: string;
-  loginAttempts: number;
-  passwordHash: string;
-  profilePhoto?: string;
-  createdBy: string;
-  createdAt: string;
-  updatedAt: string;
-  changeHistory: ChangeHistory[];
-}
 
 const mockUsersData: User[] = [
   {
@@ -76,7 +37,6 @@ const mockUsersData: User[] = [
     updatedAt: '2025-01-20T11:30:00',
     changeHistory: []
   },
-
   {
     id: 'USER-002',
     fullName: 'Mariana Silva Fernandes Lima',
@@ -98,7 +58,6 @@ const mockUsersData: User[] = [
     updatedAt: '2024-12-18T09:10:00',
     changeHistory: []
   },
-
   {
     id: 'USER-003',
     fullName: 'Rafael Costa da Silva Lopes',
@@ -128,7 +87,6 @@ const mockUsersData: User[] = [
       }
     ]
   },
-
   {
     id: 'USER-004',
     fullName: 'Ana Beatriz Rocha Vieira',
@@ -161,208 +119,115 @@ const mockUsersData: User[] = [
 ];
 
 // Função auxiliar para criar colunas
-interface GetColumnsParams {
+interface GetUserColumnsParams {
   onView: (user: User) => void;
   onEdit: (user: User) => void;
   onDelete: (user: User) => void;
   onPermissions: (user: User) => void;
 }
 
-const getUsersColumns = ({ onView, onEdit, onDelete, onPermissions }: GetColumnsParams): ColumnDefinition<User>[] => [
-  {
-    key: 'fullName',
-    header: 'NOME',
-    type: 'large-text',
-    secondaryKey: 'corporateEmail'
-  },
-  {
-    key: 'position',
-    header: 'CARGO',
-    type: 'large-text'
-  },
-  {
-    key: 'accessProfile',
-    header: 'PERFIL DE ACESSO',
-    type: 'fixed-short'
-  },
-  {
-    key: 'specificPermissions',
-    header: 'PERMISSÕES',
-    align: 'center',
-    type: 'actions',
-    render: (value, row) => {
-      const permissions = value as string[];
-      const countPermissions = permissions.length;
-      return (
-        <Button
-          onClick={() => onPermissions(row)}
-          className={countPermissions > 0 ? Styles.permissionsActive : Styles.permissionsEmpty}
-          title="Gerenciar Permissões"
-          size='small'
-        >
-          <i className="bi bi-shield-lock"></i>
-          {countPermissions > 0 && ` ${countPermissions}`}
-        </Button>
-      );
+const getUsersColumns = ({
+  onView,
+  onEdit,
+  onDelete,
+  onPermissions
+}: GetUserColumnsParams): ColumnDefinition<User>[] => [
+    ...userSchema.tableColumns,
+    {
+      key: 'specificPermissions',
+      header: 'PERMISSÕES',
+      align: 'center',
+      type: 'actions',
+      render: (value: unknown, row: User) => { // ← CORRIGIDO: tipagem
+        const permissions = value as string[];
+        const countPermissions = permissions.length;
+        return (
+          <Button
+            onClick={() => onPermissions(row)}
+            className={countPermissions > 0 ? Styles.permissionsActive : Styles.permissionsEmpty}
+            title="Gerenciar Permissões"
+            size='small'
+          >
+            <i className="bi bi-shield-lock"></i>
+            {countPermissions > 0 && ` ${countPermissions}`}
+          </Button>
+        );
+      }
+    },
+    {
+      key: 'status',
+      header: 'STATUS',
+      type: 'badge',
+      align: 'center',
+      render: (value: unknown) => { // ← CORRIGIDO: tipagem
+        const status = value as UserStatus;
+        const variant = userStatusClasses[status] ?? 'default';
+        return <TableBadge value={status} variant={variant} />;
+      }
+    },
+    {
+      key: 'lastAccess',
+      header: 'ÚLTIMO ACESSO',
+      type: 'fixed-short',
+      render: (value: unknown) => { // ← CORRIGIDO: tipagem
+        if (!value) return '-';
+        const date = new Date(value as string);
+        return date.toLocaleString('pt-BR', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+      }
+    },
+    {
+      key: 'custom',
+      header: 'AÇÕES',
+      align: 'center',
+      type: 'actions',
+      render: (_: unknown, row: User) => ( // ← CORRIGIDO: tipagem
+        <TableActions
+          onView={() => onView(row)}
+          onEdit={() => onEdit(row)}
+          onDelete={() => onDelete(row)}
+        />
+      )
     }
-  },
-  {
-    key: 'status',
-    header: 'STATUS',
-    type: 'badge',
-    render: (value) => {
-      const status = value as UserStatus;
-      const variant = userStatusClasses[status] ?? 'default';
-      return <TableBadge value={status} variant={variant} />;
-    }
-  },
-  {
-    key: 'lastAccess',
-    header: 'ÚLTIMO ACESSO',
-    type: 'fixed-short',
-    render: (value) => {
-      const date = new Date(value as string);
-      return date.toLocaleString('pt-BR', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-    }
-  },
-  {
-    key: 'custom',
-    header: 'AÇÕES',
-    align: 'center',
-    type: 'actions',
-    render: (_, row) => (
-      <TableActions
-        onView={() => onView(row)}
-        onEdit={() => onEdit(row)}
-        onDelete={() => onDelete(row)}
-      />
-    )
-  }
-];
+  ];
 
 export const Users = () => {
-
   // Estado dos dados
   const [users, setUsers] = useState<User[]>(mockUsersData);
 
-  // Estados do modals
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  // Hook tipado com User
+  const crud = useEntityCRUD<User>();
+
+  // Estado do modal de permissões (separado porque é customizado)
   const [isPermissionsOpen, setIsPermissionsOpen] = useState(false);
-
-  // Estados auxiliares
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [isEdit, setIsEdit] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
-  // Handlers para CRIAR
-  const handleCreateUser = () => {
-    setSelectedUser(null);
-    setIsEdit(false);
-    setIsFormOpen(true);
-  };
-
-  // Handlers para EDITAR
-  const handleEditUser = (user: User) => {
-    setSelectedUser(user);
-    setIsEdit(true);
-    setIsFormOpen(true);
-  };
-
-  // Handlers para VER DETALHES
-  const handleViewUser = (user: User) => {
-    setSelectedUser(user);
-    setIsDetailsOpen(true);
-  };
-
-  // Handlers para DELETAR
-  const handleDeleteUserClick = (user: User) => {
-    setSelectedUser(user);
-    setIsDeleteOpen(true);
-  };
-
-  const handleDeleteUser = async () => {
-    if (!selectedUser) return;
-
-    setIsLoading(true);
-    try {
-      // TODO: Implementar chamada API
-      // await deleteUser(selectedUser.id);
-      console.log('Deltando usuáiro:', selectedUser.id);
-
-      // Atualiza estado local
-      setUsers(prevUsers => prevUsers.filter(u => u.id !== selectedUser.id));
-      setIsDeleteOpen(false);
-      setSelectedUser(null);
-    } catch (error) {
-      console.error('Erro ao deletar usuário:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Handlers para PERMISSÕES
-  const handlePermissions = (user: User) => {
-    setSelectedUser(user);
-    setIsPermissionsOpen(true);
-  };
-
-  const handleSavePermissions = async (permissions: string[]) => {
-    if (!selectedUser) return;
-
-    setIsLoading(true);
-    try {
-      // TODO: Implementar chamada API
-      // await updateUserPermissions(selectedUser.id, permissions);
-
-      console.log('Salvando permissões para usuário:', { userId: selectedUser.id, permissions });
-      // Atualiza estado local
-      setUsers(prevUsers => prevUsers.map(u =>
-        u.id === selectedUser.id
-          ? { ...u, specificPermissions: permissions }
-          : u
-      ));
-
-      setIsPermissionsOpen(false);
-      setSelectedUser(null);
-
-    } catch (error) {
-      console.error('Erro ao salvar permissões:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const [permissionsUser, setPermissionsUser] = useState<User | null>(null);
 
   // Handler do FORMULÁRIO (Create/Edit)
-  const handleSubmit = async (data: UserFormData) => {
-    setIsLoading(true);
+  const handleSubmit = async (data: Partial<User>) => {
+    crud.setIsLoading(true);
     try {
-      if (isEdit) {
+      if (crud.isEdit && crud.selectedEntity) {
         // TODO: Implementar chamada API
         // await updateUser(data);
-
         console.log('Atualizando usuário:', data);
 
         // Atualiza estado local
         setUsers(prevUsers => prevUsers.map(u =>
-          u.id === data.id
-            ? { ...u, ...data, updateAt: new Date().toISOString() }
+          u.id === crud.selectedEntity!.id
+            ? { ...u, ...data, updatedAt: new Date().toISOString() } // ← CORRIGIDO: updatedAt
             : u
         ));
       } else {
         // TODO: Implementar chamada API
         // const newUser = await createUser(data);
-
         const newUser: User = {
-          id: `USER-${Date.now()}`,
           ...data,
+          id: `USER-${Date.now()}`,
           specificPermissions: [],
           loginAttempts: 0,
           lastAccess: new Date().toISOString(),
@@ -371,27 +236,82 @@ export const Users = () => {
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           changeHistory: [],
-          passwordHash: data.passwordHash || ''
-        };
+          passwordHash: data.passwordHash || 'temp_hash'
+        } as User;
 
         console.log('Criando novo usuário:', newUser);
-
         setUsers(prevUsers => [...prevUsers, newUser]);
       }
 
-      setIsFormOpen(false);
-      setSelectedUser(null);
+      crud.setIsFormOpen(false);
+      crud.setSelectedEntity(null);
     } catch (error) {
       console.error('Erro ao salvar usuário:', error);
     } finally {
-      setIsLoading(false);
+      crud.setIsLoading(false);
     }
   };
 
-  const usersColumns: ColumnDefinition<User>[] = getUsersColumns({
-    onView: handleViewUser,
-    onEdit: handleEditUser,
-    onDelete: handleDeleteUserClick,
+  // Handler de DELETE
+  const handleDelete = async () => {
+    if (!crud.selectedEntity) return;
+
+    crud.setIsLoading(true);
+    try {
+      // TODO: Implementar chamada API
+      // await deleteUser(selectedUser.id);
+      console.log('Deletando usuário:', crud.selectedEntity.id); // ← CORRIGIDO: typo
+
+      // Atualiza estado local
+      setUsers(prevUsers => prevUsers.filter(u => u.id !== crud.selectedEntity!.id));
+      crud.setIsDeleteOpen(false);
+      crud.setSelectedEntity(null);
+    } catch (error) {
+      console.error('Erro ao deletar usuário:', error);
+    } finally {
+      crud.setIsLoading(false);
+    }
+  };
+
+  // Handler para abrir modal de PERMISSÕES
+  const handlePermissions = (user: User) => { // ← CORRIGIDO: recebe o user
+    setPermissionsUser(user);
+    setIsPermissionsOpen(true);
+  };
+
+  // Handler para SALVAR permissões
+  const handleSavePermissions = async (permissions: string[]) => {
+    if (!permissionsUser) return; // ← CORRIGIDO: usa permissionsUser
+
+    crud.setIsLoading(true);
+    try {
+      // TODO: Implementar chamada API
+      // await updateUserPermissions(permissionsUser.id, permissions);
+      console.log('Salvando permissões:', {
+        userId: permissionsUser.id,
+        permissions
+      });
+
+      // Atualiza estado local
+      setUsers(prevUsers => prevUsers.map(u =>
+        u.id === permissionsUser.id
+          ? { ...u, specificPermissions: permissions, updatedAt: new Date().toISOString() }
+          : u
+      ));
+
+      setIsPermissionsOpen(false);
+      setPermissionsUser(null);
+    } catch (error) {
+      console.error('Erro ao salvar permissões:', error);
+    } finally {
+      crud.setIsLoading(false);
+    }
+  };
+
+  const usersColumns = getUsersColumns({
+    onView: crud.handleView,
+    onEdit: crud.handleEdit,
+    onDelete: crud.handleDeleteClick,
     onPermissions: handlePermissions
   });
 
@@ -402,76 +322,98 @@ export const Users = () => {
         description="Gerencie os membros da equipe e suas permissões."
         buttonIcon={<i className="bi bi-plus-lg"></i>}
         buttonText="Adicionar Membro"
-        onButtonClick={handleCreateUser}
+        onButtonClick={crud.handleCreate}
       />
-      <Table
-        data={users}
-        columns={usersColumns}
-      />
+
+      <Table data={users} columns={usersColumns} />
 
       {/* Modal de Formulário (Create/Edit) */}
       <ModalForm
-        isOpen={isFormOpen}
-        onClose={() => setIsFormOpen(false)}
-        title={isEdit ? 'Editar Usuário' : 'Novo Usuário'}
-        subtitle={isEdit ? selectedUser?.fullName : undefined}
+        isOpen={crud.isFormOpen}
+        onClose={() => {
+          crud.setIsFormOpen(false);
+          crud.setSelectedEntity(null);
+        }}
+        title={crud.isEdit ? 'Editar Usuário' : 'Novo Usuário'}
+        subtitle={crud.isEdit ? crud.selectedEntity?.fullName : undefined}
         size="lg"
       >
-        <UserForm
-          key={selectedUser?.id || 'new'}
-          initialData={selectedUser}
+        <EntityGenericForm<User>
+          schema={userSchema}
+          key={crud.selectedEntity?.id || 'new'}
+          initialData={crud.selectedEntity}
           onSubmit={handleSubmit}
-          onCancel={() => setIsFormOpen(false)}
-          isEdit={isEdit}
-          isLoading={isLoading}
+          onCancel={() => {
+            crud.setIsFormOpen(false);
+            crud.setSelectedEntity(null);
+          }}
+          isEdit={crud.isEdit}
+          isLoading={crud.isLoading}
         />
       </ModalForm>
 
       {/* Modal de Detalhes (View) */}
       <ModalDetails
-        isOpen={isDetailsOpen}
-        onClose={() => setIsDetailsOpen(false)}
+        isOpen={crud.isDetailsOpen}
+        onClose={() => {
+          crud.setIsDetailsOpen(false);
+          crud.setSelectedEntity(null);
+        }}
         title="Detalhes do Usuário"
-        subtitle={selectedUser?.fullName}
+        subtitle={crud.selectedEntity?.fullName}
         size="lg"
         onEdit={() => {
-                    setIsDetailsOpen(false);
-                    if (selectedUser) handleEditUser(selectedUser);
-                }}
+          crud.setIsDetailsOpen(false);
+          if (crud.selectedEntity) crud.handleEdit(crud.selectedEntity);
+        }}
       >
-        {selectedUser && <UserDetailsContent user={selectedUser} />}
+        {crud.selectedEntity && (
+          <EntityDetailsContent<User>
+            schema={userSchema}
+            entity={crud.selectedEntity}
+          />
+        )}
       </ModalDetails>
 
-      {/* Modal de Permissões */}
+      {/* Modal de Permissões (Customizado) */}
       <ModalForm
         isOpen={isPermissionsOpen}
-        onClose={() => setIsPermissionsOpen(false)}
+        onClose={() => {
+          setIsPermissionsOpen(false);
+          setPermissionsUser(null);
+        }}
         title="Gerenciar Permissões"
-        subtitle={selectedUser?.fullName}
+        subtitle={permissionsUser?.fullName}
         size="lg"
       >
-        {selectedUser && (
+        {permissionsUser && (
           <UserPermissionsModal
-            userName={selectedUser.fullName}
-            currentPermissions={selectedUser.specificPermissions}
+            userName={permissionsUser.fullName}
+            currentPermissions={permissionsUser.specificPermissions}
             onSave={handleSavePermissions}
-            onCancel={() => setIsPermissionsOpen(false)}
-            isLoading={isLoading}
+            onCancel={() => {
+              setIsPermissionsOpen(false);
+              setPermissionsUser(null);
+            }}
+            isLoading={crud.isLoading}
           />
         )}
       </ModalForm>
 
       {/* Modal de Confirmação (Delete) */}
       <ModalConfirm
-        isOpen={isDeleteOpen}
-        onConfirm={handleDeleteUser}
-        onCancel={() => setIsDeleteOpen(false)}
+        isOpen={crud.isDeleteOpen}
+        onConfirm={handleDelete}
+        onCancel={() => {
+          crud.setIsDeleteOpen(false);
+          crud.setSelectedEntity(null);
+        }}
         title="Deletar Usuário"
-        message={`Tem certeza que deseja deletar o usuário "${selectedUser?.fullName}"? Esta ação não pode ser desfeita.`}
+        message={`Tem certeza que deseja deletar o usuário "${crud.selectedEntity?.fullName}"? Esta ação não pode ser desfeita.`}
         confirmLabel="Sim, deletar"
         cancelLabel="Cancelar"
         variant="danger"
-        isLoading={isLoading}
+        isLoading={crud.isLoading}
       />
     </div>
   );
