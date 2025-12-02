@@ -1,76 +1,19 @@
-// Tipo de Motorista
-// Motorista de Cargas
-// Motorista Leve
-// Motoboy
-// Motorista Urban
-// Carreteiro
-// Pranchista
-// etc.
-
-// Disponibilidade Programada
-// Férias
-// Folga
-// Ausente
-// Horário de Trabalho
-
-// Score de Segurança
-// Histórico de ocorrências
-// Reclamações
-// Notas negativas
-// Pontos críticos
-
+import { useState } from 'react';
 import Styles from './Drivers.module.css';
-import { 
-    Table,
-    TableBadge,
-    TableActions,
-    type ColumnDefinition,
-    type TableBadgeProps
-} from '../../components/common/Table';
-
+import { driverSchema, type Driver, type DriverStatus } from '../../components/features/drivers';
+import { Table, TableActions, TableBadge, type ColumnDefinition, type TableBadgeProps } from '../../components/common/Table';
+import { useEntityCRUD } from '../../hooks/useEntityCRUD';
 import { PageHeader } from '../../components/common/Layout';
+import { ModalConfirm, ModalDetails, ModalForm } from '../../components/common/Modal';
+import { EntityDetailsContent, EntityGenericForm } from '../../components/common/EntityCRUD';
 
-type DriverStatus = 'Disponível' | 'Em Rota' | 'Inativo' | 'Suspenso';
-type DriverLinkType = 'Interno' | 'Terceirizado' | 'Parceiro';
-type CnhCategory = 'A' | 'B' | 'C' | 'D' | 'E';
 
 const driverStatusClasses: Record<DriverStatus, TableBadgeProps["variant"]> = {
-  'Disponível': 'success',
-  'Em Rota': 'warning',
+  'Ativo': 'success',
   'Inativo': 'info',
+  'Férias': 'warning',
   'Suspenso': 'error',
 };
-
-interface ChangeHistory {
-  date: string;
-  changedBy: string;
-  field: string;
-  oldValue: string | number | boolean;
-  newValue: string | number | boolean;
-}
-
-interface Driver {
-  id: string;
-  fullName: string;
-  cpf: string;
-  cnhNumber: string;
-  cnhCategory: CnhCategory;
-  cnhValidity: string;
-  phone: string;
-  email: string;
-  driverLinkType: DriverLinkType;
-  status: DriverStatus;
-  linkedVehicleId?: string;
-  averageRating: number;
-  totalDeliveries: number;
-  baseCity: string;
-  admissionDate: string;
-  internalScore: number;
-  observations?: string;
-  createdAt: string;
-  updatedAt: string;
-  changeHistory: ChangeHistory[];
-}
 
 const mockDriversData: Driver[] = [
   {
@@ -83,7 +26,8 @@ const mockDriversData: Driver[] = [
     phone: '+55 83 98888-1111',
     email: 'joao.ferreira@gmail.com',
     driverLinkType: 'Parceiro',
-    status: 'Disponível',
+    status: 'Ativo',
+    profilePhoto: 'https://i.pravatar.cc/150?img=12',
     linkedVehicleId: 'VEI-001',
     averageRating: 4.8,
     totalDeliveries: 152,
@@ -105,8 +49,9 @@ const mockDriversData: Driver[] = [
     cnhValidity: '2025-03-20',
     phone: '+55 84 97777-2222',
     email: 'andre.nascimento@gmail.com',
-    driverLinkType: 'Interno',
-    status: 'Em Rota',
+    driverLinkType: 'Parceiro',
+    status: 'Ativo',
+    profilePhoto: 'https://i.pravatar.cc/150?img=12',
     linkedVehicleId: 'VEI-003',
     averageRating: 4.5,
     totalDeliveries: 310,
@@ -138,6 +83,7 @@ const mockDriversData: Driver[] = [
     email: 'rogerio.silva@gmail.com',
     driverLinkType: 'Terceirizado',
     status: 'Inativo',
+    profilePhoto: 'https://i.pravatar.cc/150?img=12',
     linkedVehicleId: 'VEI-005',
     averageRating: 3.9,
     totalDeliveries: 89,
@@ -169,6 +115,7 @@ const mockDriversData: Driver[] = [
     email: 'carlos.pimenta@gmail.com',
     driverLinkType: 'Parceiro',
     status: 'Suspenso',
+    profilePhoto: 'https://i.pravatar.cc/150?img=12',
     linkedVehicleId: 'VEI-007',
     averageRating: 2.8,
     totalDeliveries: 45,
@@ -190,74 +137,171 @@ const mockDriversData: Driver[] = [
   }
 ];
 
-const driversColumns: ColumnDefinition<Driver>[] = [
-    {
-        key: 'fullName',
-        header: 'NOME',
-        type: 'large-text',
-        secondaryKey: 'email'
-    }, 
-    {
-        key: 'status',
-        header: 'STATUS',
-        align: 'center',
-        type: 'badge',
-        render: (value) => {
-            const status = value as DriverStatus;
-            const variant = driverStatusClasses[status] ?? 'default';
-            return <TableBadge value={status} variant={variant} />;
-        }
-    },
-    {
-        key: 'driverLinkType',
-        header: 'VÍNCULO',
-        type: 'fixed-short'
-    },
-    {
-        key: 'averageRating',
-        header: 'AVALIAÇÃO',
-        type: 'fixed-short',
-        render: (_, row) => {
-            return <span>{row.averageRating} <i className="bi bi-star"></i></span>
-        } 
-    },
-    {
-        key: 'baseCity',
-        header: 'CIDADE BASE',
-        type: 'medium-text'
-    },
-    {
-        key: 'totalDeliveries',
-        header: 'TOTAL ENTREGAS',
-        type: 'fixed-short'
-    },
-    {
-        key: 'custom',
-        header: 'AÇÕES',
-        align: 'center',
-        type: 'actions',
-        render: (_, row) => <TableActions
-          onView={() => alert("ver mais " + row.id)}
-          onEdit={() => alert("Editando " + row.id)}
-          onDelete={() => alert("Deletando " + row.id)}
-        />
-    }
-]
-
-function Drivers() {
-    return (
-        <div className={Styles.driversContainer}>
-            <PageHeader 
-                title="Motoristas"
-                description="Gerencie os motoristas cadastrados no Movix."
-            />
-            <Table
-                data={mockDriversData}
-                columns={driversColumns}
-            />
-        </div>
-        
-    )
+interface GetDriverColumnsParams {
+  onView: (driver: Driver) => void;
+  onEdit: (driver: Driver) => void;
+  onDelete: (driver: Driver) => void;
 }
 
-export default Drivers;
+const getDriverColumns = ({ onView, onEdit, onDelete }: GetDriverColumnsParams): ColumnDefinition<Driver>[] => [
+  ...driverSchema.tableColumns,
+  {
+    key: 'status',
+    header: 'STATUS',
+    align: 'center',
+    type: 'badge',
+    render: (value: unknown) => {
+      const status = value as DriverStatus;
+      const variant = driverStatusClasses[status] ?? 'default';
+      return <TableBadge value={status} variant={variant} />;
+    }
+  } as ColumnDefinition<Driver>,
+  {
+    key: 'averageRating',
+    header: 'AVALIAÇÃO',
+    type: 'fixed-short',
+    render: (_: unknown, row: Driver) => {
+      return <span>{row.averageRating} <i className="bi bi-star"></i></span>
+    }
+  } as ColumnDefinition<Driver>,
+  {
+    key: 'custom',
+    header: 'AÇÕES',
+    align: 'center',
+    type: 'actions',
+    render: (_: unknown, row: Driver) => (
+      <TableActions
+        onView={() => onView(row)}
+        onEdit={() => onEdit(row)}
+        onDelete={() => onDelete(row)}
+      />
+    )
+  } as ColumnDefinition<Driver>
+];
+
+export const Drivers = () => {
+  const [drivers, setDrivers] = useState<Driver[]>(mockDriversData);
+
+  // Hook tipado com Driver
+  const crud = useEntityCRUD<Driver>();
+
+  const handleSubmit = async (data: Partial<Driver>) => {
+    crud.setIsLoading(true);
+    try {
+      if (crud.isEdit) {
+        // TODO: Implementar chamada API
+        // await updateDriver(data);
+
+        console.log('Atualizando motorista:', data);
+
+        // Atualiza estado local
+        setDrivers(prev => prev.map(d =>
+          d.id === data.id 
+          ? { ...d, ...data, updatedAt: new Date().toISOString() } 
+          : d
+        ));
+      } else {
+        const newDriver: Driver = {
+          id: `DRV-${Date.now()}`,
+          ...data,
+          averageRating: 0,
+          totalDeliveries: 0,
+          internalScore: 0,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        } as Driver;
+        console.log('Criando motorista:', newDriver);
+        setDrivers(prev => [...prev, newDriver]);
+      }
+      crud.setIsFormOpen(false);
+      crud.setSelectedEntity(null);
+    } catch (error) {
+      console.error('Erro ao salvar Motorista:', error);
+    } finally {
+      crud.setIsLoading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!crud.selectedEntity) return;
+    crud.setIsLoading(true);
+    try {
+      console.log('Deletando motorista:', crud.selectedEntity.id);
+      setDrivers(prev => prev.filter(d => d.id !== crud.selectedEntity!.id));
+      crud.setIsDeleteOpen(false);
+    } catch (error) {
+      console.error('Erro ao deletar Motorista:', error);
+    } finally {
+      crud.setIsLoading(false);
+    }
+  };
+
+  const columns = getDriverColumns({
+    onView: crud.handleView,
+    onEdit: crud.handleEdit,
+    onDelete: crud.handleDeleteClick
+  });
+
+  return (
+    <div className={Styles.driversContainer}>
+      <PageHeader
+        title="Motoristas"
+        description="Gerencie os motoristas cadastrados"
+        buttonIcon={<i className="bi bi-plus-lg"></i>}
+        buttonText="Novo Motorista"
+        onButtonClick={crud.handleCreate}
+      />
+
+      <Table data={drivers} columns={columns} />
+
+      {/* Modal de Formulário (Create/Edit) */}
+      <ModalForm
+        isOpen={crud.isFormOpen}
+        onClose={() => crud.setIsFormOpen(false)}
+        title={crud.isEdit ? 'Editar Motorista' : 'Novo Motorista'}
+        subtitle={crud.isEdit ? crud.selectedEntity?.fullName : undefined}
+        size="lg"
+      >
+        <EntityGenericForm<Driver>
+          schema={driverSchema}
+          key={crud.selectedEntity?.id || 'new'}
+          initialData={crud.selectedEntity}
+          onSubmit={handleSubmit}
+          onCancel={() => crud.setIsFormOpen(false)}
+          isEdit={crud.isEdit}
+          isLoading={crud.isLoading}
+        />
+      </ModalForm>
+
+      {/* Modal de Detalhes */}
+      <ModalDetails
+        isOpen={crud.isDetailsOpen}
+        onClose={() => crud.setIsDetailsOpen(false)}
+        title="Detalhes do Motorista"
+        subtitle={crud.selectedEntity?.fullName}
+        onEdit={() => {
+          crud.setIsDetailsOpen(false);
+          if (crud.selectedEntity) crud.handleEdit(crud.selectedEntity);
+        }}
+      >
+        {crud.selectedEntity && (
+          <EntityDetailsContent<Driver>
+            schema={driverSchema}
+            entity={crud.selectedEntity}
+          />
+        )}
+      </ModalDetails>
+
+      {/* Modal de Confirmação */}
+      <ModalConfirm
+        isOpen={crud.isDeleteOpen}
+        onConfirm={handleDelete}
+        onCancel={() => crud.setIsDeleteOpen(false)}
+        title="Deletar Motorista"
+        message={`Tem certeza que deseja deletar "${crud.selectedEntity?.fullName}"?`}
+        variant="danger"
+        isLoading={crud.isLoading}
+      />
+    </div>
+  );
+};
