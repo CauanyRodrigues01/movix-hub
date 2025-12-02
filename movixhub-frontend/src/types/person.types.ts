@@ -1,4 +1,4 @@
-import type { BaseEntity, ChangeHistoryEntry } from "./base.types";
+import type { BaseEntity } from "./base.types";
 
 // Interface BASE para todas as PESSOAS
 export interface BasePerson extends BaseEntity {
@@ -19,13 +19,7 @@ export interface BasePerson extends BaseEntity {
     passwordHash: string;
     profilePhoto?: string;
     userName: string;
-    
-    // Status (cada entidade terá seu próprio tipo)
-    status: string; // UserStatus | DriverStatus | ClientStatus
 
     // Notas internas
     internalNotes?: string;
-    
-    // Metadados
-    changeHistory?: ChangeHistoryEntry[];
 }

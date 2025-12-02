@@ -3,6 +3,10 @@ export interface BaseEntity {
     id: string;
     createdAt: string;
     updatedAt: string; 
+    changeHistory?: ChangeHistoryEntry[];
+    
+    // Status (cada entidade terá seu próprio tipo)
+    status: string; // UserStatus | DriverStatus | ClientStatus | PromotionStatus | FreightStatus
 }
 
 // Interface para histórico de mudanças
