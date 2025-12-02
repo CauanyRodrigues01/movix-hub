@@ -13,7 +13,7 @@ import { Clients } from './pages/Clients/Clients';
 import { FreightServices } from './pages/FreightsServices/FreightsServices';
 import { Promotions } from './pages/Promotions/Promotions';
 
-export const App = () => {
+function App () {
   return (
 
     <Routes>
@@ -49,3 +49,5 @@ export const App = () => {
 
   );
 };
+
+export default App;
