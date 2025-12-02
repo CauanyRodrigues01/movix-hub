@@ -1,7 +1,7 @@
 import type { BasePerson } from "./person.types";
 
 export type ClientType = 'Pessoa Física' | 'Pessoa Jurídica';
-export type ClientClassification = 'Regular' | 'Bronze' | 'Prata' | 'Ouro';
+export type ClientClassification = 'Novo Cliente' | 'Regular' | 'Bronze' | 'Prata' | 'Ouro';
 export type ClientStatus = 'Ativo' | 'Inativo' | 'Bloqueado';
 
 export interface Client extends BasePerson {

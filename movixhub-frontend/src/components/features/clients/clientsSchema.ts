@@ -113,20 +113,6 @@ export const clientSchema: EntitySchema<Client> = {
                 { value: 'TO', label: 'Tocantins' }
             ]
         },
-        {
-            name: 'classification',
-            label: 'Classificação do Cliente',
-            type: FieldType.Select,
-            required: true,
-            section: 'Informações Comerciais',
-            defaultValue: 'Regular',
-            options: [
-                { value: 'Regular', label: 'Regular' },
-                { value: 'Bronze', label: 'Bronze' },
-                { value: 'Prata', label: 'Prata' },
-                { value: 'Ouro', label: 'Ouro' }
-            ]
-        },
     ],
 
     tableColumns: [

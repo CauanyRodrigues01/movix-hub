@@ -2,8 +2,6 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 
 import ProtectedRoute from './routes/ProtectedRoute';
 
-import Freights from './pages/Freights/Freights';
-import Promotions from './pages/Promotions/Promotions';
 import { Login } from './pages/Login/Login';
 import { Dashboard } from './pages/Dashboard/Dashboard';
 import { Settings } from './pages/Settings/Settings';
@@ -12,6 +10,8 @@ import AdminLayout from './components/AdminLayout/AdminLayout';
 import { Users } from './pages/Users/Users';
 import { Drivers } from './pages/Drivers/Drivers';
 import { Clients } from './pages/Clients/Clients';
+import { FreightServices } from './pages/FreightsServices/FreightsServices';
+import { Promotions } from './pages/Promotions/Promotions';
 
 function App() {
   return (
@@ -34,7 +34,7 @@ function App() {
       {/* Rota admin protegida */}
       <Route element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
         <Route path="/dashboard/*" element={<Dashboard />} />
-        <Route path="/fretes" element={<Freights />} />
+        <Route path="/fretes" element={<FreightServices />} />
         <Route path="/promocoes" element={<Promotions />} />
         <Route path="/motoristas" element={<Drivers />} />
         <Route path="/clientes" element={<Clients />} />

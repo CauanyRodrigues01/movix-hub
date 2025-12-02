@@ -210,6 +210,7 @@ export const Clients = () => {
           profilePhoto: undefined,
           userName: data.email?.split('@')[0] || 'new_client',
           status: 'Ativo',
+          classification: 'Novo Cliente',
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString()
         } as Client;
