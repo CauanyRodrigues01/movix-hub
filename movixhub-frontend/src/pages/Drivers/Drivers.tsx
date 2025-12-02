@@ -36,7 +36,7 @@ const mockDriversData: Driver[] = [
     // Vínculo
     driverLinkType: 'Parceiro',
     baseCity: 'Campina Grande',
-    registrationDate: '2023-05-10',
+    admissionDate: '2023-05-10',
     status: 'Ativo',
     linkedVehicleId: 'VEI-001',
     // Métricas
@@ -69,7 +69,7 @@ const mockDriversData: Driver[] = [
     // Vínculo
     driverLinkType: 'CLT',
     baseCity: 'Natal',
-    registrationDate: '2021-11-02',
+    admissionDate: '2021-11-02',
     status: 'Ativo',
     linkedVehicleId: 'VEI-003',
     // Métricas
@@ -110,7 +110,7 @@ const mockDriversData: Driver[] = [
     // Vínculo
     driverLinkType: 'Terceirizado',
     baseCity: 'Recife',
-    registrationDate: '2022-06-18',
+    admissionDate: '2022-06-18',
     status: 'Inativo',
     linkedVehicleId: 'VEI-005',
     // Métricas
@@ -151,7 +151,7 @@ const mockDriversData: Driver[] = [
     // Vínculo
     driverLinkType: 'Parceiro',
     baseCity: 'Fortaleza',
-    registrationDate: '2024-02-01',
+    admissionDate: '2024-02-01',
     status: 'Suspenso',
     linkedVehicleId: 'VEI-007',
     // Métricas

@@ -4,6 +4,9 @@ export type UserStatus = 'Ativo' | 'Inativo' | 'Bloqueado' | 'Suspenso';
 export type AccessProfile = 'Administrador' | 'Operador' | 'Supervisor' | 'Finanças' | 'Visualizador';
 
 export interface User extends BasePerson {
+
+    admissionDate: string;
+    
     // Override de tipos
     status: UserStatus;
     

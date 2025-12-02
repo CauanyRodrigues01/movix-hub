@@ -17,8 +17,6 @@ export interface BasePerson extends BaseEntity {
     // Status (cada entidade terá seu próprio tipo)
     status: string; // UserStatus | DriverStatus | ClientStatus
     
-    // Data de registro (cliente) / admissão (usuário e motorista)
-    registrationDate: string;
 
     // Notas internas
     internalNotes?: string;

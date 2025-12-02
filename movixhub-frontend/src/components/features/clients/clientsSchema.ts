@@ -128,13 +128,6 @@ export const clientSchema: EntitySchema<Client> = {
             ]
         },
         {
-            name: 'registrationDate',
-            label: 'Data de Cadastro',
-            type: FieldType.Date,
-            required: true,
-            section: 'Informações Comerciais'
-        },
-        {
             name: 'status',
             label: 'Status',
             type: FieldType.Select,

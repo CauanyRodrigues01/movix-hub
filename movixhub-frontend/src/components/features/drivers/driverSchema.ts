@@ -152,7 +152,7 @@ export const driverSchema: EntitySchema<Driver> = {
             section: 'Vínculo Profissional'
         },
         {
-            name: 'registrationDate',
+            name: 'admissionDate',
             label: 'Data de Admissão',
             type: FieldType.Date,
             required: true,

@@ -31,7 +31,7 @@ const mockUsersData: User[] = [
     city: 'Campina Grande',
     state: 'PB',
     // Dados organizacionais (BasePerson)
-    registrationDate: '2022-03-15',
+    admissionDate: '2022-03-15',
     status: 'Ativo',
     // Dados específicos User
     position: 'Supervisor de Operações',
@@ -64,7 +64,7 @@ const mockUsersData: User[] = [
     city: 'Natal',
     state: 'RN',
     // Dados organizacionais (BasePerson)
-    registrationDate: '2023-01-05',
+    admissionDate: '2023-01-05',
     status: 'Ativo',
     // Dados específicos User
     position: 'Analista Financeiro',
@@ -97,7 +97,7 @@ const mockUsersData: User[] = [
     city: 'Recife',
     state: 'PE',
     // Dados organizacionais (BasePerson)
-    registrationDate: '2021-07-20',
+    admissionDate: '2021-07-20',
     status: 'Inativo',
     // Dados específicos User
     position: 'Agente de Suporte ao Cliente',
@@ -138,7 +138,7 @@ const mockUsersData: User[] = [
     city: 'Fortaleza',
     state: 'CE',
     // Dados organizacionais (BasePerson)
-    registrationDate: '2020-02-01',
+    admissionDate: '2020-02-01',
     status: 'Suspenso',
     // Dados específicos User
     position: 'Administradora de Sistemas',

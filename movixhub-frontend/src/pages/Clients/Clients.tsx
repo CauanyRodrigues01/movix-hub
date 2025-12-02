@@ -41,9 +41,6 @@ const mockClientsData: Client[] = [
     // Status (CLIENTE)
     status: 'Ativo',
 
-    // Data de registro
-    registrationDate: '2024-08-10T09:30:00',
-
     // Notas
     internalNotes: 'Cliente pontual e costuma solicitar fretes pequenos.',
 
@@ -82,7 +79,6 @@ const mockClientsData: Client[] = [
     state: 'RN',
 
     status: 'Ativo',
-    registrationDate: '2024-05-02T14:00:00',
 
     internalNotes: 'Empresa com contratos mensais recorrentes para transporte de materiais.',
 
@@ -120,7 +116,6 @@ const mockClientsData: Client[] = [
     state: 'CE',
 
     status: 'Inativo',
-    registrationDate: '2025-02-05T08:10:00',
 
     internalNotes: 'Cadastro recente, aguardando verificação de documentos.',
 
