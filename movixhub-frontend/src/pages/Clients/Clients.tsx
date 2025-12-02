@@ -180,7 +180,7 @@ export const Clients = () => {
         // TODO: Implementar chamada API
         // await updateClient(data);
 
-        console.log('Atualizando motorista:', data);
+        console.log('Atualizando cliente:', data);
 
         // Atualiza estado local
         setClients(prev => prev.map(d =>
@@ -196,13 +196,13 @@ export const Clients = () => {
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString()
         } as Client;
-        console.log('Criando motorista:', newClient);
+        console.log('Criando cliente:', newClient);
         setClients(prev => [...prev, newClient]);
       }
       crud.setIsFormOpen(false);
       crud.setSelectedEntity(null);
     } catch (error) {
-      console.error('Erro ao salvar Motorista:', error);
+      console.error('Erro ao salvar Cliente:', error);
     } finally {
       crud.setIsLoading(false);
     }
@@ -212,12 +212,12 @@ export const Clients = () => {
     if (!crud.selectedEntity) return;
     crud.setIsLoading(true);
     try {
-      console.log('Deletando motorista:', crud.selectedEntity.id);
+      console.log('Deletando cliente:', crud.selectedEntity.id);
       setClients(prev => prev.filter(d => d.id !== crud.selectedEntity!.id));
       crud.setIsDeleteOpen(false);
       crud.setSelectedEntity(null);
     } catch (error) {
-      console.error('Erro ao deletar Motorista:', error);
+      console.error('Erro ao deletar Cliente:', error);
     } finally {
       crud.setIsLoading(false);
     }
@@ -245,7 +245,7 @@ export const Clients = () => {
           crud.setIsFormOpen(false);
           crud.setSelectedEntity(null);
         }}
-        title={crud.isEdit ? 'Editar Motorista' : 'Novo Motorista'}
+        title={crud.isEdit ? 'Editar Cliente' : 'Novo Cliente'}
         subtitle={crud.isEdit ? crud.selectedEntity?.fullName : undefined}
         size="lg"
       >
@@ -270,7 +270,7 @@ export const Clients = () => {
           crud.setIsDetailsOpen(false);
           crud.setSelectedEntity(null);
         }}
-        title="Detalhes do Motorista"
+        title="Detalhes do Cliente"
         subtitle={crud.selectedEntity?.fullName}
         onEdit={() => {
           crud.setIsDetailsOpen(false);
@@ -293,7 +293,7 @@ export const Clients = () => {
           crud.setIsDeleteOpen(false);
           crud.setSelectedEntity(null);
         }}
-        title="Deletar Motorista"
+        title="Deletar Cliente"
         message={`Tem certeza que deseja deletar "${crud.selectedEntity?.fullName}"?`}
         variant="danger"
         isLoading={crud.isLoading}
