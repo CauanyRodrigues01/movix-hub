@@ -1,7 +1,8 @@
 // Exibe os detalhes completos de uma entidade usando o schema configurado.
 
-import type { EntitySchema, FormFieldDefinition, BaseEntity } from '../../../types';
+import type { BaseEntity } from '../../../types';
 import Styles from './EntityCRUD.module.css';
+import type { EntitySchema, FormFieldDefinition } from './types';
 
 export interface EntityDetailsContentProps<T extends BaseEntity> {
     schema: EntitySchema<T>;
