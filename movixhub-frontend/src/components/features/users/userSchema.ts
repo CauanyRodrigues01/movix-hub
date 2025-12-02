@@ -1,33 +1,6 @@
-import { FieldType, type BaseEntity, type EntitySchema } from "../../common/EntityCRUD";
+import type { User } from "../../../types";
+import { FieldType, type EntitySchema } from "../../common/EntityCRUD";
 import type { ColumnDefinition } from "../../common/Table";
-
-export type UserStatus = 'Ativo' | 'Inativo' | 'Bloqueado' | 'Suspenso';
-export type AccessProfile = 'Administrador' | 'Operador' | 'Supervisor' | 'Finanças' | 'Visualizador';
-
-export interface User extends BaseEntity {
-    fullName: string;
-    corporateEmail: string;
-    cpf: string;
-    phone?: string;
-    position: string;
-    department: string;
-    accessProfile: AccessProfile;
-    specificPermissions: string[];
-    status: UserStatus;
-    admissionDate: string;
-    lastAccess: string;
-    loginAttempts: number;
-    passwordHash: string;
-    profilePhoto?: string;
-    createdBy: string;
-    changeHistory?: Array<{
-        date: string;
-        changedBy: string;
-        field: string;
-        oldValue: string;
-        newValue: string;
-    }>;
-}
 
 export const userSchema: EntitySchema<User> = {
     entityName: 'Usuário',
@@ -37,13 +10,6 @@ export const userSchema: EntitySchema<User> = {
             name: 'fullName',
             label: 'Nome Completo',
             type: FieldType.Text,
-            required: true,
-            section: 'Dados Pessoais'
-        },
-        {
-            name: 'corporateEmail',
-            label: 'E-mail Corporativo',
-            type: FieldType.Email,
             required: true,
             section: 'Dados Pessoais'
         },
@@ -66,21 +32,105 @@ export const userSchema: EntitySchema<User> = {
             mask: '(00) 00000-0000'
         },
         {
-            name: 'department',
-            label: 'Departamento',
+            name: 'email',
+            label: 'E-mail Pessoal',
+            type: FieldType.Email,
+            required: true,
+            section: 'Dados Pessoais'
+        },
+        {
+            name: 'corporateEmail',
+            label: 'E-mail Corporativo',
+            type: FieldType.Email,
+            required: true,
+            section: 'Dados Pessoais'
+        }, {
+            name: 'zipCode',
+            label: 'CEP',
             type: FieldType.Text,
             required: true,
-            section: 'Dados Organizacionais'
+            section: 'Endereço',
+            placeholder: '00000-000',
+            mask: '00000-000'
+        },
+        {
+            name: 'fullAddress',
+            label: 'Endereço Completo',
+            type: FieldType.Text,
+            required: true,
+            section: 'Endereço',
+            placeholder: 'Rua, número, complemento'
+        },
+        {
+            name: 'city',
+            label: 'Cidade',
+            type: FieldType.Text,
+            required: true,
+            section: 'Endereço'
+        },
+        {
+            name: 'state',
+            label: 'Estado',
+            type: FieldType.Select,
+            required: true,
+            section: 'Endereço',
+            options: [
+                { value: 'AC', label: 'Acre' },
+                { value: 'AL', label: 'Alagoas' },
+                { value: 'AP', label: 'Amapá' },
+                { value: 'AM', label: 'Amazonas' },
+                { value: 'BA', label: 'Bahia' },
+                { value: 'CE', label: 'Ceará' },
+                { value: 'DF', label: 'Distrito Federal' },
+                { value: 'ES', label: 'Espírito Santo' },
+                { value: 'GO', label: 'Goiás' },
+                { value: 'MA', label: 'Maranhão' },
+                { value: 'MT', label: 'Mato Grosso' },
+                { value: 'MS', label: 'Mato Grosso do Sul' },
+                { value: 'MG', label: 'Minas Gerais' },
+                { value: 'PA', label: 'Pará' },
+                { value: 'PB', label: 'Paraíba' },
+                { value: 'PR', label: 'Paraná' },
+                { value: 'PE', label: 'Pernambuco' },
+                { value: 'PI', label: 'Piauí' },
+                { value: 'RJ', label: 'Rio de Janeiro' },
+                { value: 'RN', label: 'Rio Grande do Norte' },
+                { value: 'RS', label: 'Rio Grande do Sul' },
+                { value: 'RO', label: 'Rondônia' },
+                { value: 'RR', label: 'Roraima' },
+                { value: 'SC', label: 'Santa Catarina' },
+                { value: 'SP', label: 'São Paulo' },
+                { value: 'SE', label: 'Sergipe' },
+                { value: 'TO', label: 'Tocantins' }
+            ]
+        }, {
+            name: 'department',
+            label: 'Departamento',
+            type: FieldType.Select,
+            required: true,
+            section: 'Dados Organizacionais',
+            options: [
+                { value: 'Logística', label: 'Logística' },
+                { value: 'Financeiro', label: 'Financeiro' },
+                { value: 'Comercial', label: 'Comercial' },
+                { value: 'Operações', label: 'Operações' },
+                { value: 'RH', label: 'Recursos Humanos' },
+                { value: 'TI', label: 'Tecnologia da Informação' },
+                { value: 'Suporte', label: 'Suporte ao Cliente' },
+                { value: 'Administrativo', label: 'Administrativo' },
+                { value: 'Diretoria', label: 'Diretoria' }
+            ]
         },
         {
             name: 'position',
             label: 'Cargo',
             type: FieldType.Text,
             required: true,
-            section: 'Dados Organizacionais'
+            section: 'Dados Organizacionais',
+            placeholder: 'Ex: Analista, Gerente, Coordenador'
         },
         {
-            name: 'admissionDate',
+            name: 'registrationDate',
             label: 'Data de Admissão',
             type: FieldType.Date,
             required: true,
@@ -92,25 +142,25 @@ export const userSchema: EntitySchema<User> = {
             type: FieldType.Select,
             required: true,
             section: 'Dados Organizacionais',
+            defaultValue: 'Ativo',
             options: [
                 { value: 'Ativo', label: 'Ativo' },
                 { value: 'Inativo', label: 'Inativo' },
                 { value: 'Bloqueado', label: 'Bloqueado' },
                 { value: 'Suspenso', label: 'Suspenso' }
             ]
-        },
-        {
+        }, {
             name: 'accessProfile',
             label: 'Perfil de Acesso',
             type: FieldType.Select,
             required: true,
-            section: 'Dados Organizacionais',
+            section: 'Permissões de Acesso',
             options: [
-                { value: 'Administrador', label: 'Administrador' },
-                { value: 'Operador', label: 'Operador' },
-                { value: 'Supervisor', label: 'Supervisor' },
-                { value: 'Finanças', label: 'Finanças' },
-                { value: 'Visualizador', label: 'Visualizador' }
+                { value: 'Administrador', label: 'Administrador - Acesso total' },
+                { value: 'Supervisor', label: 'Supervisor - Gerenciar operações' },
+                { value: 'Finanças', label: 'Finanças - Gestão financeira' },
+                { value: 'Operador', label: 'Operador - Operações básicas' },
+                { value: 'Visualizador', label: 'Visualizador - Somente leitura' }
             ]
         },
         {
@@ -118,8 +168,18 @@ export const userSchema: EntitySchema<User> = {
             label: 'Senha',
             type: FieldType.Password,
             required: true,
-            section: 'Dados Organizacionais',
-            showOnlyOnCreate: true
+            section: 'Segurança',
+            showOnlyOnCreate: true,
+            placeholder: 'Mínimo 8 caracteres'
+        },
+        {
+            name: 'internalNotes',
+            label: 'Notas Internas',
+            type: FieldType.Textarea,
+            section: 'Observações',
+            rows: 4,
+            maxLength: 500,
+            placeholder: 'Observações internas sobre o usuário'
         }
     ],
 
