@@ -18,13 +18,13 @@ const protect = async (req: Request, res: Response, next: NextFunction) => {
 
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
         try {
-            // 1. Obter token da header
+            // Obter token da header
             token = req.headers.authorization.split(' ')[1];
 
-            // 2. Verificar token
+            // Verificar token
             const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { id: string };
 
-            // 3. Obter usuário pelo ID do token (excluindo a senha)
+            // Obter usuário pelo ID do token (excluindo a senha)
             const user = await User.findById(decoded.id).select('-passwordHash');
 
             if (!user) {

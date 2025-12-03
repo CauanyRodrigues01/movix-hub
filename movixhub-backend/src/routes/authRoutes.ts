@@ -1,4 +1,5 @@
 // Rotas de Login
+
 import { Router } from 'express';
 import { loginUser } from '../controllers/authController';
 

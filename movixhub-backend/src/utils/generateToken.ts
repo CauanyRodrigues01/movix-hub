@@ -16,5 +16,4 @@ export const generateToken = (id: string | Types.ObjectId): string => {
     return token;
 };
 
-// Precisamos exportar como default para que a importação em authController funcione
 export default generateToken;

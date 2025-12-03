@@ -1,10 +1,9 @@
 // Lógica CRUD de Usuários
+
 import { Request, Response } from 'express';
 import User from '../models/User';
 import bcrypt from 'bcryptjs';
 
-// --- Funções Auxiliares de Permissão (Mock) ---
-// Em um sistema real, esta lógica seria mais robusta
 const checkAdminPermissions = (req: Request, res: Response): boolean => {
     // Apenas Administradores e Supervisores podem gerenciar usuários
     if (req.user?.accessProfile !== 'Administrador' && req.user?.accessProfile !== 'Supervisor') {
@@ -16,9 +15,6 @@ const checkAdminPermissions = (req: Request, res: Response): boolean => {
     return true;
 };
 
-// --- 1. GET /api/users - Obter Todos os Usuários ---
-// @desc    Obter todos os usuários (Equipe Interna)
-// @access  Private (Requer Admin/Supervisor)
 export const getUsers = async (req: Request, res: Response) => {
     if (!checkAdminPermissions(req, res)) return;
 
@@ -32,9 +28,6 @@ export const getUsers = async (req: Request, res: Response) => {
     }
 };
 
-// --- 2. GET /api/users/:id - Obter Usuário por ID ---
-// @desc    Obter detalhes de um usuário específico
-// @access  Private (Requer Admin/Supervisor ou ser o próprio usuário)
 export const getUserById = async (req: Request, res: Response) => {
     // Permissão: Admin/Supervisor OU o ID na URL é o ID do usuário logado
     const canView =
@@ -48,6 +41,7 @@ export const getUserById = async (req: Request, res: Response) => {
         });
     }
 
+    // Busca o usuário pelo ID
     try {
         const user = await User.findById(req.params.id).select('-passwordHash');
 
@@ -62,9 +56,6 @@ export const getUserById = async (req: Request, res: Response) => {
     }
 };
 
-// --- 3. POST /api/users - Criar Novo Usuário ---
-// @desc    Cria um novo usuário na base (Equipe Interna)
-// @access  Private (Requer Admin/Supervisor)
 export const createUser = async (req: Request, res: Response) => {
     if (!checkAdminPermissions(req, res)) return;
 
@@ -85,24 +76,22 @@ export const createUser = async (req: Request, res: Response) => {
             return res.status(400).json({ message: 'Um usuário com este e-mail corporativo já existe.' });
         }
 
-        // 1. Cria a instância do documento (não salva ainda)
+        // Cria a instância do documento (não salva ainda)
         const userDoc = new User({
             ...req.body,
             createdBy: req.user?.fullName || 'Sistema Interno',
             // O passwordHash será gerado pelo middleware 'pre-save' no passo 2
         });
 
-        // 2. Salva o documento no banco de dados (chama o middleware 'pre-save')
+        // Salva o documento no banco de dados (chama o middleware 'pre-save')
         const newUser = await userDoc.save();
-        // ^^^ newUser é tipado corretamente como um único IUser
 
         // Retorna o objeto criado (sem a senha)
         res.status(201).json({
             _id: newUser._id,
-            fullName: newUser.fullName, // <--- FUNCIONA
+            fullName: newUser.fullName, 
             corporateEmail: newUser.corporateEmail,
             accessProfile: newUser.accessProfile,
-            // ...
         });
     } catch (error) {
         console.error(error);
@@ -110,9 +99,6 @@ export const createUser = async (req: Request, res: Response) => {
     }
 };
 
-// --- 4. PUT /api/users/:id - Atualizar Usuário ---
-// @desc    Atualiza dados de um usuário
-// @access  Private (Requer Admin/Supervisor ou ser o próprio usuário)
 export const updateUser = async (req: Request, res: Response) => {
     const userIdToUpdate = req.params.id;
 
@@ -128,6 +114,7 @@ export const updateUser = async (req: Request, res: Response) => {
         });
     }
 
+    // Busca o usuário e aplica as atualizações
     try {
         const user = await User.findById(userIdToUpdate);
 
@@ -159,9 +146,6 @@ export const updateUser = async (req: Request, res: Response) => {
     }
 };
 
-// --- 5. DELETE /api/users/:id - Deletar Usuário ---
-// @desc    Deleta um usuário
-// @access  Private (Requer Admin/Supervisor)
 export const deleteUser = async (req: Request, res: Response) => {
     if (!checkAdminPermissions(req, res)) return;
 

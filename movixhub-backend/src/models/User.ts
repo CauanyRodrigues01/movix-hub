@@ -1,7 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import bcrypt from 'bcryptjs';
 
-// Baseado na sua interface User do frontend (simplificado para o backend)
 export interface IUser extends Document {
     // Campos necessários para o login e gerenciamento de acesso
     fullName: string;
@@ -21,7 +20,6 @@ export interface IUser extends Document {
     matchPassword(enteredPassword: string): Promise<boolean>;
 }
 
-// 1. Definição do Schema
 const UserSchema: Schema = new Schema({
     // --- Campos de Identificação e Organização ---
     fullName: { type: String, required: true },
@@ -48,23 +46,23 @@ const UserSchema: Schema = new Schema({
 });
 
 
-// 2. Método: Comparar Senha (Deve vir ANTES do Middleware)
+// Comparar Senha
 UserSchema.methods.matchPassword = async function (enteredPassword: string): Promise<boolean> {
     // Compara a senha informada com o hash salvo (this.passwordHash)
     return await bcrypt.compare(enteredPassword, this.passwordHash);
 };
 
 
-// 3. Middleware: Hash da Senha antes de salvar (Executa ANTES de persistir no DB)
+// Middleware: Hash da Senha antes de salvar (Executa ANTES de persistir no DB)
 UserSchema.pre<IUser>('save', async function () { 
     
-    // 1. Se o campo passwordHash não foi modificado, não fazemos nada.
+    // Se o campo passwordHash não foi modificado, não fazemos nada.
     if (!this.isModified('passwordHash')) {
         // Quando a função retorna, o Mongoose prossegue com o salvamento
         return; 
     }
 
-    // 2. Geração e atribuição do Hash
+    // Geração e atribuição do Hash
     const salt = await bcrypt.genSalt(10);
     this.passwordHash = await bcrypt.hash(this.passwordHash, salt);
     
@@ -72,7 +70,7 @@ UserSchema.pre<IUser>('save', async function () {
 });
 
 
-// 4. Criação e Exportação do Modelo
+// Criação e Exportação do Modelo
 const User = mongoose.model<IUser>('User', UserSchema);
 
 export default User;
