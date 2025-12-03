@@ -1,7 +1,9 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Styles from './Login.module.css';
-import { FormContainer, FormField, FormError, FormActions, FormCheckbox } from '../../components/common/Form'; 
+import { FormContainer, FormField, FormError, FormActions, FormCheckbox } from '../../components/common/Form';
+import { authService } from '../../services/authService';
+import axios from 'axios';
 
 export const Login = () => {
     const [corporateEmail, setCorporateEmail] = useState('');
@@ -12,7 +14,6 @@ export const Login = () => {
 
     const navigate = useNavigate();
 
-    // Simulação da chamada de API de autenticação
     const handleLogin = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
         setAuthError(null);
@@ -24,34 +25,56 @@ export const Login = () => {
             setIsLoading(false);
             return;
         }
-        
-        // Simulação de delay de rede
-        await new Promise(resolve => setTimeout(resolve, 1500)); 
 
         try {
-            // **TODO:** Substituir por chamada real à API (Ex: axios.post('/api/auth/login', { corporateEmail, password }))
-            
-            // Simulação de autenticação (usando credencial de exemplo: lucas.andrade@movix.com / 123456)
-            if (corporateEmail === 'lucas.andrade@movix.com' && password === '123456') {
-                
-                localStorage.setItem("authToken", "valid_jwt_token_45678");
+            // Chama a API real
+            const response = await authService.login({
+                corporateEmail,
+                password,
+            });
 
-                if (rememberMe) {
-                    // Lógica para persistir o token por mais tempo, se "Lembrar-me" estiver marcado
-                    console.log("Token salvo com persistência.");
-                }
+            // Salva o token no localStorage
+            localStorage.setItem('authToken', response.token);
 
-                // Redireciona
-                navigate('/dashboard', { replace: true });
+            // Opcionalmente, salva dados do usuário
+            localStorage.setItem('userData', JSON.stringify({
+                id: response._id,
+                fullName: response.fullName,
+                corporateEmail: response.corporateEmail,
+                accessProfile: response.accessProfile,
+            }));
 
-            } else {
-                setAuthError('Credenciais inválidas. Verifique seu e-mail corporativo e senha.');
-                localStorage.removeItem("authToken");
+            if (rememberMe) {
+                // Lógica adicional se necessário
+                console.log('Token salvo com persistência.');
             }
 
+            // Redireciona para o dashboard
+            navigate('/dashboard', { replace: true });
+
         } catch (err) {
-            console.error('Erro de rede/API ao fazer login:', err);
-            setAuthError('Falha na comunicação com o servidor. Tente novamente.');
+            console.error('Erro ao fazer login:', err);
+
+            // Trata erros da API com type guard
+            if (axios.isAxiosError(err)) {
+                // Erro do Axios (da API ou de rede)
+                if (err.response) {
+                    // Erro retornado pela API
+                    setAuthError(err.response.data.message || 'Credenciais inválidas.');
+                } else if (err.request) {
+                    // Erro de rede (sem resposta do servidor)
+                    setAuthError('Erro de conexão. Verifique se o servidor está rodando.');
+                } else {
+                    // Outro erro do Axios
+                    setAuthError('Erro inesperado. Tente novamente.');
+                }
+            } else {
+                // Erro que não é do Axios
+                setAuthError('Erro inesperado. Tente novamente.');
+            }
+
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userData');
         } finally {
             setIsLoading(false);
         }

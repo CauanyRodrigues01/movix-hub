@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from "./contexts/AuthProvider";
 
 import ProtectedRoute from './routes/ProtectedRoute';
 
@@ -12,29 +13,35 @@ import { Drivers } from './pages/Drivers/Drivers';
 import { Clients } from './pages/Clients/Clients';
 import { FreightServices } from './pages/FreightsServices/FreightsServices';
 import { Promotions } from './pages/Promotions/Promotions';
+import { useAuth } from './hooks/useAuth';
 
-function App () {
+function AppRoutes() {
+  const { isAuthenticated } = useAuth();
+
   return (
-
     <Routes>
-
       {/* Rota raiz */}
       <Route
         path="/"
         element={
-          // Verifica se o token existe (qualquer valor não nulo/vazio)
-          localStorage.getItem("authToken") 
-            ? <Navigate to="/dashboard" />
-            : <Navigate to="/entrar" />
+          isAuthenticated 
+            ? <Navigate to="/dashboard" replace />
+            : <Navigate to="/entrar" replace />
         }
       />
 
       {/* Rota pública */}
-      <Route path="/entrar" element={<Login />} />
+      <Route 
+        path="/entrar" 
+        element={
+          isAuthenticated 
+            ? <Navigate to="/dashboard" replace />
+            : <Login />
+        } 
+      />
 
-      {/* Rota admin protegida */}
+      {/* Rotas admin protegidas */}
       <Route element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
-        {/* ... rotas protegidas ... */}
         <Route path="/dashboard/*" element={<Dashboard />} />
         <Route path="/fretes" element={<FreightServices />} />
         <Route path="/promocoes" element={<Promotions />} />
@@ -45,9 +52,23 @@ function App () {
         <Route path="/ajuda" element={<Help />} />
       </Route>
 
+      {/* Rota 404 */}
+      <Route 
+        path="*" 
+        element={
+          <Navigate to={isAuthenticated ? "/dashboard" : "/entrar"} replace />
+        } 
+      />
     </Routes>
-
   );
-};
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <AppRoutes />
+    </AuthProvider>
+  );
+}
 
 export default App;
