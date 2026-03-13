@@ -5,6 +5,7 @@ import cors from 'cors';
 import connectDB from './src/config/db';
 import userRoutes from './src/routes/userRoutes';
 import authRoutes from './src/routes/authRoutes';
+import freightServiceRoutes from './src/routes/freightServiceRoutes';
 
 // Carrega variáveis de ambiente do .env
 dotenv.config();
@@ -23,6 +24,7 @@ app.use(express.json());
 // Rotas da API
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/freight-services', freightServiceRoutes);
 
 app.get('/', (req, res) => {
     res.send('API MovixHub Rodando...');
