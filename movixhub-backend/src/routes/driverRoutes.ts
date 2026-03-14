@@ -6,12 +6,12 @@ const router = Router();
 
 // All routes below require authentication
 router.route('/')
-    .get(protect, getAllDrivers)
-    .post(protect, createOneDriver);
+    .get(getAllDrivers)
+    .post(createOneDriver);
 
 router.route('/:id')
-    .get(protect, getOneDriver)
-    .put(protect, updateOneDriver)
-    .delete(protect, deleteOneDriver);
+    .get(getOneDriver)
+    .put(updateOneDriver)
+    .delete(deleteOneDriver);
 
 export default router;
