@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createPromotion, getAllPromotions } from '../controllers/promotionController';
+import { createPromotion, getAllPromotions, getPromotionById } from '../controllers/promotionController';
 import protect from '../middleware/authMiddleware';
 
 const router = Router();
@@ -8,5 +8,8 @@ const router = Router();
 router.route('/')
     .get(protect, getAllPromotions)
     .post(protect, createPromotion);
+
+router.route('/:id')
+    .get(protect, getPromotionById);
 
 export default router;
