@@ -37,4 +37,20 @@ export const getPromotionById = async (req: Request, res: Response) => {
     }
 };
 
+// Delete promotion by ID
+export const deletePromotionById = async (req: Request, res: Response) => {
+    try {
+        const promotion = await Promotion.findById(req.params.id);
+        if (!promotion) {
+            return res.status(404).json({ message: 'Promotion not found' });
+        }
+
+        await promotion.deleteOne();
+        res.status(200).json({ message: 'Promotion deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting promotion:', error);
+        res.status(500).json({ message: 'Error deleting promotion' });
+    }
+};
+
 export default createPromotion;
