@@ -5,6 +5,8 @@ import cors from 'cors';
 import connectDB from './src/config/db';
 import userRoutes from './src/routes/userRoutes';
 import authRoutes from './src/routes/authRoutes';
+import driverRoutes from './src/routes/driverRoutes';
+import clientRoutes from './src/routes/clientRoutes';
 
 // Carrega variáveis de ambiente do .env
 dotenv.config();
@@ -13,7 +15,7 @@ const app = express();
 
 // CORS - Permite requisições do frontend
 app.use(cors({
-    origin: 'http://localhost:5173', // ou a porta do frontend
+    origin: 'http://localhost:5173',
     credentials: true,
 }));
 
@@ -23,6 +25,8 @@ app.use(express.json());
 // Rotas da API
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/drivers', driverRoutes);
+app.use('/api/clients', clientRoutes);
 
 app.get('/', (req, res) => {
     res.send('API MovixHub Rodando...');
