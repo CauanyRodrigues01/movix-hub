@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createPromotion, getAllPromotions, getPromotionById, deletePromotionById } from '../controllers/promotionController';
+import { createPromotion, getAllPromotions, getPromotionById, deletePromotionById, updatePromotionById } from '../controllers/promotionController';
 import protect from '../middleware/authMiddleware';
 
 const router = Router();
@@ -9,9 +9,8 @@ router.route('/')
     .post(protect, createPromotion);
 
 router.route('/:id')
-    .get(protect, getPromotionById);
-
-router.route('/:id')
+    .get(protect, getPromotionById)
+    .patch(protect, updatePromotionById)
     .delete(protect, deletePromotionById);
 
 export default router;
