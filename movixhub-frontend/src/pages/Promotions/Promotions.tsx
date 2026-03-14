@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Styles from './Promotions.module.css'; // Ajuste o nome do arquivo CSS
 import {
     Table,
@@ -11,8 +11,9 @@ import { useEntityCRUD } from '../../hooks/useEntityCRUD';
 import { PageHeader } from '../../components/common/Layout';
 import { ModalConfirm, ModalDetails, ModalForm } from '../../components/common/Modal';
 import { EntityDetailsContent, EntityGenericForm } from '../../components/common/EntityCRUD';
-import type { DiscountType, Promotion, PromotionStatus, PromotionTarget, PromotionType } from '../../types/promotion.types';
+import type { Promotion, PromotionStatus } from '../../types/promotion.types';
 import { promotionSchema } from '../../components/features/promotions/promotionSchema';
+import * as promotionService from '../../services/promotionService';
 
 const promotionsStatusClasses: Record<PromotionStatus, TableBadgeProps["variant"]> = {
     'Agendada': 'default',
@@ -21,82 +22,6 @@ const promotionsStatusClasses: Record<PromotionStatus, TableBadgeProps["variant"
     'Expirada': 'info',
     'Cancelada': 'error',
 };
-
-const mockPromotionsData: Promotion[] = [
-    {
-        id: 'PROMO-001',
-        name: 'Desconto Primeira Viagem',
-        promoCode: 'MOVIX10',
-        description: '10% de desconto para novos clientes na primeira contratação.',
-        promotionType: 'Cupom',
-        discountType: 'Percentual',
-        discountValue: 10,
-        applicableServices: ['1', '3'],
-        target: 'Novos Clientes', 
-        startDate: '2025-01-01T00:00:00',
-        endDate: null,
-        status: 'Ativa',
-        maxUses: 1000,
-        usedCount: 245,
-        autoApply: false,
-        priority: 1,
-        eligibilityRule: 'Somente para novos clientes',
-        createdBy: 'Admin', 
-        isStackable: false, 
-        createdAt: '2024-12-15T14:20:00',
-        updatedAt: '2025-01-10T09:00:00',
-        changeHistory: []
-    },
-    {
-        id: 'PROMO-002',
-        name: 'Frete Econômico',
-        promoCode: 'FRETE20',
-        description: 'R$20 de desconto para serviços do tipo Normal.',
-        promotionType: 'Cupom', 
-        discountType: 'Valor Fixo',
-        discountValue: 20,
-        applicableServices: ['4'],
-        target: 'Todos', 
-        startDate: '2025-02-01T00:00:00',
-        endDate: '2025-03-01T23:59:59',
-        status: 'Agendada',
-        maxUses: 500,
-        usedCount: 0,
-        autoApply: true,
-        priority: 2,
-        eligibilityRule: 'Válido para todos os usuários',
-        createdBy: 'Admin', 
-        isStackable: false,
-        createdAt: '2025-01-20T11:00:00',
-        updatedAt: '2025-01-20T11:00:00',
-        changeHistory: []
-    },
-    {
-        id: 'PROMO-003',
-        name: 'Inverno Movix',
-        promoCode: 'WINTER15',
-        description: 'Desconto especial de inverno para cargas pesadas.',
-        promotionType: 'Sem Cupom', 
-        discountType: 'Percentual',
-        discountValue: 15,
-        applicableServices: ['2', '5'],
-        target: 'Todos', 
-        startDate: '2024-06-01T00:00:00',
-        endDate: '2024-08-30T23:59:59',
-        status: 'Expirada',
-        maxUses: 300,
-        usedCount: 300,
-        autoApply: true,
-        priority: 3,
-        eligibilityRule: 'Aplicável para qualquer cliente',
-        createdBy: 'Admin', 
-        isStackable: true, 
-        createdAt: '2024-05-10T08:30:00',
-        updatedAt: '2024-09-01T10:10:00',
-        changeHistory: []
-    },
-];
-
 
 // Função auxiliar para criar colunas
 interface GetPromotionColumnsParams {
@@ -157,7 +82,22 @@ const getPromotionColumns = ({
 
 export const Promotions = () => {
     // Estado dos dados
-    const [promotions, setPromotions] = useState<Promotion[]>(mockPromotionsData);
+    const [promotions, setPromotions] = useState<Promotion[]>([]);
+
+    // Carrega promoções do backend
+    useEffect(() => {
+        let mounted = true;
+        const load = async () => {
+            try {
+                const data = await promotionService.getPromotions();
+                if (mounted) setPromotions(data);
+            } catch (error) {
+                console.error('Erro ao buscar promoções:', error);
+            }
+        };
+        load();
+        return () => { mounted = false; };
+    }, []);
 
     // Hook tipado com Promotion
     const crud = useEntityCRUD<Promotion>();
@@ -168,38 +108,12 @@ export const Promotions = () => {
         try {
             if (crud.isEdit && crud.selectedEntity) {
                 // Lógica de Atualização (Update)
-                console.log('Atualizando Promoção:', data);
-
-                setPromotions(prevPromotions => prevPromotions.map(p =>
-                    p.id === crud.selectedEntity!.id
-                        ? { ...p, ...data, updatedAt: new Date().toISOString() }
-                        : p
-                ));
+                const updated = await promotionService.updatePromotion(crud.selectedEntity.id, data);
+                setPromotions(prevPromotions => prevPromotions.map(p => p.id === updated.id ? updated : p));
             } else {
                 // Lógica de Criação (Create)
-                const newPromotion: Promotion = {
-                    ...data,
-                    id: `PROMO-${Date.now()}`,
-                    status: data.status as PromotionStatus || 'Agendada',
-                    discountValue: data.discountValue || 0,
-                    promotionType: data.promotionType as PromotionType || 'Cupom',
-                    discountType: data.discountType as DiscountType || 'Percentual',
-                    target: data.target as PromotionTarget || 'Todos',
-                    startDate: data.startDate || new Date().toISOString(),
-                    applicableServices: data.applicableServices as string[] || [],
-                    usedCount: 0,
-                    autoApply: data.autoApply ?? false,
-                    isStackable: data.isStackable ?? false,
-                    priority: data.priority ?? 10,
-                    eligibilityRule: data.eligibilityRule || 'Nenhuma regra especificada',
-                    createdBy: 'CURRENT_USER',
-                    createdAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString(),
-                    changeHistory: [],
-                } as Promotion;
-
-                console.log('Criando nova Promoção:', newPromotion);
-                setPromotions(prevPromotions => [...prevPromotions, newPromotion]);
+                const created = await promotionService.createPromotion(data);
+                setPromotions(prevPromotions => [...prevPromotions, created]);
             }
 
             crud.setIsFormOpen(false);
@@ -217,10 +131,9 @@ export const Promotions = () => {
 
         crud.setIsLoading(true);
         try {
-            // Lógica de Deleção (Delete)
-            console.log('Deletando Promoção:', crud.selectedEntity.id);
-
-            setPromotions(prevPromotions => prevPromotions.filter(p => p.id !== crud.selectedEntity!.id));
+            const id = crud.selectedEntity.id;
+            await promotionService.deletePromotion(id);
+            setPromotions(prevPromotions => prevPromotions.filter(p => p.id !== id));
             crud.setIsDeleteOpen(false);
             crud.setSelectedEntity(null);
         } catch (error) {
