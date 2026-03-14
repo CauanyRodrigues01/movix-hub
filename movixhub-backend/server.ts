@@ -6,6 +6,7 @@ import connectDB from './src/config/db';
 import userRoutes from './src/routes/userRoutes';
 import authRoutes from './src/routes/authRoutes';
 import freightServiceRoutes from './src/routes/freightServiceRoutes';
+import driverRoutes from './src/routes/driverRoutes';
 
 // Carrega variáveis de ambiente do .env
 dotenv.config();
@@ -25,6 +26,7 @@ app.use(express.json());
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/freight-services', freightServiceRoutes);
+app.use('/api/drivers', driverRoutes);
 
 app.get('/', (req, res) => {
     res.send('API MovixHub Rodando...');
