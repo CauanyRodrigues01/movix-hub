@@ -59,34 +59,43 @@ export const getUserById = async (req: Request, res: Response) => {
 export const createUser = async (req: Request, res: Response) => {
     if (!checkAdminPermissions(req, res)) return;
 
-    const { corporateEmail, passwordHash, fullName, accessProfile, department, position } = req.body;
+    // Campos atualizados com base no frontend
+    const { 
+        corporateEmail, 
+        passwordHash, 
+        fullName, 
+        accessProfile, 
+        department, 
+        position,
+        cpfCnpj,      
+        phone,        
+        personalEmail,  
+        zipCode,      
+        fullAddress,  
+        city,         
+        state,        
+        admissionDate 
+    } = req.body;
 
-    // Validação básica
-    if (!corporateEmail || !passwordHash || !fullName || !accessProfile) {
+    if (!corporateEmail || !passwordHash || !fullName || !accessProfile || !cpfCnpj) {
         return res.status(400).json({
-            message: 'Campos essenciais (e-mail, senha, nome, perfil de acesso) são obrigatórios.'
+            message: 'Campos essenciais são obrigatórios, incluindo e-mail, senha, nome e CPF.'
         });
     }
 
     try {
-        // Verifica se o e-mail já existe
         const userExists = await User.findOne({ corporateEmail });
-
         if (userExists) {
             return res.status(400).json({ message: 'Um usuário com este e-mail corporativo já existe.' });
         }
 
-        // Cria a instância do documento (não salva ainda)
         const userDoc = new User({
-            ...req.body,
+            ...req.body, 
             createdBy: req.user?.fullName || 'Sistema Interno',
-            // O passwordHash será gerado pelo middleware 'pre-save' no passo 2
         });
 
-        // Salva o documento no banco de dados (chama o middleware 'pre-save')
         const newUser = await userDoc.save();
 
-        // Retorna o objeto criado (sem a senha)
         res.status(201).json({
             _id: newUser._id,
             fullName: newUser.fullName, 

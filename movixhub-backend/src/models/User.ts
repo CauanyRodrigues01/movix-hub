@@ -2,7 +2,6 @@ import mongoose, { Schema, Document } from 'mongoose';
 import bcrypt from 'bcryptjs';
 
 export interface IUser extends Document {
-    // Campos necessários para o login e gerenciamento de acesso
     fullName: string;
     corporateEmail: string;
     passwordHash: string;
@@ -10,28 +9,40 @@ export interface IUser extends Document {
     position: string;
     accessProfile: string;
     status: 'Ativo' | 'Inativo' | 'Bloqueado' | 'Suspenso';
+    
+    cpfCnpj: string;      
+    phone: string;        
+    personalEmail: string; 
+    zipCode: string;      
+    fullAddress: string;  
+    city: string;
+    state: string;
+    admissionDate: Date;  
     internalNotes?: string;
     
-    // Metadados (BaseEntity)
     createdAt: Date;
     updatedAt: Date;
-    
-    // Métodos para o Model
     matchPassword(enteredPassword: string): Promise<boolean>;
 }
 
 const UserSchema: Schema = new Schema({
-    // --- Campos de Identificação e Organização ---
     fullName: { type: String, required: true },
     corporateEmail: { type: String, required: true, unique: true },
+    passwordHash: { type: String, required: true },
     department: { type: String, required: true },
     position: { type: String, required: true },
     accessProfile: { type: String, required: true },
-
-    // --- Campo de Segurança ---
-    passwordHash: { type: String, required: true },
     
-    // --- Metadados e Status ---
+    
+    cpfCnpj: { type: String, required: true },
+    phone: { type: String, required: true },
+    personalEmail: { type: String, required: true },
+    zipCode: { type: String, required: true },
+    fullAddress: { type: String, required: true },
+    city: { type: String, required: true },
+    state: { type: String, required: true },
+    admissionDate: { type: Date, required: true }, 
+    
     status: { 
         type: String, 
         required: true, 
@@ -39,9 +50,7 @@ const UserSchema: Schema = new Schema({
         enum: ['Ativo', 'Inativo', 'Bloqueado', 'Suspenso']
     },
     internalNotes: { type: String },
-
 }, {
-    // Mongoose gerencia createdAt e updatedAt automaticamente
     timestamps: true,
 });
 
