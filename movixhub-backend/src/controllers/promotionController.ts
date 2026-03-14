@@ -12,4 +12,15 @@ export const createPromotion = async (req: Request, res: Response) => {
     }
 };
 
+// Get all promotions
+export const getAllPromotions = async (req: Request, res: Response) => {
+    try {
+        const promotions = await Promotion.find({});
+        res.status(200).json(promotions);
+    } catch (error) {
+        console.error('Error fetching promotions:', error);
+        res.status(500).json({ message: 'Error fetching promotions' });
+    }
+};
+
 export default createPromotion;

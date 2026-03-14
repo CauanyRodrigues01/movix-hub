@@ -1,11 +1,12 @@
 import { Router } from 'express';
-import { createPromotion } from '../controllers/promotionController';
+import { createPromotion, getAllPromotions } from '../controllers/promotionController';
 import protect from '../middleware/authMiddleware';
 
 const router = Router();
 
-// Apenas criação por enquanto (protegida)
+// Listar e criar promotions (protegidas)
 router.route('/')
+    .get(protect, getAllPromotions)
     .post(protect, createPromotion);
 
 export default router;
