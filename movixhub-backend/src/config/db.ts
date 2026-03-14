@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const connectDB = async () => {
     try {
         // Adiciona opções de conexão para evitar warnings
-        const conn = await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/movixhubdb');
+        const conn = await mongoose.connect(process.env.MONGO_URI || 'np');
         
         console.log(`MongoDB Conectado: ${conn.connection.host}`);
         
