@@ -16,16 +16,15 @@ const adminUser = {
     position: "CEO",
     accessProfile: "Administrador",
     status: "Ativo",
-    
     cpfCnpj: "000.000.000-00",
     phone: "(00) 00000-0000",
-    personalEmail: "admin.pessoal@email.com",
+    personalEmail: "admin@pessoal.com",
     zipCode: "00000-000",
-    fullAddress: "Rua Admin, 123",
-    city: "Campina Grande",
+    fullAddress: "Rua Principal, 1",
+    city: "Cidade Admin",
     state: "PB",
-    admissionDate: new Date(), 
-    
+    admissionDate: new Date(),
+    specificPermissions: [],
     createdBy: "SYSTEM_SEEDER"
 };
 

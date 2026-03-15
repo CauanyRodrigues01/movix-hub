@@ -59,49 +59,23 @@ export const getUserById = async (req: Request, res: Response) => {
 export const createUser = async (req: Request, res: Response) => {
     if (!checkAdminPermissions(req, res)) return;
 
-    // Campos atualizados com base no frontend
-    const { 
-        corporateEmail, 
-        passwordHash, 
-        fullName, 
-        accessProfile, 
-        department, 
-        position,
-        cpfCnpj,      
-        phone,        
-        personalEmail,  
-        zipCode,      
-        fullAddress,  
-        city,         
-        state,        
-        admissionDate 
-    } = req.body;
-
-    if (!corporateEmail || !passwordHash || !fullName || !accessProfile || !cpfCnpj) {
-        return res.status(400).json({
-            message: 'Campos essenciais são obrigatórios, incluindo e-mail, senha, nome e CPF.'
-        });
-    }
-
     try {
-        const userExists = await User.findOne({ corporateEmail });
+        const userExists = await User.findOne({ corporateEmail: req.body.corporateEmail });
         if (userExists) {
-            return res.status(400).json({ message: 'Um usuário com este e-mail corporativo já existe.' });
+            return res.status(400).json({ message: 'Um usuário com este e-mail já existe.' });
         }
 
         const userDoc = new User({
-            ...req.body, 
+            ...req.body,
             createdBy: req.user?.fullName || 'Sistema Interno',
         });
 
         const newUser = await userDoc.save();
 
-        res.status(201).json({
-            _id: newUser._id,
-            fullName: newUser.fullName, 
-            corporateEmail: newUser.corporateEmail,
-            accessProfile: newUser.accessProfile,
-        });
+        // Forma atualizada para esconder a senha
+        const { passwordHash: _, ...userWithoutPassword } = newUser.toObject();
+
+        res.status(201).json(userWithoutPassword);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Erro ao criar o usuário.' });
