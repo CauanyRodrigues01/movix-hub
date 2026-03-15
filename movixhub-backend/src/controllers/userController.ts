@@ -85,7 +85,7 @@ export const createUser = async (req: Request, res: Response) => {
 export const updateUser = async (req: Request, res: Response) => {
     const userIdToUpdate = req.params.id;
 
-    // Permissão: Admin/Supervisor OU o ID na URL é o ID do usuário logado
+    // Verificação de Permissão
     const canUpdate =
         req.user?.accessProfile === 'Administrador' ||
         req.user?.accessProfile === 'Supervisor' ||
@@ -93,36 +93,37 @@ export const updateUser = async (req: Request, res: Response) => {
 
     if (!canUpdate) {
         return res.status(403).json({
-            message: 'Acesso negado. Você só pode atualizar o seu próprio perfil, a menos que seja um administrador.'
+            message: 'Acesso negado. Você só pode atualizar o seu próprio perfil ou ser um gestor.'
         });
     }
 
-    // Busca o usuário e aplica as atualizações
     try {
         const user = await User.findById(userIdToUpdate);
-
         if (!user) {
             return res.status(404).json({ message: 'Usuário não encontrado.' });
         }
 
-        // Prepara os dados de atualização
         const updateData = req.body;
 
-        // Se a senha estiver sendo alterada, faz o hash antes de salvar
+        // Tratamento Manual da Senha 
         if (updateData.passwordHash) {
             const salt = await bcrypt.genSalt(10);
             updateData.passwordHash = await bcrypt.hash(updateData.passwordHash, salt);
         }
 
-        // Aplica as mudanças e salva (incluindo createdAt/updatedAt)
+        // Atualização no Banco
         const updatedUser = await User.findByIdAndUpdate(
             userIdToUpdate,
             { $set: updateData },
-            { new: true } // Retorna o documento modificado
-        ).select('-passwordHash');
+            { new: true, runValidators: true } 
+        );
 
-        res.json(updatedUser);
+        if (!updatedUser) return res.status(404).json({ message: 'Erro ao atualizar.' });
 
+        // Remoção Segura da Senha para Retorno
+        const { passwordHash: _, ...userWithoutPassword } = updatedUser.toObject();
+
+        res.json(userWithoutPassword);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Erro ao atualizar o usuário.' });
