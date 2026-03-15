@@ -6,15 +6,25 @@ import connectDB from './src/config/db';
 // Carrega variáveis de ambiente
 dotenv.config();
 
+
+// Campos atualizados com base no frontend
 const adminUser = {
     fullName: "Admin Master",
     corporateEmail: "admin@movixhub.com",
-    // Esta será hashada automaticamente pelo middleware 'pre-save' do Mongoose
     passwordHash: "12345678", 
     department: "Diretoria",
     position: "CEO",
     accessProfile: "Administrador",
     status: "Ativo",
+    cpfCnpj: "000.000.000-00",
+    phone: "(00) 00000-0000",
+    personalEmail: "admin@pessoal.com",
+    zipCode: "00000-000",
+    fullAddress: "Rua Principal, 1",
+    city: "Cidade Admin",
+    state: "PB",
+    admissionDate: new Date(),
+    specificPermissions: [],
     createdBy: "SYSTEM_SEEDER"
 };
 
