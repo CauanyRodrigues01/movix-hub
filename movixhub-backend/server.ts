@@ -6,6 +6,7 @@ import connectDB from './src/config/db';
 import userRoutes from './src/routes/userRoutes';
 import authRoutes from './src/routes/authRoutes';
 import driverRoutes from './src/routes/driverRoutes';
+import promotionRoutes from './src/routes/promotionRoutes';
 import clientRoutes from './src/routes/clientRoutes';
 
 // Carrega variáveis de ambiente do .env
@@ -26,6 +27,7 @@ app.use(express.json());
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/drivers', driverRoutes);
+app.use('/api/promotions', promotionRoutes);
 app.use('/api/clients', clientRoutes);
 
 app.get('/', (req, res) => {
