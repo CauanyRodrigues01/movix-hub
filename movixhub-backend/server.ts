@@ -24,8 +24,7 @@ app.use(express.json());
 // Rotas da API
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/api/', driverRoutes);
-app.use('/api/:id', driverRoutes);
+app.use('/api/drivers', driverRoutes);
 
 app.get('/', (req, res) => {
     res.send('API MovixHub Rodando...');
