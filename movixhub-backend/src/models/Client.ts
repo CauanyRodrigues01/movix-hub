@@ -26,6 +26,7 @@ const ClientSchema: Schema = new Schema({
         enum: ['Ativo', 'Inativo', 'Bloqueado', 'Suspenso']
     },
     internalNotes: { type: String },
+    drivers: [{type: mongoose.Schema.Types.ObjectId, ref: "Driver"}]
 }, {
     timestamps: true,
 });
