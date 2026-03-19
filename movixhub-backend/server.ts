@@ -33,6 +33,7 @@ app.use('/api/promotions', promotionRoutes);
 app.use('/api/clients', clientRoutes);
 app.use('/api/notifications', notificationRoutes);
 
+
 app.get('/', (req, res) => {
     res.send('API MovixHub Rodando...');
 });
