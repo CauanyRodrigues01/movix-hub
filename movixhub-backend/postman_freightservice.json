@@ -1,0 +1,166 @@
+{
+  "info": {
+    "name": "MovixHub - Freight Services",
+    "_postman_id": "movixhub-freight-collection",
+    "description": "CRUD completo para testar os Serviços de Frete da API MovixHub. \n\n⚠️ FLUXO: Rode primeiro o request 'Login' e o token será salvo automaticamente na variável {{token}}.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000/api",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "freightId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "🔐 1. Login (obter token)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const res = pm.response.json();",
+              "if (res.token) {",
+              "    pm.collectionVariables.set('token', res.token);",
+              "    console.log('✅ Token salvo automaticamente!');",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"corporateEmail\": \"admin@movixhub.com\",\n  \"password\": \"12345678\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["auth", "login"]
+        }
+      }
+    },
+    {
+      "name": "📋 2. Listar todos os fretes",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/freight-services",
+          "host": ["{{baseUrl}}"],
+          "path": ["freight-services"]
+        }
+      }
+    },
+    {
+      "name": "➕ 3. Criar serviço de frete",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const res = pm.response.json();",
+              "if (res._id) {",
+              "    pm.collectionVariables.set('freightId', res._id);",
+              "    console.log('✅ ID salvo: ' + res._id);",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Entrega Expressa Local\",\n  \"internalCode\": \"EEL-001\",\n  \"description\": \"Serviço de entrega rápida dentro do município, com prazo de até 4 horas.\",\n  \"averagePrice\": 29.90,\n  \"status\": \"Ativo\",\n  \"coverage\": [\"Municipal\"],\n  \"allowedVehicles\": [\"Motocicleta\", \"Carro\"],\n  \"averageTime\": \"2-4 horas\",\n  \"detailedCoverageArea\": \"Zona urbana e distritos da cidade\",\n  \"activePromotions\": []\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/freight-services",
+          "host": ["{{baseUrl}}"],
+          "path": ["freight-services"]
+        }
+      }
+    },
+    {
+      "name": "🔍 4. Buscar serviço por ID",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/freight-services/{{freightId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["freight-services", "{{freightId}}"]
+        }
+      }
+    },
+    {
+      "name": "✏️ 5. Atualizar serviço de frete",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"Inativo\",\n  \"averagePrice\": 34.90,\n  \"averageTime\": \"3-5 horas\",\n  \"description\": \"Serviço atualizado: entrega rápida com nova cobertura.\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/freight-services/{{freightId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["freight-services", "{{freightId}}"]
+        }
+      }
+    },
+    {
+      "name": "🗑️ 6. Deletar serviço de frete",
+      "request": {
+        "method": "DELETE",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/freight-services/{{freightId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["freight-services", "{{freightId}}"]
+        }
+      }
+    },
+    {
+      "name": "❌ 7. Teste de código duplicado (deve retornar 400)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Outro Serviço\",\n  \"internalCode\": \"EEL-001\",\n  \"description\": \"Tentativa de criar com código duplicado.\",\n  \"averagePrice\": 10.00,\n  \"status\": \"Ativo\",\n  \"coverage\": [\"Municipal\"],\n  \"allowedVehicles\": [\"Carro\"],\n  \"averageTime\": \"1 hora\",\n  \"detailedCoverageArea\": \"\",\n  \"activePromotions\": []\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/freight-services",
+          "host": ["{{baseUrl}}"],
+          "path": ["freight-services"]
+        }
+      }
+    }
+  ]
+}

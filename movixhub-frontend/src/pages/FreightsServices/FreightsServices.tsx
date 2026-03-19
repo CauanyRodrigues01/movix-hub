@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Styles from './FreightServices.module.css';
 import { Table, TableActions, TableArrayRenderer, TableBadge, type ColumnDefinition, type TableBadgeProps } from '../../components/common/Table';
 import { useEntityCRUD } from '../../hooks/useEntityCRUD';
 import { PageHeader } from '../../components/common/Layout';
 import { ModalConfirm, ModalDetails, ModalForm } from '../../components/common/Modal';
 import { EntityDetailsContent, EntityGenericForm } from '../../components/common/EntityCRUD';
-import type { AllowedVehicle, CoverageArea, FreightService, ServiceInternalStatus } from '../../types/freight.types'; 
+import type { AllowedVehicle, CoverageArea, FreightService, ServiceInternalStatus } from '../../types/freight.types';
 import { freightServiceSchema } from '../../components/features/freightService';
+import { freightServiceAPI } from '../../services/freightService';
 
 // Mapeamento de status para variantes de badge
 const freightStatusClasses: Record<ServiceInternalStatus, TableBadgeProps["variant"]> = {
@@ -15,46 +16,6 @@ const freightStatusClasses: Record<ServiceInternalStatus, TableBadgeProps["varia
   'Manutencao': 'warning',
   'Indisponível': 'error',
 };
-
-// Dados Mock
-const mockFreightServicesData: FreightService[] = [
-  {
-    id: 'FSERVICE-001',
-    name: 'Entrega Rápida Local',
-    internalCode: 'RPL-LOC',
-    description: 'Serviço de entrega prioritária para o perímetro municipal.',
-    averagePrice: 25.50,
-    status: 'Ativo',
-    coverage: ['Municipal'],
-    allowedVehicles: ['Motocicleta', 'Carro'],
-    averageTime: '3 horas',
-    detailedCoverageArea: 'Todas as Zonas Urbanas',
-    activePromotions: ['PROMO-VERAO'],
-    createdBy: 'USER-ADMIN',
-    createdAt: '2024-01-10T10:00:00',
-    updatedAt: '2025-01-20T11:30:00',
-    changeHistory: []
-  },
-  {
-    id: 'FSERVICE-002',
-    name: 'Transporte Inter-regional',
-    internalCode: 'TRI-REG',
-    description: 'Transporte de cargas médias entre estados vizinhos.',
-    averagePrice: 180.00,
-    status: 'Manutencao',
-    coverage: ['Interestadual'],
-    allowedVehicles: ['Van', 'Caminhão Toco'],
-    averageTime: '4 dias úteis',
-    detailedCoverageArea: 'Regiões Sul e Sudeste',
-    activePromotions: [],
-    createdBy: 'USER-ADMIN',
-    createdAt: '2023-05-15T14:00:00',
-    updatedAt: '2025-02-18T09:10:00',
-    changeHistory: [
-        { date: '2025-02-18T09:10:00', changedBy: 'OP_MANAGER', field: 'status', oldValue: 'Ativo', newValue: 'Manutencao' }
-    ]
-  },
-];
 
 // Função auxiliar para criar colunas
 interface GetFreightServiceColumnsParams {
@@ -137,50 +98,48 @@ const getFreightServiceColumns = ({
 ];
 
 export const FreightServices = () => {
-  // Estado dos dados
-  const [freights, setFreights] = useState<FreightService[]>(mockFreightServicesData);
+  // Estado dos dados e loading da listagem
+  const [freights, setFreights] = useState<FreightService[]>([]);
+  const [isFetchLoading, setIsFetchLoading] = useState(true);
+  const [fetchError, setFetchError] = useState<string | null>(null);
 
   // Hook tipado com FreightService
   const crud = useEntityCRUD<FreightService>();
+
+  // Busca os dados do backend ao montar o componente
+  useEffect(() => {
+    const fetchFreights = async () => {
+      setIsFetchLoading(true);
+      setFetchError(null);
+      try {
+        const data = await freightServiceAPI.getAll();
+        setFreights(data);
+      } catch (error) {
+        console.error('Erro ao carregar serviços de frete:', error);
+        setFetchError('Não foi possível carregar os serviços de frete. Verifique a conexão com o servidor.');
+      } finally {
+        setIsFetchLoading(false);
+      }
+    };
+
+    fetchFreights();
+  }, []);
 
   // Handler do FORMULÁRIO (Create/Edit)
   const handleSubmit = async (data: Partial<FreightService>) => {
     crud.setIsLoading(true);
     try {
       if (crud.isEdit && crud.selectedEntity) {
-        // Lógica de Atualização (Update)
-        console.log('Atualizando Serviço de Frete:', data);
-
-        setFreights(prevFreights => prevFreights.map(f =>
-          f.id === crud.selectedEntity!.id
-            ? { ...f, ...data, updatedAt: new Date().toISOString() }
-            : f
-        ));
+        // Atualiza via API
+        const updated = await freightServiceAPI.update(crud.selectedEntity.id, data);
+        setFreights(prev => prev.map(f => f.id === updated.id ? updated : f));
       } else {
-        // Lógica de Criação (Create)
-        const newFreight: FreightService = {
-          ...data,
-          id: `FSERVICE-${Date.now()}`,
-          status: data.status as ServiceInternalStatus || 'Ativo',
-          coverage: (data.coverage as string[] || []) as FreightService['coverage'],
-          allowedVehicles: (data.allowedVehicles as string[] || []) as FreightService['allowedVehicles'],
-          activePromotions: (data.activePromotions as string[] || []),
-          internalCode: data.internalCode || 'N/A',
-          averagePrice: data.averagePrice || 0,
-          averageTime: data.averageTime || 'A definir',
-          detailedCoverageArea: data.detailedCoverageArea || 'N/A',
-          createdBy: 'CURRENT_USER',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          changeHistory: [],
-        } as FreightService;
-
-        console.log('Criando novo Serviço de Frete:', newFreight);
-        setFreights(prevFreights => [...prevFreights, newFreight]);
+        // Cria via API
+        const created = await freightServiceAPI.create(data as Parameters<typeof freightServiceAPI.create>[0]);
+        setFreights(prev => [...prev, created]);
       }
 
-      crud.setIsFormOpen(false);
-      crud.setSelectedEntity(null);
+      crud.closeAll();
     } catch (error) {
       console.error('Erro ao salvar Serviço de Frete:', error);
     } finally {
@@ -194,19 +153,15 @@ export const FreightServices = () => {
 
     crud.setIsLoading(true);
     try {
-      // Lógica de Deleção (Delete)
-      console.log('Deletando Serviço de Frete:', crud.selectedEntity.id);
-
-      setFreights(prevFreights => prevFreights.filter(f => f.id !== crud.selectedEntity!.id));
-      crud.setIsDeleteOpen(false);
-      crud.setSelectedEntity(null);
+      await freightServiceAPI.remove(crud.selectedEntity.id);
+      setFreights(prev => prev.filter(f => f.id !== crud.selectedEntity!.id));
+      crud.closeAll();
     } catch (error) {
       console.error('Erro ao deletar Serviço de Frete:', error);
     } finally {
       crud.setIsLoading(false);
     }
   };
-
 
   const columns = getFreightServiceColumns({
     onView: crud.handleView,
@@ -224,7 +179,16 @@ export const FreightServices = () => {
         onButtonClick={crud.handleCreate}
       />
 
-      <Table data={freights} columns={columns} />
+      {/* Feedback de erro de carregamento */}
+      {fetchError && (
+        <p className={Styles.errorMessage}>{fetchError}</p>
+      )}
+
+      <Table
+        data={freights}
+        columns={columns}
+        isLoading={isFetchLoading}
+      />
 
       {/* Modal de Formulário (Create/Edit) */}
       <ModalForm

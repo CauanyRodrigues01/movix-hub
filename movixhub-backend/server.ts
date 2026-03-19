@@ -1,11 +1,14 @@
-// server.ts
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import connectDB from './src/config/db';
 import userRoutes from './src/routes/userRoutes';
 import authRoutes from './src/routes/authRoutes';
+import freightServiceRoutes from './src/routes/freightServiceRoutes';
 import driverRoutes from './src/routes/driverRoutes';
+import promotionRoutes from './src/routes/promotionRoutes';
+import clientRoutes from './src/routes/clientRoutes';
+import notificationRoutes from './src/routes/notificationRoutes';
 
 // Carrega variáveis de ambiente do .env
 dotenv.config();
@@ -14,7 +17,7 @@ const app = express();
 
 // CORS - Permite requisições do frontend
 app.use(cors({
-    origin: 'http://localhost:5173', // ou a porta do frontend
+    origin: 'http://localhost:5173',
     credentials: true,
 }));
 
@@ -24,7 +27,12 @@ app.use(express.json());
 // Rotas da API
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/freight-services', freightServiceRoutes);
 app.use('/api/drivers', driverRoutes);
+app.use('/api/promotions', promotionRoutes);
+app.use('/api/clients', clientRoutes);
+app.use('/api/notifications', notificationRoutes);
+
 
 app.get('/', (req, res) => {
     res.send('API MovixHub Rodando...');

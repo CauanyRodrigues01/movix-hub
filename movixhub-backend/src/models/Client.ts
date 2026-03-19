@@ -10,7 +10,9 @@ export interface IClient extends Document {
     internalNotes?: string;
     createdAt: Date;
     updatedAt: Date;
+
     drivers: [{type: mongoose.Schema.Types.ObjectId, ref: "Driver"}]
+
 }
 
 const ClientSchema: Schema = new Schema({
@@ -26,6 +28,7 @@ const ClientSchema: Schema = new Schema({
         enum: ['Ativo', 'Inativo', 'Bloqueado', 'Suspenso']
     },
     internalNotes: { type: String },
+
     drivers: [{type: mongoose.Schema.Types.ObjectId, ref: "Driver"}]
 }, {
     timestamps: true,
