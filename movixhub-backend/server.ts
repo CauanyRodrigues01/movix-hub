@@ -1,4 +1,3 @@
-// server.ts
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
@@ -9,6 +8,7 @@ import freightServiceRoutes from './src/routes/freightServiceRoutes';
 import driverRoutes from './src/routes/driverRoutes';
 import promotionRoutes from './src/routes/promotionRoutes';
 import clientRoutes from './src/routes/clientRoutes';
+import notificationRoutes from './src/routes/notificationRoutes';
 
 // Carrega variáveis de ambiente do .env
 dotenv.config();
@@ -31,6 +31,7 @@ app.use('/api/freight-services', freightServiceRoutes);
 app.use('/api/drivers', driverRoutes);
 app.use('/api/promotions', promotionRoutes);
 app.use('/api/clients', clientRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 app.get('/', (req, res) => {
     res.send('API MovixHub Rodando...');

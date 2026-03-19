@@ -53,6 +53,16 @@ const UserSchema: Schema = new Schema({
     internalNotes: { type: String },
 }, {
     timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+});
+
+// Virtual para popular notificações relacionadas a um usuário
+UserSchema.virtual('notifications', {
+    ref: 'Notification',
+    localField: '_id',
+    foreignField: 'user',
+    justOne: false,
 });
 
 UserSchema.methods.matchPassword = async function (enteredPassword: string): Promise<boolean> {
