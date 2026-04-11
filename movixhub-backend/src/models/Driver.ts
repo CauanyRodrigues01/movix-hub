@@ -37,6 +37,8 @@ const DriverSchema: Schema = new Schema({
         default: 'Active',
         enum: ['Active', 'Inactive', 'Blocked', 'Suspended']
     },
+
+    clients: [{type: mongoose.Schema.Types.ObjectId, ref: "Client"}]
 }, {
     timestamps: true,
 });
