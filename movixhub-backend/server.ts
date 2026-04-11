@@ -16,8 +16,19 @@ dotenv.config();
 const app = express();
 
 // CORS - Permite requisições do frontend
+// CORS - permite requisições do frontend
+const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+const allowedOrigins = [frontendUrl];
+
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: (origin, callback) => {
+        // permitir requests sem origin (ex.: Postman, server-to-server)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) !== -1) {
+            return callback(null, true);
+        }
+        return callback(new Error('Origin not allowed by CORS'));
+    },
     credentials: true,
 }));
 
