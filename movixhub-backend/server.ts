@@ -15,18 +15,31 @@ dotenv.config();
 
 const app = express();
 
-// CORS - Permite requisições do frontend
 // CORS - permite requisições do frontend
 const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
-const allowedOrigins = [frontendUrl];
+const frontendUrlsEnv = process.env.FRONTEND_URLS || '';
+const allowedOrigins = Array.from(new Set([
+    frontendUrl,
+    ...frontendUrlsEnv.split(',').map(s => s.trim()).filter(Boolean),
+]));
 
 app.use(cors({
     origin: (origin, callback) => {
         // permitir requests sem origin (ex.: Postman, server-to-server)
         if (!origin) return callback(null, true);
+
+        // aceitar origins explicitamente listadas
         if (allowedOrigins.indexOf(origin) !== -1) {
             return callback(null, true);
         }
+
+        // permitir domínios Vercel (preview/prod) que terminem com .vercel.app
+        try {
+            if (/\.vercel\.app$/.test(origin)) return callback(null, true);
+        } catch (e) {
+            // continue para rejeitar abaixo
+        }
+
         return callback(new Error('Origin not allowed by CORS'));
     },
     credentials: true,
