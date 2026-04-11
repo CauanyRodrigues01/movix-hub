@@ -26,10 +26,10 @@ api.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error.response?.status === 401) {
-            // Token inválido ou expirado
-            localStorage.removeItem('authToken');
-            window.location.href = '/login';
-        }
+                // Token inválido ou expirado
+                localStorage.removeItem('authToken');
+                window.location.href = '/entrar';
+            }
         return Promise.reject(error);
     }
 );
