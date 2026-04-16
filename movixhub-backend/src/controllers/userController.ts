@@ -103,19 +103,25 @@ export const updateUser = async (req: Request, res: Response) => {
             return res.status(404).json({ message: 'Usuário não encontrado.' });
         }
 
-        const updateData = req.body;
+        // Criamos uma cópia dos dados que vieram do Front
+        const updateData = { ...req.body };
 
-        // Tratamento Manual da Senha 
-        if (updateData.passwordHash) {
+        // Tratamento da Senha
+        if (updateData.passwordHash && updateData.passwordHash.trim() !== '') {
+            // Se o usuário digitou uma nova senha, fazemos o hash
             const salt = await bcrypt.genSalt(10);
             updateData.passwordHash = await bcrypt.hash(updateData.passwordHash, salt);
+        } else {
+            // SE A SENHA VEIO VAZIA: Removemos a propriedade para o Mongoose ignorá-la
+            delete updateData.passwordHash;
         }
 
         // Atualização no Banco
         const updatedUser = await User.findByIdAndUpdate(
             userIdToUpdate,
             { $set: updateData },
-            { new: true, runValidators: true } 
+            // Trocamos o `new: true` por `returnDocument: 'after'` para limpar o aviso do terminal
+            { returnDocument: 'after', runValidators: true } 
         );
 
         if (!updatedUser) return res.status(404).json({ message: 'Erro ao atualizar.' });
