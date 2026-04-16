@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Styles from './Users.module.css';
 import { Table, TableActions, TableBadge, type ColumnDefinition, type TableBadgeProps } from '../../components/common/Table';
 import { UserPermissionsModal, userSchema } from '../../components/features/users';
@@ -8,6 +8,7 @@ import { PageHeader } from '../../components/common/Layout';
 import { ModalConfirm, ModalDetails, ModalForm } from '../../components/common/Modal';
 import { EntityDetailsContent, EntityGenericForm } from '../../components/common/EntityCRUD';
 import type { User, UserStatus } from '../../types';
+import { userService } from '../../services/userService';
 
 const userStatusClasses: Record<UserStatus, TableBadgeProps["variant"]> = {
   'Ativo': 'success',
@@ -16,162 +17,6 @@ const userStatusClasses: Record<UserStatus, TableBadgeProps["variant"]> = {
   'Suspenso': 'warning',
 };
 
-const mockUsersData: User[] = [
-  {
-    id: 'USER-001',
-    // Dados pessoais (BasePerson)
-    fullName: 'Lucas Andrade Moura Santos',
-    cpfCnpj: '123.456.789-00',
-    phone: '+55 83 99999-1234',
-    email: 'lucas.santos@gmail.com',
-    corporateEmail: 'lucas.andrade@movix.com',
-    // Endereço (BasePerson)
-    fullAddress: 'Rua Professor João Rique, 234, Catolé',
-    zipCode: '58410-485',
-    city: 'Campina Grande',
-    state: 'PB',
-    // Dados organizacionais (BasePerson)
-    admissionDate: '2022-03-15',
-    status: 'Ativo',
-    // Dados específicos User
-    position: 'Supervisor de Operações',
-    department: 'Logística',
-    accessProfile: 'Supervisor',
-    specificPermissions: ['EDIT_SERVICE', 'VIEW_REPORTS'],
-    lastAccess: '2025-02-10T09:45:00',
-    loginAttempts: 0,
-    passwordHash: 'hashed_password_001',
-    profilePhoto: 'https://i.pravatar.cc/150?img=12',
-    userName: 'lucas.santos',
-    createdBy: 'USER-ADMIN',
-    // Observações (BasePerson)
-    internalNotes: 'Funcionário exemplar, com excelente desempenho.',
-    // Metadados (BaseEntity)
-    createdAt: '2022-03-10T10:00:00',
-    updatedAt: '2025-01-20T11:30:00',
-    changeHistory: []
-  },
-  {
-    id: 'USER-002',
-    // Dados pessoais (BasePerson)
-    fullName: 'Mariana Silva Fernandes Lima',
-    cpfCnpj: '987.654.321-00',
-    phone: '+55 84 98888-4567',
-    email: 'mariana.silva@hotmail.com',
-    corporateEmail: 'mariana.silva@movix.com',
-    // Endereço (BasePerson)
-    fullAddress: 'Av. Senador Salgado Filho, 1234, Lagoa Nova',
-    zipCode: '59075-000',
-    city: 'Natal',
-    state: 'RN',
-    // Dados organizacionais (BasePerson)
-    admissionDate: '2023-01-05',
-    status: 'Ativo',
-    // Dados específicos User
-    position: 'Analista Financeiro',
-    department: 'Financeiro',
-    accessProfile: 'Finanças',
-    specificPermissions: ['VIEW_INVOICES', 'EXPORT_REPORTS'],
-    lastAccess: '2025-02-09T16:20:00',
-    loginAttempts: 1,
-    passwordHash: 'hashed_password_002',
-    profilePhoto: 'https://i.pravatar.cc/150?img=32',
-    userName: 'mariana.silva',
-    createdBy: 'USER-ADMIN',
-    // Observações (BasePerson)
-    internalNotes: 'Responsável por análises de custos e relatórios.',
-    // Metadados (BaseEntity)
-    createdAt: '2023-01-05T14:00:00',
-    updatedAt: '2024-12-18T09:10:00',
-    changeHistory: []
-  },
-  {
-    id: 'USER-003',
-    // Dados pessoais (BasePerson)
-    fullName: 'Rafael Costa da Silva Lopes',
-    cpfCnpj: '456.789.123-00',
-    phone: '+55 81 97777-0001',
-    email: 'rafael.costa@outlook.com',
-    corporateEmail: 'rafael.costa@movix.com',
-    // Endereço (BasePerson)
-    fullAddress: 'Rua do Príncipe, 567, Boa Vista',
-    zipCode: '50050-900',
-    city: 'Recife',
-    state: 'PE',
-    // Dados organizacionais (BasePerson)
-    admissionDate: '2021-07-20',
-    status: 'Inativo',
-    // Dados específicos User
-    position: 'Agente de Suporte ao Cliente',
-    department: 'Suporte',
-    accessProfile: 'Operador',
-    specificPermissions: ['CREATE_TICKET', 'EDIT_TICKET'],
-    lastAccess: '2024-12-15T13:05:00',
-    loginAttempts: 0,
-    passwordHash: 'hashed_password_003',
-    profilePhoto: 'https://i.pravatar.cc/150?img=5',
-    userName: 'rafael.costa',
-    createdBy: 'USER-ADMIN',
-    // Observações (BasePerson)
-    internalNotes: 'Desligado em dezembro de 2024.',
-    // Metadados (BaseEntity)
-    createdAt: '2021-07-18T09:00:00',
-    updatedAt: '2025-01-02T08:30:00',
-    changeHistory: [
-      {
-        date: '2025-01-02T08:30:00',
-        changedBy: 'HR_MANAGER',
-        field: 'status',
-        oldValue: 'Ativo',
-        newValue: 'Inativo'
-      }
-    ]
-  },
-  {
-    id: 'USER-004',
-    // Dados pessoais (BasePerson)
-    fullName: 'Ana Beatriz Rocha Vieira',
-    cpfCnpj: '321.654.987-00',
-    phone: '+55 85 96666-7890',
-    email: 'ana.rocha@gmail.com',
-    corporateEmail: 'ana.rocha@movix.com',
-    // Endereço (BasePerson)
-    fullAddress: 'Av. Beira Mar, 890, Meireles',
-    zipCode: '60165-121',
-    city: 'Fortaleza',
-    state: 'CE',
-    // Dados organizacionais (BasePerson)
-    admissionDate: '2020-02-01',
-    status: 'Suspenso',
-    // Dados específicos User
-    position: 'Administradora de Sistemas',
-    department: 'TI',
-    accessProfile: 'Administrador',
-    specificPermissions: ['FULL_ACCESS'],
-    lastAccess: '2024-11-10T18:00:00',
-    loginAttempts: 5,
-    passwordHash: 'hashed_password_004',
-    profilePhoto: 'https://i.pravatar.cc/150?img=44',
-    userName: 'ana.rocha',
-    createdBy: 'SYSTEM',
-    // Observações (BasePerson)
-    internalNotes: 'Conta suspensa por múltiplas tentativas de login falhadas.',
-    // Metadados (BaseEntity)
-    createdAt: '2020-02-01T10:00:00',
-    updatedAt: '2025-02-01T12:00:00',
-    changeHistory: [
-      {
-        date: '2025-02-01T12:00:00',
-        changedBy: 'SECURITY_SYSTEM',
-        field: 'status',
-        oldValue: 'Ativo',
-        newValue: 'Suspenso'
-      }
-    ]
-  }
-];
-
-// Função auxiliar para criar colunas
 interface GetUserColumnsParams {
   onView: (user: User) => void;
   onEdit: (user: User) => void;
@@ -192,7 +37,7 @@ const getUsersColumns = ({
     align: 'center',
     type: 'actions',
     render: (value: unknown, row: User) => {
-      const permissions = value as string[];
+      const permissions = value as string[] || [];
       const countPermissions = permissions.length;
       return (
         <Button
@@ -250,51 +95,40 @@ const getUsersColumns = ({
 ];
 
 export const Users = () => {
-  // Estado dos dados
-  const [users, setUsers] = useState<User[]>(mockUsersData);
+  // Inicializa com lista vazia
+  const [users, setUsers] = useState<User[]>([]);
 
-  // Hook tipado com User
   const crud = useEntityCRUD<User>();
-
-  // Estado do modal de permissões (separado porque é customizado)
   const [isPermissionsOpen, setIsPermissionsOpen] = useState(false);
   const [permissionsUser, setPermissionsUser] = useState<User | null>(null);
 
+  useEffect(() => {
+    const loadUsers = async () => {
+      crud.setIsLoading(true);
+      try {
+        const data = await userService.getUsers();
+        setUsers(data);
+      } catch (error) {
+        console.error('Falha ao carregar usuários:', error);
+      } finally {
+        crud.setIsLoading(false);
+      }
+    };
+
+    loadUsers();
+  }, []);
+
   // Handler do FORMULÁRIO (Create/Edit)
-  const handleSubmit = async (data: Partial<User>) => {
+ const handleSubmit = async (data: Partial<User>) => {
     crud.setIsLoading(true);
     try {
       if (crud.isEdit && crud.selectedEntity) {
-        // TODO: Implementar chamada API
-        // await updateUser(data);
-        console.log('Atualizando usuário:', data);
-
-        // Atualiza estado local
-        setUsers(prevUsers => prevUsers.map(u =>
-          u.id === crud.selectedEntity!.id
-            ? { ...u, ...data, updatedAt: new Date().toISOString() } // ← CORRIGIDO: updatedAt
-            : u
-        ));
+        const updatedUser = await userService.updateUser(crud.selectedEntity.id, data);
+        
+        setUsers(prevUsers => prevUsers.map(u => u.id === updatedUser.id ? updatedUser : u));
       } else {
-        // TODO: Implementar chamada API
-        // const newUser = await createUser(data);
-        const newUser: User = {
-          ...data,
-          id: `USER-${Date.now()}`,
-          specificPermissions: [],
-          loginAttempts: 0,
-          lastAccess: new Date().toISOString(),
-          profilePhoto: undefined,
-          userName: data.email?.split('@')[0] || 'new_user',
-          status: 'Ativo',
-          createdBy: 'CURRENT_USER',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          changeHistory: [],
-          passwordHash: data.passwordHash || 'temp_hash'
-        } as User;
-
-        console.log('Criando novo usuário:', newUser);
+        const newUser = await userService.createUser(data);
+        
         setUsers(prevUsers => [...prevUsers, newUser]);
       }
 
@@ -302,6 +136,7 @@ export const Users = () => {
       crud.setSelectedEntity(null);
     } catch (error) {
       console.error('Erro ao salvar usuário:', error);
+      alert('Erro ao salvar os dados. Verifique os campos.'); // Um alerta simples ajuda a debugar
     } finally {
       crud.setIsLoading(false);
     }
@@ -313,47 +148,33 @@ export const Users = () => {
 
     crud.setIsLoading(true);
     try {
-      // TODO: Implementar chamada API
-      // await deleteUser(selectedUser.id);
-      console.log('Deletando usuário:', crud.selectedEntity.id); // ← CORRIGIDO: typo
+      // DELETAR (DELETE) no backend
+      await userService.deleteUser(crud.selectedEntity.id);
 
-      // Atualiza estado local
+      // Remove da lista na tela
       setUsers(prevUsers => prevUsers.filter(u => u.id !== crud.selectedEntity!.id));
+      
       crud.setIsDeleteOpen(false);
       crud.setSelectedEntity(null);
     } catch (error) {
       console.error('Erro ao deletar usuário:', error);
+      alert('Não foi possível deletar o usuário.');
     } finally {
       crud.setIsLoading(false);
     }
   };
 
-  // Handler para abrir modal de PERMISSÕES
-  const handlePermissions = (user: User) => { // ← CORRIGIDO: recebe o user
+  const handlePermissions = (user: User) => {
     setPermissionsUser(user);
     setIsPermissionsOpen(true);
   };
 
-  // Handler para SALVAR permissões
   const handleSavePermissions = async (permissions: string[]) => {
-    if (!permissionsUser) return; // ← CORRIGIDO: usa permissionsUser
-
+    if (!permissionsUser) return;
     crud.setIsLoading(true);
     try {
-      // TODO: Implementar chamada API
-      // await updateUserPermissions(permissionsUser.id, permissions);
-      console.log('Salvando permissões:', {
-        userId: permissionsUser.id,
-        permissions
-      });
-
-      // Atualiza estado local
-      setUsers(prevUsers => prevUsers.map(u =>
-        u.id === permissionsUser.id
-          ? { ...u, specificPermissions: permissions, updatedAt: new Date().toISOString() }
-          : u
-      ));
-
+      // TODO: Implementar no próximo passo
+      console.log('Salvando permissões:', { userId: permissionsUser.id, permissions });
       setIsPermissionsOpen(false);
       setPermissionsUser(null);
     } catch (error) {
@@ -382,7 +203,6 @@ export const Users = () => {
 
       <Table data={users} columns={usersColumns} />
 
-      {/* Modal de Formulário (Create/Edit) */}
       <ModalForm
         isOpen={crud.isFormOpen}
         onClose={() => {
@@ -407,7 +227,6 @@ export const Users = () => {
         />
       </ModalForm>
 
-      {/* Modal de Detalhes (View) */}
       <ModalDetails
         isOpen={crud.isDetailsOpen}
         onClose={() => {
@@ -430,7 +249,6 @@ export const Users = () => {
         )}
       </ModalDetails>
 
-      {/* Modal de Permissões (Customizado) */}
       <ModalForm
         isOpen={isPermissionsOpen}
         onClose={() => {
@@ -444,7 +262,7 @@ export const Users = () => {
         {permissionsUser && (
           <UserPermissionsModal
             userName={permissionsUser.fullName}
-            currentPermissions={permissionsUser.specificPermissions}
+            currentPermissions={permissionsUser.specificPermissions || []}
             onSave={handleSavePermissions}
             onCancel={() => {
               setIsPermissionsOpen(false);
@@ -455,7 +273,6 @@ export const Users = () => {
         )}
       </ModalForm>
 
-      {/* Modal de Confirmação (Delete) */}
       <ModalConfirm
         isOpen={crud.isDeleteOpen}
         onConfirm={handleDelete}

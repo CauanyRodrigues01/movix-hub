@@ -14,7 +14,7 @@ export const userSchema: EntitySchema<User> = {
             section: 'Dados Pessoais'
         },
         {
-            name: ' cpfCnpj',
+            name: 'cpfCnpj',
             label: 'CPF',
             type: FieldType.Text,
             required: true,
@@ -32,7 +32,7 @@ export const userSchema: EntitySchema<User> = {
             mask: '(00) 00000-0000'
         },
         {
-            name: 'email',
+            name: 'personalEmail',
             label: 'E-mail Pessoal',
             type: FieldType.Email,
             required: true,
@@ -131,7 +131,7 @@ export const userSchema: EntitySchema<User> = {
             placeholder: 'Ex: Analista, Gerente, Coordenador'
         },
         {
-            name: 'registrationDate',
+            name: 'admissionDate',
             label: 'Data de Admissão',
             type: FieldType.Date,
             required: true,
