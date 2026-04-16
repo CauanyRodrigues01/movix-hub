@@ -4,6 +4,7 @@ import { useState, type ChangeEvent, type FormEvent } from "react";
 import { FormActions, FormCheckbox, FormContainer, FormError, FormField, FormGrid, FormSection, FormSelect, FormTextarea } from "../Form";
 import type { BaseEntity } from "../../../types";
 import type { EntitySchema, FormFieldDefinition } from "./types";
+import FormStyles from '../Form/Form.module.css';
 
 export interface EntityGenericFormProps<T extends BaseEntity> {
     schema: EntitySchema<T>;
@@ -66,6 +67,8 @@ export function EntityGenericForm<T extends BaseEntity>({
                 n[field.name] = new Date().toISOString().substring(0, 10);
             } else if (field.type === 'checkbox') {
                 n[field.name] = false;
+            } else if (field.type === 'multiselect') {
+                n[field.name] = [];
             } else {
                 n[field.name] = '';
             }
@@ -160,6 +163,46 @@ export function EntityGenericForm<T extends BaseEntity>({
                         maxLength={field.maxLength}
                     />
                 );
+
+            case 'multiselect': {
+                const currentValues = (Array.isArray(formDataRecord[field.name]) ? formDataRecord[field.name] : []) as string[];
+                return (
+                    <div key={field.name} className={FormStyles.formGroup}>
+                        <label>
+                            {field.label}
+                            {field.required && <span className={FormStyles.required}>*</span>}
+                        </label>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.4rem', marginTop: '0.2rem' }}>
+                            {field.options?.length ? field.options.map(opt => (
+                                <FormCheckbox
+                                    key={opt.value}
+                                    id={`${field.name}-${opt.value}`}
+                                    name={field.name}
+                                    label={opt.label}
+                                    checked={currentValues.includes(opt.value)}
+                                    onChange={(e) => {
+                                        const isChecked = e.target.checked;
+                                        setFormData(prev => {
+                                            const updated = { ...prev } as Record<string, unknown>;
+                                            const arr = (Array.isArray(updated[field.name]) ? updated[field.name] : []) as string[];
+                                            if (isChecked) {
+                                                updated[field.name] = [...arr, opt.value];
+                                            } else {
+                                                updated[field.name] = arr.filter(v => v !== opt.value);
+                                            }
+                                            return updated as Partial<T>;
+                                        });
+                                        setError(null);
+                                    }}
+                                    disabled={opt.disabled}
+                                />
+                            )) : (
+                                <span style={{ fontSize: '0.85rem', color: '#64748b' }}>Nenhuma opção disponível</span>
+                            )}
+                        </div>
+                    </div>
+                );
+            }
 
             case 'checkbox':
                 return (
