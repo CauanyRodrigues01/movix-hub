@@ -7,10 +7,10 @@
 .formActions {
     margin-top: 1.5rem; 
     display: flex;
-    gap: var(--space-sm);
+    gap: var(--space-sm, 8px);
     justify-content: flex-end;
-    padding-top: var(--space-md);
-    border-top: 1px solid var(--border-light);
+    padding-top: var(--space-md, 16px);
+    border-top: 1px solid var(--border-light, #e2e8f0);
 }
 
 .formOptions {
@@ -25,4 +25,104 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+/* Base Classes para os Campos de Formulário */
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    position: relative;
+    width: 100%;
+}
+
+.formGroup label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-dark, #1e293b);
+}
+
+.required {
+    color: #ef4444;
+    margin-left: 0.2rem;
+}
+
+.input {
+    width: 100%;
+    padding: 0.65rem 0.8rem;
+    border: 1px solid var(--border-light, #cbd5e1);
+    border-radius: 6px;
+    font-size: 0.95rem;
+    background-color: var(--color-surface, #ffffff);
+    color: var(--text-dark, #1e293b);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    font-family: inherit;
+    box-sizing: border-box; /* Garante que padding não amplie larguras */
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--color-primary, #3b82f6);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.input:disabled {
+    background-color: #f1f5f9;
+    color: #94a3b8;
+    cursor: not-allowed;
+}
+
+.inputError {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 1px #ef4444;
+}
+
+.inputError:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+.error, 
+.errorText {
+    color: #ef4444;
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-top: 0.2rem;
+}
+
+.charCount {
+    display: block;
+    text-align: right;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary, #64748b);
+    margin-top: 0.3rem;
+    font-weight: 500;
+}
+
+textarea.input {
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.5;
+}
+
+/* Custom Checkbox */
+.formCheckbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    padding-top: 0.2rem;
+}
+
+.formCheckbox input[type="checkbox"] {
+    width: 1rem;
+    height: 1rem;
+    cursor: pointer;
+    accent-color: var(--color-primary, #3b82f6);
+}
+
+.formCheckbox label {
+    font-size: 0.9rem;
+    color: var(--text-dark, #1e293b);
+    cursor: pointer;
+    user-select: none;
 }
