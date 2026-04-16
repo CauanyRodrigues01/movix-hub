@@ -1,8 +1,9 @@
 // Interface base para todas as entidades
 export interface BaseEntity {
-    id: string;
-    createdAt: string;
-    updatedAt: string; 
+    id?: string;
+    _id?: string;
+    createdAt?: string;
+    updatedAt?: string; 
     changeHistory?: ChangeHistoryEntry[];
     
     // Status (cada entidade terá seu próprio tipo)

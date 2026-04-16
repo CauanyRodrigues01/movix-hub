@@ -1,24 +1,16 @@
-import type { BasePerson } from "./person.types";
+import type { BaseEntity } from "./base.types";
 
-export type CnhCategory = 'A' | 'B' | 'C' | 'D' | 'E' | 'AB' | 'AC' | 'AD' | 'AE';
-export type DriverLinkType = 'CLT' | 'PJ' | 'Terceirizado' | 'Parceiro';
 export type DriverStatus = 'Ativo' | 'Inativo' | 'Suspenso' | 'Férias';
 
-export interface Driver extends BasePerson {
-
-    admissionDate: string;
-
-    // Override de tipos
-    status: DriverStatus;
-    
-    // Campos específicos de Driver
-    cnhNumber: string;
-    cnhCategory: CnhCategory;
-    cnhValidity: string;
-    driverLinkType: DriverLinkType;
-    linkedVehicleId?: string;
-    averageRating: number;
-    totalDeliveries: number;
-    baseCity: string;
-    internalScore: number;
+export interface DriverService extends BaseEntity {
+    _id?: string; 
+    id?: string;  
+    fullName: string;
+    cnh: string; 
+    employment_relationship: string; 
+    total_deliveries: number;
+    rating: number;
+    status: 'Active' | 'Inactive' | 'Blocked' | 'Suspended';
+    createdAt?: string;
+    updatedAt?: string;
 }
