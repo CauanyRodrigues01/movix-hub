@@ -8,7 +8,7 @@ export const generateToken = (id: string | Types.ObjectId): string => {
 
     // Definimos a secret em uma constante para garantir a tipagem
     // Se o .env não existir, o fallback assume o controle
-    const secret = (process.env.JWT_SECRET || 'fallback_secret_para_desenvolvimento') as string;
+    const secret = (process.env.JWT_SECRET) as string;
 
     const token = jwt.sign({ id: idString }, secret, {
         expiresIn: '30d',

@@ -22,7 +22,7 @@ const protect = async (req: Request, res: Response, next: NextFunction) => {
             token = req.headers.authorization.split(' ')[1];
 
             // Verificar token
-            const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret_para_desenvolvimento' as string) as { id: string };
+            const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { id: string };
 
             // Obter usuário pelo ID do token (excluindo a senha)
             const user = await User.findById(decoded.id).select('-passwordHash');
